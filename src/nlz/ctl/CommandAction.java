@@ -23,6 +23,7 @@ import nlz.db.ConnectionPool;
 import nlz.com.DOM;
 import nlz.com.Client;
 import nlz.com.Log;
+import nlz.DataRest;
 
 
 public class CommandAction extends HttpServlet {

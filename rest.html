@@ -1,0 +1,147 @@
+<html>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <head>
+    <title>InfoSphere REST API Sample - View Data</title>
+
+    <link rel="stylesheet" href="js/dojo/dojo/resources/dojo.css" />
+    <link rel="stylesheet" href="js/dojo/dijit/themes/claro/claro.css" />
+    <link rel="stylesheet" href="js/dojo/dojox/grid/resources/Grid.css" />
+
+    <script src="js/dojo/dojo/dojo.js"></script>
+
+    <script type="text/javascript">
+      require(["dojox/charting/Chart",
+               "dojox/charting/themes/Shrooms",
+               "dojox/charting/plot2d/Lines",
+               "dojox/charting/StoreSeries",
+               "dojox/charting/action2d/Tooltip",
+               "dojox/charting/plot2d/Pie",
+               "dojox/grid/DataGrid",
+               "dojo/store/Observable",
+               "dojo/store/Memory",
+               "dojo/data/ObjectStore",
+               "dojox/charting/widget/Legend",
+               "dojox/charting/plot2d/Markers",
+               "dojox/charting/axis2d/Default",
+               "dojo/domReady!"],
+      function(Chart, theme, LinesPlot, Memory, StoreSeries, ObjectStore, Tooltip){
+        var Sensor = "MAG_Y";
+        dojoCharts = new DojoCharts(Sensor);
+        //drawDojoCharts(Memory, StoreSeries, ObjectStore, Sensor);
+        drawDojoCharts(Sensor);
+		
+      });
+
+	  var lineChart;
+      var run;
+      var legend;
+      //function drawDojoCharts(Memory, StoreSeries, ObjectStore, Sensor){
+      function drawDojoCharts(Sensor){
+        //dojoCharts.draw(Memory, StoreSeries, ObjectStore, Sensor);
+        dojoCharts.draw(Sensor);
+console.log("selected sensor: " + Sensor);
+        //setTimeout(function () {drawDojoCharts(Memory, StoreSeries, ObjectStore, Sensor);}, 10000);
+        run = setTimeout(function () {drawDojoCharts(Sensor);}, 10000);
+      };
+
+      //DojoCharts.prototype.draw = function(Memory, StoreSeries, ObjectStore, Sensor) {
+      DojoCharts.prototype.draw = function(Sensor) {
+        var response = getFormattedViewData();
+        this.lineData = dojo.store.Observable(new dojo.store.Memory({data:response}));
+        var lineSeries = this.lineChart.series;
+        for (var i=0; i<lineSeries.length; i++) {
+          this.lineChart.updateSeries(lineSeries[i].name,  new dojox.charting.StoreSeries(this.lineData, {query: {"DEVICE_ID":lineSeries[i].name, "SENSOR_ID":Sensor}}, function(items){ return { x:formatTimeLabel(items.DT), y:items.CUR_VALUE }}));
+        }
+        this.lineChart.title = "Current " + Sensor;
+        this.lineChart.fullRender();
+        legend.refresh();
+        //legend = new dojox.charting.widget.Legend({chart: this.lineChart, horizontal: false}, "legend");
+      };
+
+      function DojoCharts(Sensor) {
+        // Retrieve the view data
+        var response = getFormattedViewData();
+        this.lineData = dojo.store.Observable(new dojo.store.Memory({data:response}));
+
+        var sensorList = [];
+        this.lineData.query({}).forEach(function(sensor){
+          if ( sensorList.indexOf(sensor.SENSOR_ID)==-1 ) sensorList.push(sensor.SENSOR_ID);
+        });
+        drawList(sensorList);
+
+        var seriesList = [];
+        this.lineData.query({SENSOR_ID:Sensor}).forEach(function(device){
+          if ( seriesList.indexOf(device.DEVICE_ID)==-1 ) seriesList.push(device.DEVICE_ID);
+        });
+
+        // Create the line chart
+        this.lineChart = new dojox.charting.Chart("lineChart", { title: "Current "+Sensor, titleGap:5, titleFont: "10pt Consolas"});
+		lineChart = this.lineChart;
+        this.lineChart.setTheme(dojox.charting.themes.Shrooms);
+        this.lineChart.addPlot("default", {type: dojox.charting.plot2d.Lines, markers: true, tension:"" });
+        this.lineChart.addAxis("x", { labelFunc:xAxisLabel, fixLower: "major", fixUpper: "major", rotation: 0});//,  dropLabels: false });
+        this.lineChart.addAxis("y", { vertical: true, natural: true, minorTickStep:5, fixLower: "minor", fixUpper: "minor" });
+
+        var lineSeries;
+        for (var i=0; i<seriesList.length; i++) {
+          lineSeries = new dojox.charting.StoreSeries(this.lineData, {query: {"DEVICE_ID":seriesList[i], "SENSOR_ID":Sensor}}, function(items){ return { x:formatTimeLabel(items.DT), y:items.CUR_VALUE }});
+          this.lineChart.addSeries(seriesList[i], lineSeries) ;
+console.log(seriesList[i]);
+        }
+        //this.lineTooltip = new Tooltip(this.lineChart, "default");
+        this.lineChart.render();
+		
+        legend = new dojox.charting.widget.Legend({chart: this.lineChart, horizontal: false}, "legend");
+
+      }
+
+      function getFormattedViewData() {
+        var httpRequest = new XMLHttpRequest();
+        httpRequest.open("GET","CommandAction?CID=Rest&CMD=doGet",false);
+        httpRequest.send();
+        return JSON.parse( httpRequest.responseText );
+      }
+
+      function formatTimeLabel(timeValue) {
+        var dt = new Date(Date.parse(timeValue.replace(" ","T")));
+        return (dt);
+      }
+
+      function xAxisLabel(timeValue) {
+        var dt = new Date();
+        dt.setTime(timeValue);
+        var rtnValue = dt.toLocaleFormat('%H:%M:%S');
+        return rtnValue;
+      }
+
+      function drawList(List) {
+        var str='';
+        for (var i=0; i<List.length; i++) {
+          str += '&nbsp;<INPUT type="radio" name="sensor" value="' + List[i] + '" onchange="javascript:clearTimeout(run); drawDojoCharts(this.value);">' + List[i];
+        }
+//console.log(str);
+        document.getElementById("SensorList").innerHTML = str;
+      }
+	  
+	  function init(viewName) {
+		clearTimeout(run);
+        var httpRequest = new XMLHttpRequest();
+        httpRequest.open("GET","CommandAction?CID=Rest&CMD=initialize&View="+viewName,false);
+        httpRequest.send();
+		lineChart.destroy();
+		legend.destroyRecursive(true);
+        dojoCharts = new DojoCharts("MAG_Y");
+		drawDojoCharts("MAG_Y");
+		
+	  }
+    </script>
+  </head>
+
+  <body>
+    <table cellpadding="0" cellspacing="0">
+      <tr><td colspan="2" id="SensorList"></td></tr>
+	  <tr><td colspan="2"><input id="View" value="" ><button onclick='javascript:init(document.getElementById("View").value);'>init</button></td></tr>
+      <tr><td id="lineChart" width="600" height="200"></td><td id="legend"></td></tr>
+    </table>
+  </body>
+</html>

@@ -102,6 +102,20 @@ ORDER BY utilization DESC]]></sql>
   </item>
   <item cat="Diag">
     <schema>sysibmadm</schema>
+    <name>TABLESPACE(pre97)</name>
+    <sql><![CDATA[select COALESCE(cast(TBSP_NAME as char(20)), 'Total') tbsp_name
+    , cast(max(TBSP_TYPE) as char(4)) type
+    , cast(max(TBSP_AUTO_RESIZE_ENABLED) as char(4)) auto
+    , cast((round(sum(TBSP_TOTAL_PAGES*TBSP_PAGE_SIZE)/(1073741824+0.01))) as int) total_size_GB
+    , cast(round(sum(TBSP_USED_PAGES*TBSP_PAGE_SIZE)/(1073741824+0.01)) as int) used_size_GB
+    , cast(round(sum(TBSP_PAGE_TOP) / (sum(TBSP_TOTAL_PAGES)+0.01) * 100) as int) hwm_ratio
+    , cast(round(sum(TBSP_USED_PAGES) / (sum(TBSP_TOTAL_PAGES)+0.01) * 100) as int) used_ratio
+from SYSIBMADM.TBSP_UTILIZATION
+group by rollup(tbsp_name)]]></sql>
+    <desc />
+  </item>
+  <item cat="Diag">
+    <schema>sysibmadm</schema>
     <name>Container Usage(pre97)</name>
     <sql><![CDATA[SELECT TBSP_ID,
        TBSP_NAME,
