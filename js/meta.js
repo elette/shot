@@ -686,7 +686,8 @@ function getStmm() {
 	if ($E('board').style.display=='block') {$E('board').style.display = 'none'; return;}
 	$E('board').innerHTML = "<table width='600px'><tr><td style='vertical-align:top;'><span id='ListSpan'></span></td><td><div id='StmmSpan'><canvas style='height:20px;'></canvas></div></td></tr></table>";
 	$E('board').style.display = 'block';
-	lineChartData = [];
+	lineChartData = [];
+
 	var url = "CommandAction?CID=DOM&CMD=list&" + Math.random();
 	var XHttp =  new initXHttp();
 	XHttp.onreadystatechange = function() {
@@ -702,13 +703,34 @@ function getStmm() {
 				// Split the lines
 				var $xml = $(xml);
 				var labels = {};
-				var data = {};				var iSeries = '';
+				var data = {};
+				var iSeries = '';
 // console.log($xml);
-				// $xml.find('series').each(function(i, series) {					// iSeries = $(series).find('name').text();					// if (lineChartData.length == 0 || lineChartData.indexOf(iSeries) == -1)						// lineChartData.push(iSeries);				// });				// var idx = 0;				$xml.find('series').each(function(i, series) {
+				// $xml.find('series').each(function(i, series) {
+					// iSeries = $(series).find('name').text();
+					// if (lineChartData.length == 0 || lineChartData.indexOf(iSeries) == -1)
+						// lineChartData.push(iSeries);
+				// });
+				// var idx = 0;
+				$xml.find('series').each(function(i, series) {
 	   				// push data points
-					iSeries = $(series).find('name').text();					if (lineChartData.length == 0 || lineChartData.indexOf(iSeries) == -1) {						lineChartData.push(iSeries);						labels[iSeries] = [];
-						data[iSeries] = [];					}					labels[iSeries].push($(series).children('value').eq(0).text());					data[iSeries].push($(series).children('value').eq(1).text());
-				});				for (var i=0; i<lineChartData.length; i++)					lineChartData[lineChartData[i]] = {						labels : labels[lineChartData[i]],						datasets : [{data:data[lineChartData[i]]}]					};				var idxList = "";
+					iSeries = $(series).find('name').text();
+					if (lineChartData.length == 0 || lineChartData.indexOf(iSeries) == -1) {
+						lineChartData.push(iSeries);
+						labels[iSeries] = [];
+						data[iSeries] = [];
+					}
+					labels[iSeries].push($(series).children('value').eq(0).text());
+					data[iSeries].push($(series).children('value').eq(1).text());
+
+				});
+				for (var i=0; i<lineChartData.length; i++)
+					lineChartData[lineChartData[i]] = {
+						labels : labels[lineChartData[i]],
+						datasets : [{data:data[lineChartData[i]]}]
+					};
+
+				var idxList = "";
 				for (var i=0; i<lineChartData.length; i++) {
 					idxList += "<li onclick='javascript:getStmmDone(\"" + lineChartData[i] + "\");'>" + lineChartData[i] + "</li>" ;
 				}
@@ -724,13 +746,16 @@ function getStmm() {
 }
 
 function getStmmDone(idx) {
-    var divChild = $E('StmmSpan').lastChild;    if (divChild.tagName == 'CANVAS') $E('StmmSpan').removeChild(divChild);
+    var divChild = $E('StmmSpan').lastChild;
+    if (divChild.tagName == 'CANVAS') $E('StmmSpan').removeChild(divChild);
     var pane = document.createElement("CANVAS");
     // pane.setAttribute("class", "canvas");
     pane.setAttribute("width", 400);
     pane.setAttribute("height", 300);
-	trackItemHighlight(event);    $E('StmmSpan').appendChild(pane);
-    stmmShot(pane, idx);}
+	trackItemHighlight(event);
+    $E('StmmSpan').appendChild(pane);
+    stmmShot(pane, idx);
+}
 
 function insertItem() {
     var url = "CommandAction?CID=DOM&CMD=insNode&Name=" + $E('ItemName').value + "&Category=" + $E('Category').value + "&Schema=" + $E('Schema').value  + "&Sql=" + urlfmt($E('Statement').value) + "&Desc=" + urlfmt($E('Desc').value);

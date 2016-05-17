@@ -2,7 +2,7 @@
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <head>
     <title></title>
-<link rel="stylesheet" href="./css/style.css" type="text/css" />
+<link rel="stylesheet" href="./css/style_Astro.css" type="text/css" />
 <link rel="stylesheet" href="./css/modaldbox.css" type="text/css" />
 <link rel="stylesheet" href="./css/dhtmlxchart.css" type="text/css" />
 <script type="text/javascript" src="./js/modaldbox.js"></script>
@@ -118,7 +118,7 @@ function OKSelected() {
     <tr>
         <td colspan="2"><input type="text" id="sqllist" style="width:200"><input id="selectedRow" type="text" style="display:none;"></td>
     </tr><tr>
-        <td colspan="2"><textarea id="SQL" cols="60" rows="10" style="font-family:Consolas; font-size:10pt;"></textarea></td>
+        <td colspan="2"><textarea id="SQL" cols="60" rows="10" class="scrollbar" style="font-family:Consolas; font-size:10pt; padding:2px;"></textarea></td>
     </tr><tr>
 		<td>
 		<li id="SQLDESC" class="SQLDESC" title="">?</li>
@@ -148,7 +148,7 @@ function OKSelected() {
 <tr><td align='center'><input type='radio' name='dateformat' value='DATETIME'>datetime<input type='radio' name='dateformat' value='TIME' checked>time</td></tr>
 </table>
 
-<table id="Property" class="prop" style="background-color:#C0C0C0;z-Index:30;" border="0" cellspacing="1" cellpadding="0">
+<table id="Property" class="prop" style="background-color:;z-Index:30;" border="0" cellspacing="1" cellpadding="0">
                 <tr><th align="left">Property</th></tr>
     <tr>
         <td><div class="scrollbar" style="width:300px;height:292px;">
@@ -160,7 +160,7 @@ function OKSelected() {
         </td>
     </tr>
 </table>
-<div id="board" class="dbinfo" style="position:absolute;left:64px;top:30px;display:none; color:#000; z-Index:100;"></div>
+<div id="board" class="dbinfo" style="position:absolute;left:64px;top:30px;display:none; z-Index:100;"></div>
 <span id="graph" class="graphCanvas"></span>
 <table id="gridTable" class="grid" border="0" cellspacing="0" cellpadding="0" width="90%">
     <tr>
@@ -177,7 +177,7 @@ function OKSelected() {
 <th style="display:none;"><div id="SQLMSG"></div></th>
 <th align="right"><a href="javascript:hm('msgbox');" style="text-decoration:underline;">X</a>&nbsp;&nbsp;</th></tr>
 <tr><td colspan="2">
-<textarea id="msgdetail" cols="70" rows="18" style="padding:2px; border-bottom:none;"></textarea>
+<textarea id="msgdetail" cols="70" rows="18" class="scrollbar" style="padding:2px; border-bottom:none;"></textarea>
 </td></tr></table>
 </span>
 

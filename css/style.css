@@ -13,20 +13,26 @@ A.black:hover  {color:#444444; text-decoration:underline}
 
 /*
 */
+
+/*
 @font-face{
 font-family: 'HPSimplified';
-src: url('/shot/css/HPSimplifiedW01-Regular.eot'); /* IE9 compat */ 
-src: url('/shot/css/HPSimplifiedW01-Regular.woff') format('woff'), /*IE9 and some modern browsers*/ 
-url('/shot/css/HPSimplifiedW01-Regular.ttf') format('truetype'); /*iOS, Android, Safari*/
+src: url('/shot/css/HPSimplifiedW01-Regular.eot'); 
+src: url('/shot/css/HPSimplifiedW01-Regular.woff') format('woff'), 
+url('/shot/css/HPSimplifiedW01-Regular.ttf') format('truetype'); 
+}
+*/
+@font-face{
+font-family: 'Hack';
 }
  
- html, body { /* background-color:#202020; */ height:90%; font-family:Verdana; font-size:9pt; color:#C0C0C0; letter-spacing : 0px;}
+html, body { /* background-color:#202020; */ height:90%; font-family:Hack; font-size:9pt; color:#C0C0C0; letter-spacing : 0px;}
 
 table { background-color:#fff; font-family:Consolas; font-size:9pt;  white-space: nowrap; }
-th { font-family:¸¼Àº °íµñ, Verdana; font-size:9pt; color:#808080; line-height:120%; white-space: nowrap;}
-.paneheader {font-family:HPSimplified; color:#444;}
-td { font-family:"HPSimplified", Consolas, Arial, sans-serif; font-size:9pt; color:#404040; line-height:120%;}
-button { /*background-color:#303030; */ color:#808080; border:1px solid #B0B0B0; font-family:Verdana; font-size:8pt;}
+th { font-family:Hack Verdana; font-size:9pt; color:#808080; line-height:120%; white-space: nowrap;}
+.paneheader {font-family:Hack; color:#444;}
+td { font-family:Hack, Consolas, Arial, sans-serif; font-size:9pt; color:#404040; line-height:120%;}
+button { /*background-color:#303030; */ color:#808080; border:1px solid #B0B0B0; font-family:Hack; font-size:8pt;}
 /*li { margin:0; padding:0;}
 /*li {float:left;}*/
 ul {margin:10;padding:0;}

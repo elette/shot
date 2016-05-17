@@ -60,7 +60,7 @@ public class ServiceDelegator {
 		
 		long endTime = System.currentTimeMillis();
 		long runningTime = endTime - startTime;
-		LoggingWriter.setLogAll(ioParam.getClassID(),"@ServiceDelegator==== ServiceDelegator [수행시간  : " + runningTime + " ms] ");
+		LoggingWriter.setLogAll(ioParam.getClassID(),"@ServiceDelegator==== ServiceDelegator [runTime  : " + runningTime + " ms] ");
 		LoggingWriter.setLogAll(ioParam.getClassID() ,"@ServiceDelegator# Service Delegator END   #:");
 		
 		return returnResultValue;

@@ -9,7 +9,7 @@
 <html>
 
 <body>
-	<table border="0" cellspacing="1" cellpadding="1" valign="middle" width="600" bgcolor="#D6D2C9">
+	<table border="0" cellspacing="1" cellpadding="1" valign="middle" width="600">
 		<tr class="tr_head"><%
 if (arrList.isEmpty()) {
 %><td>0 rows</td></tr><%

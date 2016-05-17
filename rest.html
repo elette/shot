@@ -29,7 +29,7 @@
         dojoCharts = new DojoCharts(Sensor);
         //drawDojoCharts(Memory, StoreSeries, ObjectStore, Sensor);
         drawDojoCharts(Sensor);
-		
+
       });
 
 	  var lineChart;
@@ -90,7 +90,7 @@ console.log(seriesList[i]);
         }
         //this.lineTooltip = new Tooltip(this.lineChart, "default");
         this.lineChart.render();
-		
+
         legend = new dojox.charting.widget.Legend({chart: this.lineChart, horizontal: false}, "legend");
 
       }
@@ -122,7 +122,7 @@ console.log(seriesList[i]);
 //console.log(str);
         document.getElementById("SensorList").innerHTML = str;
       }
-	  
+
 	  function init(viewName) {
 		clearTimeout(run);
         var httpRequest = new XMLHttpRequest();
@@ -132,7 +132,7 @@ console.log(seriesList[i]);
 		legend.destroyRecursive(true);
         dojoCharts = new DojoCharts("MAG_Y");
 		drawDojoCharts("MAG_Y");
-		
+
 	  }
     </script>
   </head>

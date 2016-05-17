@@ -54,7 +54,8 @@ var margin = {top: 20, right: 80, bottom: 30, left: 50},
     width = 960 - margin.left - margin.right,
     height = 500 - margin.top - margin.bottom;
 
-var parseDate = d3.time.format("%X").parse;
+var dateformat = "%Y-%m-%d %X"	//"%X";
+var parseDate = d3.time.format(dateformat).parse;
 
 var x = d3.time.scale()
     .range([0, width]);
@@ -84,7 +85,7 @@ var svg = d3.select("body").append("svg")
     .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
     // .on("click", click);
 
-d3.csv("logs/-time-sample_2014-11-07.txt", function(error, data) {
+d3.csv("logs/IoT 서버-20150526151128_2015-06-05.txt", function(error, data) {
   color.domain(d3.keys(data[0]).filter(function(key) { return key !== "TIME"; }));
 
   data.forEach(function(d) {
