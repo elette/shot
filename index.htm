@@ -120,6 +120,8 @@ function OKSelected() {
     </tr><tr>
         <td colspan="2"><textarea id="SQL" cols="60" rows="10" class="scrollbar" style="font-family:Consolas; font-size:10pt; padding:2px;"></textarea></td>
     </tr><tr>
+        <td colspan="2"><textarea id="SQLUPDATE" cols="60" rows="1" class="scrollbar" style="font-family:Consolas; font-size:10pt; padding:2px;"></textarea></td>
+    </tr><tr>
 		<td>
 		<li id="SQLDESC" class="SQLDESC" title="">?</li>
 		</td>
@@ -130,6 +132,7 @@ function OKSelected() {
 		<input type="text" id="period" size="3" maxlength="3" align="right" style="text-align:right;border:0px;" value="10">(sec)
 		<input type="text" id="count" size="3" maxlength="3" align="right" style="text-align:right;border:0px;" value="1">(count)
         <button onclick="javascript:backShot($E('sqllist').value);">_</button>
+        <button onclick="javascript:callServerUpdate($E('SQLUPDATE').value);">Update</button>
         </td>
     </tr>
 </table>
