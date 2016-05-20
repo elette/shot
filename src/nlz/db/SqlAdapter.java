@@ -24,7 +24,7 @@ public abstract class SqlAdapter {
     * @param ioParam	InoutParameter	입력파라미터 객체
     * @return ArrayList 				결과 ArrayList
 	*/
-	protected ArrayList excuteQuery(Connection con, String p_strSql, InoutParameter ioParam, ArrayList inputList) {
+	protected ArrayList executeQuery(Connection con, String p_strSql, InoutParameter ioParam, ArrayList inputList) {
 
 		PreparedStatement ps = null;
 		ResultSet l_rsResult                   = null;
@@ -409,45 +409,51 @@ public abstract class SqlAdapter {
  	}    
 
      
- 	/**
- 	* SQL문 입력및 수정졀과를 int 로 생성하는 메소드.
-     * @param con		Connection		Database Connection 객체
-     * @param p_strSql	String			SQL문
-     * @param ioParam	InoutParameter	입력파라미터 객체
-     * @return ArrayList 				결과 ArrayList
- 	*/
- 	protected int excuteUpdate(Connection con, String p_strSql, InoutParameter ioParam, List inputList) {
+ 	protected int executeUpdate(Connection con, String p_strSql, InoutParameter ioParam, List inputList) {
 
  		PreparedStatement ps = null;
  		
  		int result=0;
  		HashObject ho           = ioParam.getInputHashObject();
  		try {
- 			LoggingWriter.setLogSql(SqlAdapter.class.getName(),"@SqlAdaptor==== SELECT SQL : \n" + p_strSql);
+ 			LoggingWriter.setLogSql(SqlAdapter.class.getName(),"@SqlAdaptor==== UPDATE SQL : \n" + p_strSql);
  			ps = con.prepareStatement(p_strSql);
- 			int iPSNo = 1;
- 			for(int i=0;i<inputList.size();i++, iPSNo++){
- 				// TODO iteration 
+ 			// int iPSNo = 1;
+ 			// for(int i=0;i<inputList.size();i++, iPSNo++){
+ 			// 	// TODO iteration 
  				
- 				String[] paramValue=(String[])inputList.get(i);
- 				if(paramValue[1] !=null && !paramValue[1].equals("") && paramValue[1].equals("int")){
- 					ps.setInt(iPSNo,Integer.parseInt((String)ho.get(paramValue[0],HashObject.YES)));
- 				}else if (paramValue[1].equals("Array")) {
-     				String[] parArrValue = (String[])ho.getArray(paramValue[0]);
+ 			// 	String[] paramValue=(String[])inputList.get(i);
+ 			// 	if(paramValue[1] !=null && !paramValue[1].equals("") && paramValue[1].equals("int")){
+ 			// 		ps.setInt(iPSNo,Integer.parseInt((String)ho.get(paramValue[0],HashObject.YES)));
+ 			// 	}else if (paramValue[1].equals("Array")) {
+    //  				String[] parArrValue = (String[])ho.getArray(paramValue[0]);
 
-					for (int j=0; j<parArrValue.length; j++, iPSNo++)
-     					ps.setString(iPSNo, (String)parArrValue[j]);
- 				}else{
+				// 	for (int j=0; j<parArrValue.length; j++, iPSNo++)
+    //  					ps.setString(iPSNo, (String)parArrValue[j]);
+ 			// 	}else{
  					
- 					ps.setString(iPSNo,(String)ho.get(paramValue[0],HashObject.YES));
- 				}		
- 			}	
+ 			// 		ps.setString(iPSNo,(String)ho.get(paramValue[0],HashObject.YES));
+ 			// 	}		
+ 			// }	
  		
+			if (!(inputList == null)) {
+			for(int i=0;i<inputList.size();i++){
+				String[] paramValue=(String[])inputList.get(i);
+				if(paramValue[1] !=null && !paramValue[1].equals("") && paramValue[1].equals("int")){
+					ps.setInt(i+1,Integer.parseInt((String)ho.get(paramValue[0],HashObject.YES)));
+				}else{
+					ps.setString(i+1,(String)ho.get(paramValue[0],HashObject.YES));
+				}
+				
+				
+			}
+			}	
+
  			result          = ps.executeUpdate();
  		
  		} catch (SQLException e) {
  			LoggingWriter.setLogError(SqlAdapter.class.getName(),"@SqlAdaptor==== SQL Error = " + e.getMessage());
-             ioParam.setMessage(MessageDefine.M_SELECT_FAILED);
+             ioParam.setMessage(MessageDefine.M_UPDATE_FAILED);
              
              e.printStackTrace();
  		} catch (NumberFormatException e) {

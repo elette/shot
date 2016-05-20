@@ -13,7 +13,7 @@ public class ServiceDelegator {
 	* @return ServiceDelegator
 	*/
 	public static ServiceDelegator getInstance() {
-		LoggingWriter.setLogAll(ServiceDelegator.class.getName() ,"@ServiceDelegator# Service Delegator START #:");
+		LoggingWriter.setLogAll(ServiceDelegator.class.getName() ,"@ServiceDelegator# START #:");
 		if (null == ServiceDelegator.m_objSelf)	{
 			ServiceDelegator.m_objSelf = new ServiceDelegator();
 			LoggingWriter.setLogDebug(ServiceDelegator.class.getName() , "@ServiceDelegator==== Create ServiceDelegator ====");
@@ -60,8 +60,8 @@ public class ServiceDelegator {
 		
 		long endTime = System.currentTimeMillis();
 		long runningTime = endTime - startTime;
-		LoggingWriter.setLogAll(ioParam.getClassID(),"@ServiceDelegator==== ServiceDelegator [runTime  : " + runningTime + " ms] ");
-		LoggingWriter.setLogAll(ioParam.getClassID() ,"@ServiceDelegator# Service Delegator END   #:");
+		LoggingWriter.setLogAll(ioParam.getClassID(),"@ServiceDelegator= [runTime  : " + runningTime + " ms] ");
+		LoggingWriter.setLogAll(ioParam.getClassID() ,"@ServiceDelegator# END   #:");
 		
 		return returnResultValue;
 	}

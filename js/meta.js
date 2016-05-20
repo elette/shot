@@ -222,6 +222,17 @@ function callXMLLog() {
   xmlHttp.send(null);
 }
 
+function callServerUpdate(SQL) {
+    var url = "CommandAction?CID=Mon&CMD=getUpdateResult&SQL=" + urlfmt(SQL);
+
+  $E('divInfo').style.display = 'none';
+    // $E('gridTable').style.top = window.innerHeight-$E('gridTable').clientHeight;
+    $E('gridTable').style.top = window.innerHeight-250;
+    // $E('gridTable').style.bottom = 0;
+  $E('gridTable').style.visibility = "visible";
+    XHR(url, 'pane');
+}
+
 function updateXMLPane() {
   if (xmlHttp.readyState == 4) {
     var xmlDoc=xmlHttp.responseXML;

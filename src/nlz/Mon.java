@@ -44,7 +44,7 @@ public class Mon extends SqlAdapter {
             query.append(SQL);
 
             con = pool.getConnection();
-            arrResult = super.excuteQuery(con, query.toString(), ioParam, null);
+            arrResult = super.executeQuery(con, query.toString(), ioParam, null);
             if(arrResult == null) {
                 resultInt = EventDefine.E_SQL_ERROR;
             } else {
@@ -161,7 +161,7 @@ public class Mon extends SqlAdapter {
             query.append(SQL);
 
             con = pool.getConnection();
-            arrResult = super.excuteQuery(con, query.toString(), ioParam, null);
+            arrResult = super.executeQuery(con, query.toString(), ioParam, null);
             if(arrResult == null) {
                 resultInt = EventDefine.E_SQL_ERROR;
             } else {
@@ -211,7 +211,7 @@ public class Mon extends SqlAdapter {
             query.append(SQL);
 
             con = pool.getConnection();
-            arrResult = super.excuteQuery(con, query.toString(), ioParam, null);
+            arrResult = super.executeQuery(con, query.toString(), ioParam, null);
             if(arrResult == null) {
                 resultInt = EventDefine.E_SQL_ERROR;
             } else {
@@ -232,6 +232,56 @@ public class Mon extends SqlAdapter {
         } catch (Exception e) {
             LoggingWriter.setLogError(pgmID,"@Business==== Error ====" + e.getMessage());
             ioParam.setMessage(MessageDefine.M_SELECT_FAILED);
+            resultInt = EventDefine.E_DOEXCUTE_ERROR;
+            ioParam.setResultURL("/jsp/err/errMsg.jsp");
+            e.printStackTrace();
+        } finally {
+            if(con != null) try {con.close();} catch(Exception ex) {};
+        }
+
+        return resultInt;
+    }
+
+    public int getUpdateResult(InoutParameter ioParam){
+
+        int resultInt           = EventDefine.E_DOEXCUTE_INIT;
+        HashObject ho           = ioParam.getInputHashObject();
+        Connection con          = null;
+        int intResult           = 0;
+
+        try{
+
+//          String S_USER_ID   = (String)ho.get("S_USER_ID",HashObject.YES);
+            String SQL = (String)ho.get("SQL",HashObject.YES);
+//
+//              ho.print();
+
+            StringBuffer query = new StringBuffer();
+
+            query.append(SQL);
+
+            con = pool.getConnection();
+            intResult = super.executeUpdate(con, query.toString(), ioParam, null);
+            if(intResult != 0) {
+                resultInt = EventDefine.E_SQL_ERROR;
+            } else {
+                ioParam.setResultList(null);
+                ioParam.setMessage(MessageDefine.M_UPDATE_OK);
+                resultInt = EventDefine.E_DOEXCUTE_SUCCESS;
+                LoggingWriter.setLogDebug(pgmID,"@Business==== " + MessageDefine.M_UPDATE_OK);
+            }
+
+            ioParam.setResultURL("/jsp/history.jsp");
+
+        } catch(SQLException e) {
+            LoggingWriter.setLogError(pgmID,"@Business==== SQL Error ====" + e.getMessage());
+            ioParam.setMessage(MessageDefine.M_UPDATE_FAILED);
+            resultInt = EventDefine.E_SQL_ERROR;
+            ioParam.setResultURL("/jsp/err/errMsg.jsp");
+            e.printStackTrace();
+        } catch (Exception e) {
+            LoggingWriter.setLogError(pgmID,"@Business==== Error ====" + e.getMessage());
+            ioParam.setMessage(MessageDefine.M_UPDATE_FAILED);
             resultInt = EventDefine.E_DOEXCUTE_ERROR;
             ioParam.setResultURL("/jsp/err/errMsg.jsp");
             e.printStackTrace();
