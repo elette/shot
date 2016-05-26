@@ -8,5 +8,5 @@
 <td class="line_td"></td>
 <td class="line_td"><%=ho.get("RUNTIME",HashObject.YES)%> (ms)</td>
 <td class="line_td" style="word-wrap:break-word; white-space:normal;"><%=(String)ho.get("SQL",HashObject.YES)%></td>
-<td class="line_td"><button onclick="javascript:$E('SQL').value='<%=(String)ho.get("SQL",HashObject.YES)%>';">&gt;</button></td>
+<td class="line_td"><button onclick="javascript:$E('SQL).value=$(this).parent().prev().text();">&gt;</button></td>
 </tr></table>

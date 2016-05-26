@@ -10,7 +10,7 @@
 	<td class="line_td"><span class="infocircle">!</span></td>
 	<td class="line_td" style="word-wrap:break-word; white-space:normal;"><%=ioParam.getMessageDetail()%></td>
 	<td class="line_td" style="word-wrap:break-word; white-space:normal;"><%=(String)ho.get("SQL",HashObject.YES)%></td>
-	<td><button onclick="javascript:$E('SQL').value='<%=(String)ho.get("SQL",HashObject.YES)%>';">&gt;</button><%
+	<td><button onclick="javascript:$E('SQL').value=$(this).parent().prev().text();">&gt;</button><%
 if (ioParam.getMessageDetail().substring(0,3).equals("DB2")) {
 %>
 	<button onClick="$E('SQLMSG').innerHTML='<%=ioParam.getMessageDetail()%>';callXML();">?</button><%
