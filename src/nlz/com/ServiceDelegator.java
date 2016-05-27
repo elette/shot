@@ -44,7 +44,7 @@ public class ServiceDelegator {
 			 * @return the desired integer. 성공하면 0이상, 실패하면 -1
 			 */
 			EventFactory eventFactory = new EventFactory();
-			returnResultValue = eventFactory.doExcute(ioParam); 
+			returnResultValue = eventFactory.doExecute(ioParam); 
 
 			LoggingWriter.setLogInfo(ioParam.getClassID() ,"@ServiceDelegator==== Message : " + ioParam.getMessage() + " ====");
 			LoggingWriter.setLogDebug(ioParam.getClassID() ,"@ServiceDelegator==== doService End ====");

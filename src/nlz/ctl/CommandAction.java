@@ -23,7 +23,7 @@ import nlz.db.ConnectionPool;
 import nlz.com.DOM;
 import nlz.com.Client;
 import nlz.com.Log;
-import nlz.DataRest;
+import nlz.Mon;
 
 
 public class CommandAction extends HttpServlet {
@@ -51,26 +51,29 @@ public class CommandAction extends HttpServlet {
             String CONFIG_PATH = config.getInitParameter("CONFIG_PATH"); //XML파일 output (설정, 쿼리, snap)
             String CLIENT_PATH = config.getInitParameter("CLIENT_PATH"); //고객 접속정보
             String LOG_PATH    = config.getInitParameter("LOG_PATH"); //로그 저장 경로
+            String HIST_PATH   = config.getInitParameter("HIST_PATH"); //텿uery history
 
             loggingWriter = new LoggingWriter(LOG_LEVEL,SYS_OUT,FILE_OUT,LOG_DIR);
             xmlDom        = new DOM(CONFIG_PATH);
             xmlDomClient  = new Client(CLIENT_PATH);
 			fileLog       =	new Log(LOG_PATH);
+            new Mon(HIST_PATH);
 
             super.init(config);
 
-            LoggingWriter.setLogAll("","###############################################################");
+            LoggingWriter.setLogAll("","################################################################");
             LoggingWriter.setLogAll(""," Application Starting...");
 //          LoggingWriter.setLogAll(""," CTX_PATH    : " + CTX_PATH);
 //          LoggingWriter.setLogAll(""," DATA_SOURCE : " + DATA_SOURCE);
-            LoggingWriter.setLogAll(""," LOG_LEVEL   : " + LOG_LEVEL);
-            LoggingWriter.setLogAll(""," SYS_OUT     : " + SYS_OUT);
-            LoggingWriter.setLogAll(""," FILE_OUT    : " + FILE_OUT);
-            LoggingWriter.setLogAll(""," LOG_DIR     : " + LOG_DIR);
+            LoggingWriter.setLogAll(""," LOG_LEVEL : " + LOG_LEVEL);
+            LoggingWriter.setLogAll(""," SYS_OUT : " + SYS_OUT);
+            LoggingWriter.setLogAll(""," FILE_OUT : " + FILE_OUT);
+            LoggingWriter.setLogAll(""," LOG_DIR : " + LOG_DIR);
             LoggingWriter.setLogAll(""," CONFIG_PATH : " + CONFIG_PATH);
             LoggingWriter.setLogAll(""," CLIENT_PATH : " + CLIENT_PATH);
-            LoggingWriter.setLogAll(""," LOG_PATH    : " + LOG_PATH);
-            LoggingWriter.setLogAll("","###############################################################");
+            LoggingWriter.setLogAll(""," LOG_PATH : " + LOG_PATH);
+            LoggingWriter.setLogAll(""," HIST_PATH : " + HIST_PATH);
+            LoggingWriter.setLogAll("","################################################################");
 
         } catch(Exception e) {
             System.out.println("CommandAction init Error : " + e.toString());
@@ -164,12 +167,12 @@ public class CommandAction extends HttpServlet {
     }
 
     public int initConnectionPool(InoutParameter ioParam) {
-        int resultInt = EventDefine.E_DOEXCUTE_INIT;
+        int resultInt = EventDefine.E_DOEXECUTE_INIT;
         ioParam.setResultURL("/jsp/com/connMsg.jsp");
         if (pool != null) {
 			resultInt = pool.getCheckConnection();
 		}
-		if (resultInt != EventDefine.E_DOEXCUTE_SUCCESS) {
+		if (resultInt != EventDefine.E_DOEXECUTE_SUCCESS) {
             HashObject ho = ioParam.getInputHashObject();
             try {
 //              ho.print();
@@ -181,10 +184,10 @@ public class CommandAction extends HttpServlet {
                 String PASS = (String)ho.get("PASS",HashObject.YES);
 
                 pool = new ConnectionPool(DBMS, HOST, PORT, DB, USER, PASS);
-                resultInt = EventDefine.E_DOEXCUTE_SUCCESS;
+                resultInt = EventDefine.E_DOEXECUTE_SUCCESS;
                 ioParam.setMessage(MessageDefine.M_SERVICE_OK);
             } catch(Exception e) {
-                resultInt = EventDefine.E_DOEXCUTE_ERROR;
+                resultInt = EventDefine.E_DOEXECUTE_ERROR;
                 ioParam.setMessage(MessageDefine.M_SERVICE_FAILED);
                 System.out.println("CommandAction initConnectionPool Error : " + e.toString());
             }
@@ -193,17 +196,17 @@ public class CommandAction extends HttpServlet {
     }
 
     public synchronized int releaseConnectionPool(InoutParameter ioParam) {
-        int resultInt = EventDefine.E_DOEXCUTE_INIT;
+        int resultInt = EventDefine.E_DOEXECUTE_INIT;
 		try {
 			if (pool != null) {
 				pool.releaseConnection();
 				pool = null;
 			}
-			resultInt = EventDefine.E_DOEXCUTE_SUCCESS;
+			resultInt = EventDefine.E_DOEXECUTE_SUCCESS;
 			ioParam.setMessage(MessageDefine.M_SERVICE_OK);
 			ioParam.setResultURL("/jsp/com/connMsg.jsp");
 		} catch(Exception e) {
-			resultInt = EventDefine.E_DOEXCUTE_ERROR;
+			resultInt = EventDefine.E_DOEXECUTE_ERROR;
 			ioParam.setMessage(MessageDefine.M_SERVICE_FAILED);
 			ioParam.setResultURL("/jsp/err/errMsg.jsp");
 			System.out.println("CommandAction releaseConnectionPool Error : " + e.toString());
@@ -220,7 +223,7 @@ public class CommandAction extends HttpServlet {
     }
 	
 	public int getInfoDB(InoutParameter ioParam) {
-		int resultInt = EventDefine.E_DOEXCUTE_SUCCESS;
+		int resultInt = EventDefine.E_DOEXECUTE_SUCCESS;
 		ioParam.setResultURL("/jsp/com/dbinfo.jsp");
 		HashObject ho = ioParam.getInputHashObject();
 		try {
@@ -230,7 +233,7 @@ public class CommandAction extends HttpServlet {
 				ho.put("DBINFO", new String[][]{});
 			}
 		} catch(Exception e) {
-			resultInt = EventDefine.E_DOEXCUTE_ERROR;
+			resultInt = EventDefine.E_DOEXECUTE_ERROR;
 			ioParam.setMessage(MessageDefine.M_SERVICE_FAILED);
 			System.out.println("dbinfo Error : " + e.toString());
 		}

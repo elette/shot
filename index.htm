@@ -18,6 +18,7 @@
 window.onload = function() {
     doToggle('StatusBox', 'L');
     doToggle('DomBox', 'L');
+    doToggle('HistBox', 'L');
     doToggle('ClientBox', 'L');
     doToggle('SQLBox', 'R');
     doToggle('CHARTBox', 'R'); 
@@ -41,6 +42,7 @@ function OKSelected() {
 <table class="buttonbox" style="left:0px"><tr>
 <td class="buttoncircle" id="ConnStatus" title="Database" onclick="javascript:toggle('StatusBox', 'L');">&nbsp;&nbsp;</td>
 <td class="buttoncircle" id="DomStatus" title="Monitoring" onclick="javascript:toggle('DomBox', 'L');">&nbsp;&nbsp;</td>
+<td class="buttoncircle" id="History" title="History" onclick="javascript:toggle('HistBox', 'L');">&nbsp;&nbsp;</td>
 </tr></table>
 <table class="buttonbox" style="left:60px;"><tr>
 <td id="DBInfo" style="display:none"></td>
@@ -87,6 +89,14 @@ function OKSelected() {
             <button onclick="javascript:callXML('true');">Get</button>
             <button onclick="javascript:sm('ItemBox', 307, 199);">+</button>
             <button onclick="javascript:removeItem();">×</button>
+            </td></tr>
+</table>
+
+<table id="HistBox" class="dom">
+<tr><th colspan="2" style="text-align:left">History</th></tr>
+<tr><td><div id="paneHist" class="scrollbar" style="width:200px;height:200px;" onMouseDown="javascript:selectHist(event);"></div></td></tr>
+            <tr><td height="20" colspan="2" align="center">
+            <button onclick="javascript:callHistory();">Get</button>
             </td></tr>
 </table>
 

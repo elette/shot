@@ -6,6 +6,15 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.Calendar;
 
+import org.jdom.Document;
+import org.jdom.Element;
+import org.jdom.CDATA;
+import org.jdom.JDOMException;
+import org.jdom.input.SAXBuilder;
+import org.jdom.output.Format;
+import org.jdom.output.XMLOutputter;
+import org.jdom.xpath.XPath;
+
 import nlz.com.HashObject;
 import nlz.com.InoutParameter;
 import nlz.com.LoggingWriter;
@@ -73,6 +82,55 @@ public class MonWriter {
 			System.out.println("MonWriter Error : " + e.toString());
 		} finally{
 			out.close();
+		}
+
+	}
+
+	// Writing query history
+	public static void writeHistory(InoutParameter ioParam) throws IOException {
+        HashObject ho		 = ioParam.getInputHashObject();
+    	SAXBuilder builder   = new SAXBuilder();
+		
+		try {
+            String path 	= (String)ho.get("historyPath",HashObject.YES);
+            String host 	= (String)ho.get("HOST",HashObject.YES);
+            String strSql	= (String)ho.get("SQL",HashObject.YES);
+			
+			// String title	= "../webapps/shot/history/" + host + "_" + getCurrentDate() + ".xml";
+			String title	= path + "/" + host + "_" + getCurrentDate() + ".xml";
+			File xmlFile	= new File(title);
+            Document doc 	= null;
+			Element rootNode = null;
+			if(!xmlFile.exists()) {
+				xmlFile.createNewFile();
+	            doc = new Document();
+	            rootNode = new Element("QUERY");
+	            doc.setRootElement(rootNode);
+			}
+			else {
+	            doc = (Document) builder.build(xmlFile);
+	            rootNode = doc.getRootElement();
+			}
+            Element childNode = new Element("item");
+
+            childNode.addContent(new Element("time").setText(getCurrentTime()));
+            childNode.addContent(new Element("sql").setContent(new CDATA(strSql)));
+		
+            rootNode.addContent(childNode);
+
+            XMLOutputter xmlOutput = new XMLOutputter();
+
+            xmlOutput.setFormat(Format.getPrettyFormat());
+            xmlOutput.output(doc, new FileOutputStream(xmlFile));
+
+		} catch (IOException ioe) {
+            LoggingWriter.setLogError(pgmID,"@Business==== IO Error ====" + ioe.getMessage());
+            ioe.printStackTrace();
+        } catch (JDOMException e) {
+            LoggingWriter.setLogError(pgmID,"@Business==== JDOM Error ====" + e.getMessage());
+            e.printStackTrace();
+        } catch(Exception e) {
+			System.out.println("MonWriter Error : " + e.toString());
 		}
 
 	}

@@ -26,12 +26,12 @@ public class Log {
 
     public int list(InoutParameter ioParam) {
 
-        int resultInt = EventDefine.E_DOEXCUTE_INIT;
+        int resultInt = EventDefine.E_DOEXECUTE_INIT;
         HashObject ho = ioParam.getInputHashObject();
 		ArrayList<String[]> arrFile     = new ArrayList<String[]>();
         try {
             ioParam.setResultURL("/jsp/com/listLog.jsp");
-            resultInt = EventDefine.E_DOEXCUTE_SUCCESS;
+            resultInt = EventDefine.E_DOEXECUTE_SUCCESS;
             LoggingWriter.setLogDebug(pgmID,"@Business==== " + MessageDefine.M_SELECT_OK);
 
 			File dir = new File(path); 
@@ -50,12 +50,12 @@ public class Log {
             } else {
                 ioParam.setResultList(arrFile);
                 ioParam.setMessage(MessageDefine.M_SELECT_OK);
-                resultInt = EventDefine.E_DOEXCUTE_SUCCESS;
+                resultInt = EventDefine.E_DOEXECUTE_SUCCESS;
                 LoggingWriter.setLogDebug(pgmID,"@Business==== " + MessageDefine.M_SELECT_OK);
             }
 
         } catch (Exception e) {
-            resultInt = EventDefine.E_DOEXCUTE_ERROR;
+            resultInt = EventDefine.E_DOEXECUTE_ERROR;
             e.printStackTrace();
         }
         return resultInt;
@@ -63,16 +63,16 @@ public class Log {
 
     public int getLog(InoutParameter ioParam) {
 
-        int resultInt = EventDefine.E_DOEXCUTE_INIT;
+        int resultInt = EventDefine.E_DOEXECUTE_INIT;
         HashObject ho = ioParam.getInputHashObject();
         try {
             String file      = (String)ho.get("path",HashObject.YES);
-            resultInt = EventDefine.E_DOEXCUTE_SUCCESS;
+            resultInt = EventDefine.E_DOEXECUTE_SUCCESS;
             ioParam.setResultURL(file);
             LoggingWriter.setLogDebug(pgmID,"@Business==== " + MessageDefine.M_SELECT_OK);
 
         } catch (Exception e) {
-            resultInt = EventDefine.E_DOEXCUTE_ERROR;
+            resultInt = EventDefine.E_DOEXECUTE_ERROR;
             e.printStackTrace();
         }
         return resultInt;

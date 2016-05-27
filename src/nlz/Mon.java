@@ -5,6 +5,11 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
+import java.io.File;
+import java.util.*;
+import java.io.IOException;
+import java.io.*;
+
 import nlz.com.EventDefine;
 import nlz.com.HashObject;
 import nlz.com.InoutParameter;
@@ -18,16 +23,21 @@ import nlz.MonWriter;
 public class Mon extends SqlAdapter {
 
     String pgmID        = "Mon";
+    private static String path  = "";
     ConnectionPool pool = null;
 
     public Mon() {
         pool = ConnectionPool.getInstance();
     }
 
+    public Mon (String history_path) {
+        path = history_path;
+    }
+
 
     public int getQueryResult(InoutParameter ioParam, String targetURL){
 
-        int resultInt           = EventDefine.E_DOEXCUTE_INIT;
+        int resultInt           = EventDefine.E_DOEXECUTE_INIT;
         HashObject ho           = ioParam.getInputHashObject();
         Connection con          = null;
         ArrayList arrResult     = new ArrayList();
@@ -50,7 +60,7 @@ public class Mon extends SqlAdapter {
             } else {
                 ioParam.setResultList(arrResult);
                 ioParam.setMessage(MessageDefine.M_SELECT_OK);
-                resultInt = EventDefine.E_DOEXCUTE_SUCCESS;
+                resultInt = EventDefine.E_DOEXECUTE_SUCCESS;
                 LoggingWriter.setLogDebug(pgmID,"@Business==== " + MessageDefine.M_SELECT_OK);
             }
 
@@ -65,7 +75,7 @@ public class Mon extends SqlAdapter {
         } catch (Exception e) {
             LoggingWriter.setLogError(pgmID,"@Business==== Error ====" + e.getMessage());
             ioParam.setMessage(MessageDefine.M_SELECT_FAILED);
-            resultInt = EventDefine.E_DOEXCUTE_ERROR;
+            resultInt = EventDefine.E_DOEXECUTE_ERROR;
             ioParam.setResultURL("/jsp/err/errMsg.jsp");
             e.printStackTrace();
         } finally {
@@ -76,6 +86,21 @@ public class Mon extends SqlAdapter {
     }
 
     public int list(InoutParameter ioParam){
+        // Writing query history
+        HashObject ho   = ioParam.getInputHashObject();
+        try{
+            String[][] InfoDB = pool.infoDB();
+
+            ho.put("historyPath", path);
+            ho.put("HOST",InfoDB[1][1]);
+            MonWriter.writeHistory(ioParam);
+
+        } catch (Exception e) {
+            LoggingWriter.setLogError(pgmID,"@Business==== Error ====" + e.getMessage());
+            ioParam.setMessage(MessageDefine.M_SELECT_FAILED);
+            ioParam.setResultURL("/jsp/err/errMsg.jsp");
+            e.printStackTrace();
+        }
     	return getQueryResult(ioParam, "/jsp/pane.jsp");
     }
 
@@ -108,7 +133,7 @@ public class Mon extends SqlAdapter {
     }
 
     public int getxml(InoutParameter ioParam) throws InterruptedException {
-        int resultInt = EventDefine.E_DOEXCUTE_INIT;
+        int resultInt = EventDefine.E_DOEXECUTE_INIT;
         HashObject ho = ioParam.getInputHashObject();
 
         try {
@@ -135,7 +160,7 @@ public class Mon extends SqlAdapter {
         } catch (Exception e) {
             LoggingWriter.setLogError(pgmID,"@Business==== Error ====" + e.getMessage());
             ioParam.setMessage(MessageDefine.M_SELECT_FAILED);
-            resultInt = EventDefine.E_DOEXCUTE_ERROR;
+            resultInt = EventDefine.E_DOEXECUTE_ERROR;
             ioParam.setResultURL("/jsp/err/errMsg.jsp");
             e.printStackTrace();
         }
@@ -144,7 +169,7 @@ public class Mon extends SqlAdapter {
 
     public int getmsg2(InoutParameter ioParam){
 
-        int resultInt           = EventDefine.E_DOEXCUTE_INIT;
+        int resultInt           = EventDefine.E_DOEXECUTE_INIT;
         HashObject ho           = ioParam.getInputHashObject();
         Connection con          = null;
         ArrayList arrResult     = new ArrayList();
@@ -167,7 +192,7 @@ public class Mon extends SqlAdapter {
             } else {
                 ioParam.setResultList(arrResult);
                 ioParam.setMessage(MessageDefine.M_SELECT_OK);
-                resultInt = EventDefine.E_DOEXCUTE_SUCCESS;
+                resultInt = EventDefine.E_DOEXECUTE_SUCCESS;
                 LoggingWriter.setLogDebug(pgmID,"@Business==== " + MessageDefine.M_SELECT_OK);
             }
 
@@ -182,7 +207,7 @@ public class Mon extends SqlAdapter {
         } catch (Exception e) {
             LoggingWriter.setLogError(pgmID,"@Business==== Error ====" + e.getMessage());
             ioParam.setMessage(MessageDefine.M_SELECT_FAILED);
-            resultInt = EventDefine.E_DOEXCUTE_ERROR;
+            resultInt = EventDefine.E_DOEXECUTE_ERROR;
             ioParam.setResultURL("/jsp/err/errMsg.jsp");
             e.printStackTrace();
         } finally {
@@ -194,7 +219,7 @@ public class Mon extends SqlAdapter {
 
     public int getxml2(InoutParameter ioParam){
 
-        int resultInt           = EventDefine.E_DOEXCUTE_INIT;
+        int resultInt           = EventDefine.E_DOEXECUTE_INIT;
         HashObject ho           = ioParam.getInputHashObject();
         Connection con          = null;
         ArrayList arrResult     = new ArrayList();
@@ -217,7 +242,7 @@ public class Mon extends SqlAdapter {
             } else {
                 ioParam.setResultList(arrResult);
                 ioParam.setMessage(MessageDefine.M_SELECT_OK);
-                resultInt = EventDefine.E_DOEXCUTE_SUCCESS;
+                resultInt = EventDefine.E_DOEXECUTE_SUCCESS;
                 LoggingWriter.setLogDebug(pgmID,"@Business==== " + MessageDefine.M_SELECT_OK);
             }
 
@@ -232,7 +257,7 @@ public class Mon extends SqlAdapter {
         } catch (Exception e) {
             LoggingWriter.setLogError(pgmID,"@Business==== Error ====" + e.getMessage());
             ioParam.setMessage(MessageDefine.M_SELECT_FAILED);
-            resultInt = EventDefine.E_DOEXCUTE_ERROR;
+            resultInt = EventDefine.E_DOEXECUTE_ERROR;
             ioParam.setResultURL("/jsp/err/errMsg.jsp");
             e.printStackTrace();
         } finally {
@@ -244,7 +269,7 @@ public class Mon extends SqlAdapter {
 
     public int getUpdateResult(InoutParameter ioParam){
 
-        int resultInt           = EventDefine.E_DOEXCUTE_INIT;
+        int resultInt           = EventDefine.E_DOEXECUTE_INIT;
         HashObject ho           = ioParam.getInputHashObject();
         Connection con          = null;
         int intResult           = 0;
@@ -267,11 +292,11 @@ public class Mon extends SqlAdapter {
             } else {
                 ioParam.setResultList(null);
                 ioParam.setMessage(MessageDefine.M_UPDATE_OK);
-                resultInt = EventDefine.E_DOEXCUTE_SUCCESS;
+                resultInt = EventDefine.E_DOEXECUTE_SUCCESS;
                 LoggingWriter.setLogDebug(pgmID,"@Business==== " + MessageDefine.M_UPDATE_OK);
             }
 
-            ioParam.setResultURL("/jsp/history.jsp");
+            ioParam.setResultURL("/jsp/updateResult.jsp");
 
         } catch(SQLException e) {
             LoggingWriter.setLogError(pgmID,"@Business==== SQL Error ====" + e.getMessage());
@@ -282,13 +307,65 @@ public class Mon extends SqlAdapter {
         } catch (Exception e) {
             LoggingWriter.setLogError(pgmID,"@Business==== Error ====" + e.getMessage());
             ioParam.setMessage(MessageDefine.M_UPDATE_FAILED);
-            resultInt = EventDefine.E_DOEXCUTE_ERROR;
+            resultInt = EventDefine.E_DOEXECUTE_ERROR;
             ioParam.setResultURL("/jsp/err/errMsg.jsp");
             e.printStackTrace();
         } finally {
             if(con != null) try {con.close();} catch(Exception ex) {};
         }
 
+        return resultInt;
+    }
+
+    public int listHistory(InoutParameter ioParam) {
+
+        int resultInt = EventDefine.E_DOEXECUTE_INIT;
+        HashObject ho = ioParam.getInputHashObject();
+        ArrayList<String[]> arrFile     = new ArrayList<String[]>();
+        try {
+            ioParam.setResultURL("/jsp/com/listHistory.jsp");
+            resultInt = EventDefine.E_DOEXECUTE_SUCCESS;
+            LoggingWriter.setLogDebug(pgmID,"@Business==== " + MessageDefine.M_SELECT_OK);
+
+            File dir = new File(path); 
+            File[] fileList = dir.listFiles(); 
+        
+            for(int i = 0 ; i < fileList.length ; i++){
+                File file = fileList[i]; 
+                if(file.isFile()){
+// System.out.println(file.getPath());
+                    // arrFile.add(new String[]{file.getName(), file.toURI().toURL().toString()});
+                    arrFile.add(new String[]{file.getName(), "history/"+file.getName()});
+                }
+            }
+            if(arrFile == null) {
+                resultInt = EventDefine.E_QUERY_NOT_RESULT;
+            } else {
+                ioParam.setResultList(arrFile);
+                ioParam.setMessage(MessageDefine.M_SELECT_OK);
+                resultInt = EventDefine.E_DOEXECUTE_SUCCESS;
+                LoggingWriter.setLogDebug(pgmID,"@Business==== " + MessageDefine.M_SELECT_OK);
+            }
+
+        } catch (Exception e) {
+            resultInt = EventDefine.E_DOEXECUTE_ERROR;
+            e.printStackTrace();
+        }
+        return resultInt;
+    }
+
+    public int getHistory(InoutParameter ioParam) {
+
+        int resultInt = EventDefine.E_DOEXECUTE_INIT;
+        HashObject ho = ioParam.getInputHashObject();
+        try {
+            ioParam.setResultURL("/" + ho.get("file",HashObject.YES));
+            resultInt = EventDefine.E_DOEXECUTE_SUCCESS;
+            LoggingWriter.setLogDebug(pgmID,"@Business==== " + MessageDefine.M_SELECT_OK);
+        } catch (Exception e) {
+            resultInt = EventDefine.E_DOEXECUTE_ERROR;
+            e.printStackTrace();
+        }
         return resultInt;
     }
 

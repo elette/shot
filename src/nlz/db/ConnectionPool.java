@@ -157,14 +157,14 @@ public class ConnectionPool {
             if(l_rsResult == null) {
                 resultInt = EventDefine.E_SQL_ERROR;
             } else {
-                resultInt = EventDefine.E_DOEXCUTE_SUCCESS;
+                resultInt = EventDefine.E_DOEXECUTE_SUCCESS;
             }
 
         } catch(SQLException e) {
             resultInt = EventDefine.E_SQL_ERROR;
             e.printStackTrace();
         } catch (Exception e) {
-            resultInt = EventDefine.E_DOEXCUTE_ERROR;
+            resultInt = EventDefine.E_DOEXECUTE_ERROR;
             e.printStackTrace();
         } finally {
             if(l_rsResult != null) try {l_rsResult.close();} catch(Exception ex) {};

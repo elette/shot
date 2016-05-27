@@ -15,7 +15,7 @@ public class EventFactory {
     * @return     int
     * @exception  Exception
     */
-    public int doExcute(InoutParameter ioParam){
+    public int doExecute(InoutParameter ioParam){
 
         /** ioParam으로부터 EventHander를 생성한다.*/
         String classID  = ioParam.getClassID();
@@ -32,7 +32,7 @@ public class EventFactory {
             Object[] paramObj  = new Object[1];
             paramObj[0]        = ioParam;
 
-            /** 클래스에서 메소드(doExcute)를 생성한다.
+            /** 클래스에서 메소드(doExecute)를 생성한다.
              * paramClass에 입력 파라메타를 담아서 넘긴다.
              */
             Method method = eventHander.getMethod(methodID,paramClass);

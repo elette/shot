@@ -321,6 +321,63 @@ function updateLogPane() {
   }
 }
 
+// Query history
+function callHistory() {
+  var url = "CommandAction?CID=Mon&CMD=listHistory&" + Math.random();
+
+  xmlHttp.open("GET", url, true);
+  xmlHttp.onreadystatechange = updateHistoryPane;
+
+  xmlHttp.send(null);
+}
+
+function updateHistoryPane() {
+  if (xmlHttp.readyState == 4) {
+    var xmlDoc=xmlHttp.responseXML;
+    var list = "";
+
+    var x = xmlDoc.evaluate("/file/item", xmlDoc, null, XPathResult.ORDERED_NODE_ITERATOR_TYPE , null);
+    var item = x.iterateNext();
+    while (item) {
+    var filename = item.textContent;
+        list += "<li title=\"" + item.childNodes[1].textContent + "\" id=\"" + item.childNodes[3].textContent + "\">" + item.childNodes[1].textContent + "</li>"
+        item = x.iterateNext();
+    }
+    $E('paneHist').innerHTML = list;
+  }
+}
+
+function callXMLHistory(fileID) {
+  var url = "CommandAction?CID=Mon&CMD=getHistory&file=" + fileID + "&" + Math.random();
+
+  xmlHttp.open("GET", url, true);
+  xmlHttp.onreadystatechange = updateGridPane;
+
+  xmlHttp.send(null);
+}
+
+function updateGridPane() {
+  if (xmlHttp.readyState == 4) {
+    var xmlDoc=xmlHttp.responseXML;
+    var list = "";
+
+    var x = xmlDoc.evaluate("/QUERY/item", xmlDoc, null, XPathResult.ORDERED_NODE_ITERATOR_TYPE , null);
+    var item = x.iterateNext();
+    $E('gridInfo').innerHTML = "";
+    while (item) {
+        var filename = item.textContent;
+        var tr = document.createElement("tr");
+        var td = document.createElement("td"); td.innerHTML = item.childNodes[1].textContent; td.className="line_td"; tr.appendChild(td);
+        td = document.createElement("td"); td.innerHTML = item.childNodes[3].textContent; td.className="line_td"; tr.appendChild(td);
+        td = document.createElement("td"); td.innerHTML = "<button onclick=\"javascript:$E('SQL').value=$(this).parent().prev().text();\">&gt;</button>"; td.className="line_td"; tr.appendChild(td);
+        $E('gridInfo').appendChild(tr);
+        item = x.iterateNext();
+    }
+    hideGridTable();
+    $E('divInfo').style.display = 'block';
+  }
+}
+
 function syncScroll() {
     // if (document.getElementById("bodyDiv").scrollLeft) {
         document.getElementById("headDiv").scrollLeft = document.getElementById("bodyDiv").scrollLeft;
@@ -409,7 +466,7 @@ function checkConn() {
     XHR(url, 'DBInfo');
 }
 
-var arrBtnL = {'StatusBox':false, 'DomBox':false, 'ClientBox':false};
+var arrBtnL = {'StatusBox':false, 'DomBox':false, 'ClientBox':false, 'HistBox':false};
 var arrBtnR = {'SQLBox':false, 'CHARTBox':false, 'LOGBox':false};
 function toggle(strBox,LR) {
 	if (LR=='L') {
@@ -867,6 +924,23 @@ function selectLog(mEvent) {
 
 }
 
+function selectHist(mEvent) {
+    if (!mEvent)
+        mEvent = window.event;
+
+  var nodeId = "";
+    if (mEvent.srcElement) {
+        nodeId = mEvent.srcElement.id;
+        name = mEvent.srcElement.title;
+    }
+    else if (mEvent.target) {
+        nodeId = mEvent.target.id;
+        name = mEvent.target.title;
+    }
+  callXMLHistory(nodeId);
+
+}
+
 function removeItem() {
 	if(!confirm("Remove selected item?")) return;
     var url = "CommandAction?CID=DOM&CMD=delNode&Name=" + $E('selectedRow').value;
@@ -979,6 +1053,8 @@ function shortKey(evt) {
 		toggle('StatusBox', 'L');
 	}else if(key == 77) {
 		toggle('DomBox', 'L');
+  }else if(key == 81) {
+    toggle('HistBox', 'L');
 	}else if(key == 71) {
 		callXML('true');
 	}else if(key == 84) {

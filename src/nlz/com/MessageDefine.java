@@ -15,7 +15,7 @@ public class MessageDefine {
 	public final static String M_NO_CLASS   = "Class Not Exists.";	//"클래스가 존재하지 않습니다.";
 
 
-	/* doExcute 에서 사용하는 변수*/
+	/* doExecute 에서 사용하는 변수*/
 	public final static String M_PARAM_UN_MATCH    = "Parameters Unmatched.";	//"파라미터가 일치하지 않습니다.";
 	public final static String M_SELECT_OK         = "Select OK.";	//"정상적으로 조회되었습니다.";
 	public final static String M_SELECT_NOT_RESULT = "No Result.";	//"해당 데이터가 존재하지 않습니다.";

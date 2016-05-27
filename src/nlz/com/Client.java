@@ -40,15 +40,15 @@ public class Client {
 
     public int list(InoutParameter ioParam) {
 
-        int resultInt = EventDefine.E_DOEXCUTE_INIT;
+        int resultInt = EventDefine.E_DOEXECUTE_INIT;
         HashObject ho = ioParam.getInputHashObject();
         try {
 
             ioParam.setResultURL("/" + xmlFile.getName());
-            resultInt = EventDefine.E_DOEXCUTE_SUCCESS;
+            resultInt = EventDefine.E_DOEXECUTE_SUCCESS;
             LoggingWriter.setLogDebug(pgmID,"@Business==== " + MessageDefine.M_SELECT_OK);
         } catch (Exception e) {
-            resultInt = EventDefine.E_DOEXCUTE_ERROR;
+            resultInt = EventDefine.E_DOEXECUTE_ERROR;
             e.printStackTrace();
         }
         return resultInt;
@@ -57,7 +57,7 @@ public class Client {
 
     public int insNode(InoutParameter ioParam) {
 
-        int resultInt = EventDefine.E_DOEXCUTE_INIT;
+        int resultInt = EventDefine.E_DOEXECUTE_INIT;
         HashObject ho = ioParam.getInputHashObject();
         try {
 
@@ -110,18 +110,18 @@ public class Client {
 
 //             xmlOutput.output(doc, System.out);
 
-            resultInt = EventDefine.E_DOEXCUTE_SUCCESS;
+            resultInt = EventDefine.E_DOEXECUTE_SUCCESS;
             LoggingWriter.setLogDebug(pgmID,"@Business==== " + MessageDefine.M_SELECT_OK);
         } catch (IOException ioe) {
             LoggingWriter.setLogError(pgmID,"@Business==== IO Error ====" + ioe.getMessage());
-            resultInt = EventDefine.E_DOEXCUTE_ERROR;
+            resultInt = EventDefine.E_DOEXECUTE_ERROR;
             ioe.printStackTrace();
         } catch (JDOMException e) {
             LoggingWriter.setLogError(pgmID,"@Business==== JDOM Error ====" + e.getMessage());
-            resultInt = EventDefine.E_DOEXCUTE_ERROR;
+            resultInt = EventDefine.E_DOEXECUTE_ERROR;
             e.printStackTrace();
         } catch (Exception e) {
-            resultInt = EventDefine.E_DOEXCUTE_ERROR;
+            resultInt = EventDefine.E_DOEXECUTE_ERROR;
             e.printStackTrace();
         }
         return resultInt;
@@ -129,7 +129,7 @@ public class Client {
 
     public int delNode(InoutParameter ioParam) {
 
-        int resultInt = EventDefine.E_DOEXCUTE_INIT;
+        int resultInt = EventDefine.E_DOEXECUTE_INIT;
         HashObject ho = ioParam.getInputHashObject();
         try {
             ioParam.setResultURL("/jsp/com/listClient.jsp");
@@ -146,18 +146,18 @@ public class Client {
             xmlOutput.setFormat(Format.getPrettyFormat());
             xmlOutput.output(doc, new FileOutputStream(xmlFile));
 
-            resultInt = EventDefine.E_DOEXCUTE_SUCCESS;
+            resultInt = EventDefine.E_DOEXECUTE_SUCCESS;
             LoggingWriter.setLogDebug(pgmID,"@Business==== " + MessageDefine.M_SELECT_OK);
         } catch (IOException ioe) {
             LoggingWriter.setLogError(pgmID,"@Business==== IO Error ====" + ioe.getMessage());
-            resultInt = EventDefine.E_DOEXCUTE_ERROR;
+            resultInt = EventDefine.E_DOEXECUTE_ERROR;
             ioe.printStackTrace();
         } catch (JDOMException e) {
             LoggingWriter.setLogError(pgmID,"@Business==== JDOM Error ====" + e.getMessage());
-            resultInt = EventDefine.E_DOEXCUTE_ERROR;
+            resultInt = EventDefine.E_DOEXECUTE_ERROR;
             e.printStackTrace();
         } catch (Exception e) {
-            resultInt = EventDefine.E_DOEXCUTE_ERROR;
+            resultInt = EventDefine.E_DOEXECUTE_ERROR;
             e.printStackTrace();
         }
         return resultInt;
