@@ -5,25 +5,29 @@
 
 int intResult = ioParam.getIntResult();
 if (intResult == 401 && dbinfo != null) { %>
-<table><tr align="center">
+<table cellspacing="4" cellpadding="1">
 <%
 if (dbinfo.length>0) {%>
-<td>
+<tr bgcolor="#555" style="line-height:1px;">
 <%
-	for (int i=0; i<dbinfo.length; i++) {
-		if (i>0) {%>
-</td><td><font style="size:18pt;">|</font></td><%
-		}%>
-</td><td><font size=1 sytle="font-size:10pt; color:#888;"><%=dbinfo[i][0]%></font><br><%=dbinfo[i][1]%><%
+	for (int i=0; i<dbinfo.length; i++) {%>
+<td></td><%
+	}%>
+<tr align="center">
+<%
+	for (int i=0; i<dbinfo.length; i++) {%>
+<td><font size=1 sytle="font-size:10pt; color:#888;"><%=dbinfo[i][0]%></font><br><%=dbinfo[i][1]%></td><%
 	}
-%>
-</td>
-<%
 	if (dbinfo[0][1].equals("DB2")) { %>
-<td>| <font onclick="javascript:getDash();" style="font-size:18pt;font-weight:normal;">≡</font>
-<font onclick="javascript:getStmm();" style="font-weight:bold;">STMM</font></td>
+<td onclick="javascript:getDash();"><font style="font-size:18pt;font-weight:normal;">≡</font></td>
+<td onclick="javascript:getStmm();"><font style="font-weight:bold;">STMM</font></td>
 <%
-	} 
+	}%>
+</tr><tr bgcolor="#555" style="line-height:1px;">
+<%
+	for (int i=0; i<dbinfo.length; i++) {%>
+<td></td><%
+	}
 }%>
 </tr></table>
 <%
