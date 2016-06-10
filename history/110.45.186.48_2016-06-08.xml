@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<QUERY>
+  <item>
+    <time>2016-06-08 11:29:18</time>
+    <sql><![CDATA[select current date from dual]]></sql>
+  </item>
+  <item>
+    <time>2016-06-08 11:29:44</time>
+    <sql><![CDATA[select current date from dual]]></sql>
+  </item>
+  <item>
+    <time>2016-06-08 11:33:46</time>
+    <sql><![CDATA[select current date from dual]]></sql>
+  </item>
+  <item>
+    <time>2016-06-08 11:34:06</time>
+    <sql><![CDATA[select 1 from sysibm.sysdymmy1]]></sql>
+  </item>
+  <item>
+    <time>2016-06-08 11:34:33</time>
+    <sql><![CDATA[select 1 from sysibm.sysdummy1]]></sql>
+  </item>
+  <item>
+    <time>2016-06-08 11:34:59</time>
+    <sql><![CDATA[select 1 from sysibm.sysdummy1]]></sql>
+  </item>
+  <item>
+    <time>2016-06-08 11:35:15</time>
+    <sql><![CDATA[select 1 from sysibm.sysdummy1]]></sql>
+  </item>
+  <item>
+    <time>2016-06-08 11:36:29</time>
+    <sql><![CDATA[select 1 from sysibm.sysdummy1]]></sql>
+  </item>
+  <item>
+    <time>2016-06-08 11:36:52</time>
+    <sql><![CDATA[select 1 from sysibm.sydummy1]]></sql>
+  </item>
+  <item>
+    <time>2016-06-08 11:37:30</time>
+    <sql><![CDATA[select 1 from sysibm.sydummy1]]></sql>
+  </item>
+  <item>
+    <time>2016-06-08 11:37:41</time>
+    <sql><![CDATA[select 1 from sysibm.sysdummy1]]></sql>
+  </item>
+  <item>
+    <time>2016-06-08 11:38:04</time>
+    <sql><![CDATA[select 1 from sysibm.sysdummy1]]></sql>
+  </item>
+  <item>
+    <time>2016-06-08 11:41:10</time>
+    <sql><![CDATA[select 1 from sysibm.sysdummy1]]></sql>
+  </item>
+  <item>
+    <time>2016-06-08 11:41:46</time>
+    <sql><![CDATA[select 1 from sysibm.sysdummy1]]></sql>
+  </item>
+  <item>
+    <time>2016-06-08 11:41:55</time>
+    <sql><![CDATA[select 1 from sysibm.ssdummy1]]></sql>
+  </item>
+  <item>
+    <time>2016-06-08 14:26:33</time>
+    <sql><![CDATA[select current date from dual]]></sql>
+  </item>
+</QUERY>
+

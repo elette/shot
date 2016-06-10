@@ -368,6 +368,8 @@ function updateGridPane() {
         var filename = item.textContent;
         var tr = document.createElement("tr");
         var td = document.createElement("td"); td.innerHTML = item.childNodes[1].textContent; td.className="line_td"; tr.appendChild(td);
+        td = document.createElement("td"); td.innerHTML = ""; td.className="line_td"; tr.appendChild(td);
+        td = document.createElement("td"); td.innerHTML = ""; td.className="line_td"; tr.appendChild(td);
         td = document.createElement("td"); td.innerHTML = item.childNodes[3].textContent; td.className="line_td"; tr.appendChild(td);
         td = document.createElement("td"); td.innerHTML = "<button onclick=\"javascript:$E('SQL').value=$(this).parent().prev().text();\">&gt;</button>"; td.className="line_td"; tr.appendChild(td);
         $E('gridInfo').appendChild(tr);
@@ -858,8 +860,10 @@ function selectRow(mEvent) {
 
     trackItemHighlight(mEvent);
     $E('selectedRow').value = strID;
-	$E("SQL").focus();
 	if(!arrBtnR['SQLBox']) toggle('SQLBox','R');
+  document.getElementById("SQL").focus()
+  // $E('SQL').focus();
+  // $('#SQL').trigger('focus');
 
 }
 
