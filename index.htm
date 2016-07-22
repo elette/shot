@@ -5,6 +5,7 @@
 <link rel="stylesheet" href="./css/style_Astro.css" type="text/css" />
 <link rel="stylesheet" href="./css/modaldbox.css" type="text/css" />
 <link rel="stylesheet" href="./css/dhtmlxchart.css" type="text/css" />
+<link rel="stylesheet" href="./css/card.css" type="text/css" />
 <script type="text/javascript" src="./js/modaldbox.js"></script>
 <script type="text/javascript" charset="UTF-8" src="./js/html5chart.js"></script>
 <script type="text/javascript" charset="UTF-8" src="./js/jquery.min.js"></script>
@@ -87,6 +88,7 @@ function OKSelected() {
 <tr><td><div id="paneDOM" class="scrollbar" style="width:150px;height:200px;" onMouseDown="javascript:selectRow(event);"></div></td></tr>
             <tr><td height="20" colspan="2" align="center">
             <button onclick="javascript:callXML('true');">Get</button>
+            <button onclick="javascript:callCard('true');">Card</button>
             <button onclick="javascript:sm('ItemBox', 307, 199);">+</button>
             <button onclick="javascript:removeItem();">×</button>
             </td></tr>
@@ -185,6 +187,7 @@ function OKSelected() {
 <div id="divInfo" class="scrollbar" style="position:absolute; width:90%; height:250px; left:22; bottom:0;display:none;">
 <table id="gridInfo" border="0" cellspacing="1" cellpadding="1" style="vertical-align:top;"></table>
 </div>
+<div id="paneCard" class="scrollbar" style="position:absolute; width:90%; height:400px; left:40; top:60;display:none;">
 <span id="msgbox" style="border:none;display:none;">
 <table width="100%" border="0" cellspacing="0" cellpadding="1"><tr><th align="left">Message detail</th>
 <th style="display:none;"><div id="SQLMSG"></div></th>

@@ -197,6 +197,18 @@ function callXML(bTot) {
   xmlHttp.send(null);
 }
 
+function callCard(bTot) {
+  var url = "CommandAction?CID=DOM&CMD=list&" + Math.random();
+
+  xmlHttp.open("GET", url, true);
+  if (bTot == 'true') {
+    xmlHttp.onreadystatechange = updateCardPane;
+    wheel(0, 'DomStatus');
+  }
+
+  xmlHttp.send(null);
+}
+
 function callXMLClient(bTot) {
   var url = "CommandAction?CID=Client&CMD=list&" + Math.random();
 
@@ -282,6 +294,49 @@ function updateDOMPane() {
 	// console.log(list);
     clearTimeout(runc);
     $E('DomStatus').innerHTML = '&nbsp;&nbsp;';
+  }
+}
+
+function updateCardPane() {
+  if (xmlHttp.readyState == 4) {
+    var xmlDoc=xmlHttp.responseXML;
+    var list = "";
+
+  var cat = xmlDoc.evaluate("/menu/item/@cat", xmlDoc, null, XPathResult.UNORDERED_NODE_ITERATOR_TYPE , null);
+// console.info("list : " + cat.type);
+  var category = new Array();
+  var c = cat.iterateNext();
+  while(c) {
+// console.log(c.value + ", " + category.length);
+  if (category.length == 0 || category.indexOf(c.value) == -1) category.push(c.value);
+// console.log("length: " + category.length + ", " + category[category.length-1]);
+    c = cat.iterateNext();
+  }
+  list += "";
+  for (i=0; i<category.length; i++) {
+    list += "<div style=\"float:left\">" + category[i] + "<div id=\"wrapper\" class=\"scrollbar\">" + "<ul id=\"cards\">" + "<li style=\"left:100px;display:block;\"/>";
+    var x = xmlDoc.evaluate("/menu/item[@cat='" + category[i] + "']/name", xmlDoc, null, XPathResult.ORDERED_NODE_ITERATOR_TYPE , null);
+    var item = x.iterateNext();
+    var offset=100;
+    var gap=1;
+    while (item) {
+          // console.log(item.parentNode.childNodes[7].textContent);
+  //         list += "<li title=\"" + item.parentNode.childNodes[5].textContent + "\" id=\"" + item.textContent + "\" onClick='selectRow(this);'>" + item.textContent + "</li>"
+      list += "<li style=\"margin-left:" + (offset+gap*-8) + "px; margin-top:-150px;\" title=\"" + item.parentNode.childNodes[5].textContent + "\" id=\"" + item.textContent + "\" desc=\"" + item.parentNode.childNodes[7].textContent + "\">" + item.textContent + "</li>"
+      item = x.iterateNext();
+      gap++;
+    }
+    list += "</ul></div></div>";
+  //    alert(list);
+  }
+  list += "";
+    $E('paneCard').innerHTML = list;
+  // console.log(list);
+    clearTimeout(runc);
+    $E('DomStatus').innerHTML = '&nbsp;&nbsp;';
+
+    toggle('DomBox', 'L');
+    $E('paneCard').style.display = "block";
   }
 }
 
