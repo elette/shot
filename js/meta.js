@@ -314,15 +314,13 @@ function updateCardPane() {
   }
   list += "";
   for (i=0; i<category.length; i++) {
-    list += "<div style=\"float:left\">" + category[i] + "<div id=\"wrapper\" class=\"scrollbar\">" + "<ul id=\"cards\">" + "<li style=\"left:100px;display:block;\"/>";
+    list += "<div style=\"float:left\">" + category[i] + "<div id=\"wrapper\" class=\"scrollbar\">" + "<ul id=\"cards\">" + "<li style=\"left:0px;display:block;\"/>";
     var x = xmlDoc.evaluate("/menu/item[@cat='" + category[i] + "']/name", xmlDoc, null, XPathResult.ORDERED_NODE_ITERATOR_TYPE , null);
     var item = x.iterateNext();
-    var offset=100;
+    var offset=0;
     var gap=1;
     while (item) {
-          // console.log(item.parentNode.childNodes[7].textContent);
-  //         list += "<li title=\"" + item.parentNode.childNodes[5].textContent + "\" id=\"" + item.textContent + "\" onClick='selectRow(this);'>" + item.textContent + "</li>"
-      list += "<li style=\"margin-left:" + (offset+gap*-8) + "px; margin-top:-150px;\" title=\"" + item.parentNode.childNodes[5].textContent + "\" id=\"" + item.textContent + "\" desc=\"" + item.parentNode.childNodes[7].textContent + "\">" + item.textContent + "</li>"
+      list += "<li style=\"margin-left:" + (offset+gap*24) + "px; margin-top:-100px;\" title=\"" + item.parentNode.childNodes[5].textContent + "\" id=\"" + item.textContent + "\" desc=\"" + item.parentNode.childNodes[7].textContent + "\">" + item.textContent + "</li>"
       item = x.iterateNext();
       gap++;
     }
@@ -338,6 +336,20 @@ function updateCardPane() {
     toggle('DomBox', 'L');
     $E('paneCard').style.display = "block";
   }
+
+  var lastScrollTop = 0;
+
+  $('[id="wrapper"]').scroll(function(e) {
+      var scrollTop = $(this).scrollTop()    
+      if (scrollTop === lastScrollTop) {
+          // Vertical scroll position is unchanged, so we're scrolling horizontal.
+          $(this).scrollTop($(this).scrollLeft());
+      } else {
+          // Vertical scroll position has changed, so we're scrolling vertical.
+          $(this).scrollLeft($(this).scrollTop());
+      }
+      lastScrollTop = scrollTop;
+  });
 }
 
 function updateClientPane() {
@@ -1124,3 +1136,4 @@ function shortKey(evt) {
  		$E('divInfo').style.display = ($E('divInfo').style.display == 'block')? "none" : "block";
 	}
 }
+

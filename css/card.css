@@ -1,26 +1,39 @@
 #paneCard {
 	width:900px;
-	height:500px;
-	overflow:auto;
+	height:auto;
+	overflow:scroll;
 	margin:0 auto;
 	/*text-align:center;*/
 }
+#paneCard::-webkit-scrollbar {
+    display: none;
+}
+
 
 #wrapper {
-	width:400px;
-	height:500px;
-	overflow:auto;
+	width:300px;
+	height:300px;
+	overflow:scroll;
 	margin:0 auto;
 	/*text-align:center;*/
+/*	scroll-snap-points-y: repeat(100%);
+	scroll-snap-points-x: repeat(100%);
+	scroll-snap-type: mandatory;
+	scroll-snap-destination: 20px 20px;
+*/
+}
+#wrapper::-webkit-scrollbar {
+    display: none;
 }
 
 ul#cards {
 	list-style:none;
+
 }
 
 ul#cards li {
 	width:200px; 
-	height:150px; 
+	height:100px; 
 	display:block; 
 	float:left; 
 	padding:5px;
@@ -35,8 +48,8 @@ ul#cards li {
 
 ul#cards li:hover {
 	z-index:1;
-	-moz-transform: scale(1.2) translate(20px, 10px);
-	-webkit-transform: scale(1.2) translate(20px, 10px);
+	-moz-transform: scale(1.2) translate(-20px, -40px);
+	-webkit-transform: scale(1.2) translate(-20px, -40px);
 	
 }
 	
