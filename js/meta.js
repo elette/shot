@@ -300,7 +300,7 @@ function updateDOMPane() {
 function updateCardPane() {
   if (xmlHttp.readyState == 4) {
     var xmlDoc=xmlHttp.responseXML;
-    var list = "";
+    var list = "<table width=100%><tr><td align=right><button onclick='javascript:$E(\"paneCard\").style.display=\"none\";'>X</button></td></tr></table>";
 
   var cat = xmlDoc.evaluate("/menu/item/@cat", xmlDoc, null, XPathResult.UNORDERED_NODE_ITERATOR_TYPE , null);
 // console.info("list : " + cat.type);
@@ -320,7 +320,7 @@ function updateCardPane() {
     var offset=0;
     var gap=1;
     while (item) {
-      list += "<li style=\"margin-left:" + (offset+gap*24) + "px; margin-top:-100px;\" title=\"" + item.parentNode.childNodes[5].textContent + "\" id=\"" + item.textContent + "\" desc=\"" + item.parentNode.childNodes[7].textContent + "\">" + item.textContent + "</li>"
+      list += "<li style=\"margin-left:" + (offset+gap*12) + "px; margin-top:-100px;\" title=\"" + item.parentNode.childNodes[5].textContent + "\" id=\"" + item.textContent + "\" desc=\"" + item.parentNode.childNodes[7].textContent + "\">" + item.textContent + "</li>"
       item = x.iterateNext();
       gap++;
     }
@@ -338,18 +338,44 @@ function updateCardPane() {
   }
 
   var lastScrollTop = 0;
+  var ScrollH;
 
   $('[id="wrapper"]').scroll(function(e) {
-      var scrollTop = $(this).scrollTop()    
+      var scrollTop = $(this).scrollTop();
       if (scrollTop === lastScrollTop) {
           // Vertical scroll position is unchanged, so we're scrolling horizontal.
-          $(this).scrollTop($(this).scrollLeft());
+          $(this).scrollTop(Math.floor(1.0 * $(this).scrollLeft()));
       } else {
           // Vertical scroll position has changed, so we're scrolling vertical.
-          $(this).scrollLeft($(this).scrollTop());
+          $(this).scrollLeft(Math.floor(0.5 * $(this).scrollTop()));
       }
-      lastScrollTop = scrollTop;
+      lastScrollTop = 0.5 * scrollTop;
+      ScrollH = $(this).scrollHeight;
+
+      var lenCards = $(this).find('li').last().index();
+      $(this).find('li').each(function(index) {
+        console.log(lenCards + ", " + lastScrollTop + ", " + index + ", " + (Math.round(lastScrollTop/9/lenCards + "," + ScrollH)));
+        $(this).css("-webkit-transform", "scale(" + ( 1.1 - 0.015*Math.abs(Math.round(lastScrollTop/9)-index)) + ")");
+      });
   });
+
+  // $('[id="wrapper"]').scroll(function(e) {
+  //   // var scrollTop = $(this).scrollTop();
+  //   // var offset = 0;
+  //   // var factorX = 2, factorY = 2;
+  //   // var blockOffsetX = 0;
+  //   // var blockOffsetY = 0;
+
+  //   // offset = (scrollTop < lastScrollTop) ?1:-1;
+  //   // blockOffsetX += offset * factorX;
+  //   // blockOffsetY -= offset * factorY;
+
+  //   var scrollTop = $(this).scrollTop() * -1;
+  //   $(this).css({ 
+  //     transform: 'translate3d(' + scrollTop + 'px, ' + scrollTop + 'px, 0)'
+  //   });
+  // });
+
 }
 
 function updateClientPane() {
