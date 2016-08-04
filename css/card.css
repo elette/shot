@@ -11,16 +11,10 @@
 
 
 #wrapper {
-	width:300px;
-	height:300px;
+	width:800px;
+	height:200px;
 	overflow:scroll;
 	margin:0 auto;
-	/*text-align:center;*/
-/*	scroll-snap-points-y: repeat(100%);
-	scroll-snap-points-x: repeat(100%);
-	scroll-snap-type: mandatory;
-	scroll-snap-destination: 20px 20px;
-*/
 }
 #wrapper::-webkit-scrollbar {
     display: none;
@@ -28,7 +22,7 @@
 
 ul#cards {
 	list-style:none;
-
+	margin:0px;
 }
 
 ul#cards li {
@@ -39,17 +33,18 @@ ul#cards li {
 	padding:5px;
 	border: 1px solid #333; 
 	position:relative; 
-	margin:10px 10px; 
 	background:#222; 
+	text-align:left;
 	opacity:0.7; 
 	color:#FFF; 
 	border-bottom:3px solid #333; 
 }
-
+/*
 ul#cards li:hover {
-	z-index:1;
+	z-index:101;
+	opacity:1.0;
 	-moz-transform: scale(1.2) translate(-20px, -40px);
 	-webkit-transform: scale(1.2) translate(-20px, -40px);
 	
 }
-	
+*/	

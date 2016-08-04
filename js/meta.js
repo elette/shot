@@ -301,82 +301,127 @@ function updateCardPane() {
   if (xmlHttp.readyState == 4) {
     var xmlDoc=xmlHttp.responseXML;
     var list = "<table width=100%><tr><td align=right><button onclick='javascript:$E(\"paneCard\").style.display=\"none\";'>X</button></td></tr></table>";
+    $E('paneCard').innerHTML = list;  //dyn
 
   var cat = xmlDoc.evaluate("/menu/item/@cat", xmlDoc, null, XPathResult.UNORDERED_NODE_ITERATOR_TYPE , null);
 // console.info("list : " + cat.type);
   var category = new Array();
+  var eleTab = document.createElement("table"); eleTab.style = "vertical-align:top;border:1px #555"; 
+  var Tr = document.createElement("tr"); //Tr.className = "line_td"; 
+  var Td = document.createElement("td"); Td.className = "line_td"; 
+  var Td2 = document.createElement("td"); Td2.rowSpan = 100;  
+  var Div = document.createElement("div"); Div.id = "wrapper"; Td2.appendChild(Div); 
+  Tr.appendChild(Td); Tr.appendChild(Td2); eleTab.appendChild(Tr);
   var c = cat.iterateNext();
   while(c) {
 // console.log(c.value + ", " + category.length);
   if (category.length == 0 || category.indexOf(c.value) == -1) category.push(c.value);
-// console.log("length: " + category.length + ", " + category[category.length-1]);
     c = cat.iterateNext();
   }
-  list += "";
+
   for (i=0; i<category.length; i++) {
-    list += "<div style=\"float:left\">" + category[i] + "<div id=\"wrapper\" class=\"scrollbar\">" + "<ul id=\"cards\">" + "<li style=\"left:0px;display:block;\"/>";
-    var x = xmlDoc.evaluate("/menu/item[@cat='" + category[i] + "']/name", xmlDoc, null, XPathResult.ORDERED_NODE_ITERATOR_TYPE , null);
-    var item = x.iterateNext();
-    var offset=0;
-    var gap=1;
-    while (item) {
-      list += "<li style=\"margin-left:" + (offset+gap*12) + "px; margin-top:-100px;\" title=\"" + item.parentNode.childNodes[5].textContent + "\" id=\"" + item.textContent + "\" desc=\"" + item.parentNode.childNodes[7].textContent + "\">" + item.textContent + "</li>"
-      item = x.iterateNext();
-      gap++;
-    }
-    list += "</ul></div></div>";
-  //    alert(list);
+    var eleTr = document.createElement("tr");
+    var eleTd = document.createElement("td"); eleTd.className = "line_td"; 
+    var strCat = category[i];
+
+    eleTd.innerHTML = strCat;
+    // eleTd.addEventListener("click", function() {
+    //   updateCardSubPane(xmlDoc, strCat);
+    // });
+    var clickHandler = function(clickedTD) { 
+      return function() {
+        updateCardSubPane(xmlDoc, clickedTD.innerHTML); 
+      };
+    };
+    // eleTd.onclick = function() { updateCardSubPane(xmlDoc, strCat); }
+    eleTd.onclick = clickHandler(eleTd);
+
+    eleTr.appendChild(eleTd); eleTab.appendChild(eleTr);
   }
-  list += "";
-    $E('paneCard').innerHTML = list;
-  // console.log(list);
-    clearTimeout(runc);
-    $E('DomStatus').innerHTML = '&nbsp;&nbsp;';
+  $E('paneCard').appendChild(eleTab);
+  clearTimeout(runc);
+  $E('DomStatus').innerHTML = '&nbsp;&nbsp;';
 
-    toggle('DomBox', 'L');
-    $E('paneCard').style.display = "block";
-  }
-
-  var lastScrollTop = 0;
-  var ScrollH;
-
-  $('[id="wrapper"]').scroll(function(e) {
-      var scrollTop = $(this).scrollTop();
-      if (scrollTop === lastScrollTop) {
-          // Vertical scroll position is unchanged, so we're scrolling horizontal.
-          $(this).scrollTop(Math.floor(1.0 * $(this).scrollLeft()));
-      } else {
-          // Vertical scroll position has changed, so we're scrolling vertical.
-          $(this).scrollLeft(Math.floor(0.5 * $(this).scrollTop()));
-      }
-      lastScrollTop = 0.5 * scrollTop;
-      ScrollH = $(this).scrollHeight;
-
-      var lenCards = $(this).find('li').last().index();
-      $(this).find('li').each(function(index) {
-        console.log(lenCards + ", " + lastScrollTop + ", " + index + ", " + (Math.round(lastScrollTop/9/lenCards + "," + ScrollH)));
-        $(this).css("-webkit-transform", "scale(" + ( 1.1 - 0.015*Math.abs(Math.round(lastScrollTop/9)-index)) + ")");
-      });
-  });
-
-  // $('[id="wrapper"]').scroll(function(e) {
-  //   // var scrollTop = $(this).scrollTop();
-  //   // var offset = 0;
-  //   // var factorX = 2, factorY = 2;
-  //   // var blockOffsetX = 0;
-  //   // var blockOffsetY = 0;
-
-  //   // offset = (scrollTop < lastScrollTop) ?1:-1;
-  //   // blockOffsetX += offset * factorX;
-  //   // blockOffsetY -= offset * factorY;
-
-  //   var scrollTop = $(this).scrollTop() * -1;
-  //   $(this).css({ 
-  //     transform: 'translate3d(' + scrollTop + 'px, ' + scrollTop + 'px, 0)'
-  //   });
-  // });
+  toggle('DomBox', 'L');
+  $E('paneCard').style.display = "block";
 
 }
+
+  function updateCardSubPane(xmlDoc, category) {
+      // var eleDiv = document.createElement("div"); eleDiv.style = "float:left"; eleDiv.innerHTML = category[i];
+      // var eleSubDiv = document.createElement("div"); //eleSubDiv.className = "scrollbar"; 
+      // eleSubDiv.id = "wrapper";
+
+      // $('[id="wrapper"]').innerHTML = "";
+      $E('wrapper').innerHTML = "";
+      var eleUl = document.createElement("ul"); eleUl.id = "cards";
+      var eleLi = document.createElement("li"); eleLi.style = "left:0px;top:0px;visibility:hidden;";
+      eleUl.appendChild(eleLi); 
+      // $('[id="wrapper"]').appendChild(eleUl); 
+      $E('wrapper').appendChild(eleUl); 
+      // eleDiv.appendChild(eleSubDiv); 
+      // $E('paneCard').appendChild(eleDiv);
+
+
+      var x = xmlDoc.evaluate("/menu/item[@cat='" + category + "']/name", xmlDoc, null, XPathResult.ORDERED_NODE_ITERATOR_TYPE , null);
+      
+      var item = x.iterateNext();
+      var offset=0;
+      var gap=1;
+      while (item) {
+        eleLi = document.createElement("li"); eleLi.style = "margin-left:"+(offset-190)+"px; top:"+(gap*20)+"px;";
+        eleLi.innerHTML = item.textContent;
+        eleUl.appendChild(eleLi);
+  
+        item = x.iterateNext();
+        gap++;
+      }
+      // list += "</ul></div></div>";
+    //    alert(list);
+    
+    // list += "";
+      // $E('paneCard').innerHTML = list;
+    // console.log(list);
+    }
+
+    var lastScrollTop = 100;
+    var ScrollH;
+
+    $('[id="wrapper"]').scroll(function(e) {
+        var scrollTop = $(this).scrollTop();
+        var curScrollTop = scrollTop;
+        // if (scrollTop === lastScrollTop) {
+        //     // Vertical scroll position is unchanged, so we're scrolling horizontal.
+        //     $(this).scrollTop(Math.floor(1.0 * $(this).scrollLeft()));
+        // } else {
+        //     // Vertical scroll position has changed, so we're scrolling vertical.
+        //     $(this).scrollLeft(Math.floor(0.5 * $(this).scrollTop()));
+        // }
+        lastScrollTop = scrollTop;
+        ScrollH = $(this)[0].scrollHeight;
+
+        var curPos = 0;
+        var lenCards = $(this).find('li').last().index();
+        $(this).find('li').each(function(index) {
+          curPos = Math.floor((lastScrollTop+1)/ScrollH*lenCards*3);
+          // curPos = (curScrollTop >= lastScrollTop)? curPos+1 : curPos-1;
+
+          // console.log("lenCards:"+lenCards + ", lastScrollTop:"+lastScrollTop + ", index:"+index + ", calculated:" + curPos + ", scrollHeight:"+ScrollH);
+
+          // $(this).css((curPos>index)?"left":"right", (Math.abs(curPos - index)*10)+"px");
+          // $(this).css((curPos>index)?"right":"left", "");
+          // $(this).css("margin-left", (index*-100)+"px");
+          $(this).css("top", (200-Math.abs(curPos - index)*20) + "px"); 
+          $(this).css("zIndex", 100-Math.abs(curPos - index));
+          $(this).css("-webkit-transform", "scale(" + ( 1.1 - 0.03*Math.abs(curPos - index)) + ")");
+
+          $(this).css("backgroundColor", (curPos == index)? "#555": "") ;
+          $(this).css("opacity", (curPos == index)? 1.0: 0.7) ;
+          $(this).css("-webkit-transform", (curPos == index)? "scale(1.3) translate(20px, -60px)": "") ;
+        });
+    });
+
+  }
 
 function updateClientPane() {
   if (xmlHttp.readyState == 4) {
