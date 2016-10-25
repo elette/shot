@@ -4,7 +4,7 @@
 	ArrayList<String[]> arrList = ioParam.getResultList();
 %><%
 if (!arrList.isEmpty()) {
-%><table border="0" cellspacing="1" cellpadding="2" valign="middle"><%
+%><table border="1" cellspacing="0" cellpadding="2" valign="middle"><%
 	for(String[] strLine : arrList) {%>
 		<tr><%
 		for(String strCell : strLine) {%>

@@ -32,9 +32,10 @@ public class JoinParser {
             LoggingWriter.setLogDebug(pgmID,"@Business==== " + MessageDefine.M_SELECT_OK);
 
             joinRelationAnalyze analysis = new joinRelationAnalyze( (String)ho.get("SQL",HashObject.YES), EDbVendor.dbvoracle );
-            strSplit = analysis.getAnalysisResult().split("\n");
+
+            strSplit = analysis.getAnalysisResult().split("\r\n");
             for(String each : strSplit) {
-                arrResult.add( (String[])each.split("\t") ) ;
+                arrResult.add( (String[])each.replaceAll("\t\t","\t").split("\t") ) ;
             }
 
             if(arrResult == null) {
