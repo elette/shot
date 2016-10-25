@@ -48,6 +48,10 @@
             <param-name>LOG_PATH</param-name>
             <param-value>C:/apache-tomcat-6.0.43/webapps/shot/logs</param-value>
         </init-param>
+        <init-param>
+            <param-name>HIST_PATH</param-name>
+            <param-value>C:/apache-tomcat-6.0.43/webapps/shot/history</param-value>
+        </init-param>
         <load-on-startup>1</load-on-startup>
     </servlet>
     <servlet-mapping>

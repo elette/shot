@@ -160,7 +160,7 @@ function urlfmt(txt) {
 
 function callServer(SQL) {
     // $E('sqllist').value = SQL;
-//     alert(SQL.replace(/\n/g, " ");
+    // alert(SQL.replace(/\n/g, " ");
     var url = "CommandAction?CID=Mon&CMD=list&SQL=" + urlfmt(SQL);
     // var url = "CommandAction?CID=Mon&CMD=list&SQL=" + encodeURI(SQL);
 	// $E('gridTable').style.top = (GRIDMAX)? window.innerHeight-250 : '22px' ;
@@ -232,6 +232,17 @@ function callXMLLog() {
   xmlHttp.onreadystatechange = updateLogPane;
 
   xmlHttp.send(null);
+}
+
+function callServerJoin(SQL) {
+    var url = "CommandAction?CID=SqlP&CMD=getJoin&SQL=" + urlfmt(SQL);
+
+  $E('divInfo').style.display = 'none';
+    // $E('gridTable').style.top = window.innerHeight-$E('gridTable').clientHeight;
+    $E('gridTable').style.top = window.innerHeight-250;
+    // $E('gridTable').style.bottom = 0;
+  $E('gridTable').style.visibility = "visible";
+    XHR(url, 'pane');
 }
 
 function callServerUpdate(SQL) {
@@ -371,6 +382,7 @@ function updateCardPane() {
       while (item) {
         eleLi = document.createElement("li"); eleLi.style = "margin-left:"+(offset-190)+"px; top:"+(gap*20)+"px;";
         eleLi.innerHTML = item.textContent;
+        eleLi.title = item.parentNode.childNodes[5].textContent;
         eleUl.appendChild(eleLi);
   
         item = x.iterateNext();

@@ -20,9 +20,9 @@ import nlz.com.LoggingWriter;
 import nlz.com.MessageDefine;
 import nlz.com.ServiceDelegator;
 import nlz.db.ConnectionPool;
-import nlz.com.DOM;
-import nlz.com.Client;
-import nlz.com.Log;
+import nlz.DOM;
+import nlz.Client;
+import nlz.Log;
 import nlz.Mon;
 
 

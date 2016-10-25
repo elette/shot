@@ -144,5 +144,27 @@
     <version />
     <desc />
   </item>
+  <item name="OptimDirectory" cseq="20160524134920">
+    <dbms>DB2</dbms>
+    <system>WindowsXP</system>
+    <server>192.168.161.129</server>
+    <port>50000</port>
+    <database>db2udb</database>
+    <instance>db2</instance>
+    <pass>db2</pass>
+    <version />
+    <desc />
+  </item>
+  <item name="ERPARDEVDB" cseq="2081">
+    <dbms>ORACLE</dbms>
+    <system>ERPARDEVDB</system>
+    <server>erpardev.koreanair.com</server>
+    <port>1590</port>
+    <database>ERPARDEV</database>
+    <instance>optim</instance>
+    <pass>optim4kal</pass>
+    <version />
+    <desc />
+  </item>
 </customer>
 

@@ -16,6 +16,7 @@ import java.util.*;
 import com.ibm.db2.jcc.*;
 import org.netezza.*;
 import com.vertica.jdbc.*;
+import oracle.jdbc.driver.*;
 import nlz.com.EventDefine;
 
 public class ConnectionPool {
@@ -65,6 +66,11 @@ public class ConnectionPool {
 				props.setUrl("jdbc:vertica://" + host + ":" + port + "/" + db);
 				props.setDriverClassName("com.vertica.jdbc.Driver");
 				props.setValidationQuery("SELECT 1");
+				props.setConnectionProperties("[ConnectionLoadBalance=1;SessionLabel=diagmon;]");
+			}else if (dbms.equals("ORACLE")) {
+				props.setUrl("jdbc:oracle:thin:@//" + host + ":" + port + "/" + db);
+				props.setDriverClassName("oracle.jdbc.driver.OracleDriver");
+				props.setValidationQuery("SELECT 1 FROM DUAL");
 				props.setConnectionProperties("[ConnectionLoadBalance=1;SessionLabel=diagmon;]");
 			}
 
