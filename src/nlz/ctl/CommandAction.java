@@ -51,7 +51,7 @@ public class CommandAction extends HttpServlet {
             String CONFIG_PATH = config.getInitParameter("CONFIG_PATH"); //XML파일 output (설정, 쿼리, snap)
             String CLIENT_PATH = config.getInitParameter("CLIENT_PATH"); //고객 접속정보
             String LOG_PATH    = config.getInitParameter("LOG_PATH"); //로그 저장 경로
-            String HIST_PATH   = config.getInitParameter("HIST_PATH"); //텿uery history
+            String HIST_PATH   = config.getInitParameter("HIST_PATH"); //Query history
 
             loggingWriter = new LoggingWriter(LOG_LEVEL,SYS_OUT,FILE_OUT,LOG_DIR);
             xmlDom        = new DOM(CONFIG_PATH);

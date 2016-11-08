@@ -245,6 +245,21 @@ function callServerJoin(SQL) {
     XHR(url, 'pane');
 }
 
+function callServerWeb(PY) {
+    var url = "CommandAction?CID=WebP&CMD=getWeb&PY=" + urlfmt(PY) + "&" + Math.random();
+
+  xmlHttp.open("GET", url, true);
+  xmlHttp.onreadystatechange = updateWebPane;
+  wheel(0, 'DomStatus');
+  xmlHttp.send(null);
+  // $E('divInfo').style.display = 'none';
+  //   // $E('gridTable').style.top = window.innerHeight-$E('gridTable').clientHeight;
+  //   $E('gridTable').style.top = window.innerHeight-250;
+  //   // $E('gridTable').style.bottom = 0;
+  // $E('gridTable').style.visibility = "visible";
+  //   XHR(url, 'pane');
+}
+
 function callServerUpdate(SQL) {
     var url = "CommandAction?CID=Mon&CMD=getUpdateResult&SQL=" + urlfmt(SQL);
 
@@ -470,6 +485,21 @@ function updateLogPane() {
     $E('paneLog').innerHTML = list;
   }
 }
+
+function updateWebPane() {
+  if (xmlHttp.readyState == 4) {
+    var results=xmlHttp.responseText;
+    var list = "<table width=100%><tr><td align=right><button onclick='javascript:$E(\"paneCard\").style.display=\"none\";'>X</button></td></tr></table>";
+    $E('paneCard').innerHTML = list + "<br>" + results;  //dyn
+    clearTimeout(runc);
+    $E('DomStatus').innerHTML = '&nbsp;&nbsp;';
+
+    toggle('DomBox', 'L');
+    $E('paneCard').style.display = "block";
+
+  }
+}
+
 
 // Query history
 function callHistory() {
