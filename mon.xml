@@ -1522,20 +1522,22 @@ ORDER BY
     <name>AD Results(format)</name>
     <sql><![CDATA[SELECT
     a.ARCHIVE_SEQ,
-    a.BIZ_CATEGORY,
+    a.BIZ_CATEGORY || '-' || substr(a.DESCRIPTION, 1, decode(instr(a.DESCRIPTION, '-'),0,100,instr(a.DESCRIPTION, '-')-1)) as BIZ,
     b.AD_NAME,
     a2.ARCH_ID,
     a2.ARCH_ACTION,
     a2.REQ_NAME,
-	'' 차수,
+	1 차수,
     a2.START_TIME,
     a2.ELLAPSED_TIME,
     a2.ROWS_ARCHIVED,
     a2.TABLE_NAME,
     a2.ARCHIVED_ROWS,
+	a2.P_AD_NAME,
 	a2.BIZ_NAME,
 	a2.START_DATE,
 	a2.END_DATE,
+	a2.P_ARCH_ID,
 	a2.PRE_ARCH_ID,
 	a2.BIZ_CODE,
 	a2.CUTOFF_DATE,
@@ -1550,7 +1552,6 @@ ORDER BY
 	a2.END_BP,
 	a2.START_MON,
 	a2.END_MON
-
 --    a2.*
 FROM
     OPTIM.ARCH_POLICY_INFO a,
@@ -1561,11 +1562,11 @@ FROM
             c.TABLE_NAME,
             c.ARCHIVED_ROWS,
             d.archive_seq,
---			d.AD_NAME as p_ad_name,
+			d.P_AD_NAME,
 			d.BIZ_NAME,
 			d.START_DATE,
 			d.END_DATE,
---			d.ARCH_ID as p_arch_id,
+			d.P_ARCH_ID,
 			d.PRE_ARCH_ID,
 			d.BIZ_CODE,
 			d.CUTOFF_DATE,
@@ -1624,11 +1625,11 @@ FROM
                             OPTIM.ARCH_JOB_PARAM_INFO
                     ) PIVOT(
                         MAX(PARAM_VALUE) FOR PARAM_NAME IN(
---						'AD_NAME' as AD_NAME,
+						'AD_NAME' as P_AD_NAME,
 						'BIZ_NAME' as BIZ_NAME,
 						'START_DATE' as START_DATE,
 						'END_DATE' as END_DATE,
---						'ARCH_ID' as ARCH_ID,
+						'ARCH_ID' as P_ARCH_ID,
 						'PRE_ARCH_ID' as PRE_ARCH_ID,
 						'BIZ_CODE' as BIZ_CODE,
 						'CUTOFF_DATE' as CUTOFF_DATE,
@@ -1657,12 +1658,36 @@ WHERE
     AND b.AD_NAME = a2.AD_NAME(+)
     AND b.AD_NAME not like '%_AP'
 --    and a2.start_time > to_date('2016-10-18', 'YYYY-MM-DD')
-and a.archive_seq = 'AHL001'
+and a.archive_seq = 'XLA007'
 --and b.ad_name = 'WIP.AD_WIP_PA'
 ORDER BY
     1,
     3]]></sql>
     <desc><![CDATA[ARCHIVE_SEQ 입력으로 결과 건수 조회]]></desc>
+  </item>
+  <item cat="KAL">
+    <schema>Oracle</schema>
+    <name>Column Mapping</name>
+    <sql><![CDATA[with v_obj as (
+--	select obj_id, obj_name, obj_type, listagg(def,'') within group (order by seqno) as defs
+--	  from (
+--	select obj_id, obj_name, obj_type, xmlagg(xmlelement(col,'',def) order by seqno).extract('//text()').getclobval() as def
+--	  from (
+			select obj_id, obj_name, obj_type, seqno, concat(definition1, concat(definition2, concat(definition3, definition4))) as def
+			  from pstarchdata.pstobj2
+--	) 
+--	 group by obj_id, obj_name, obj_type
+)
+select distinct req.obj_id, req.obj_name as req, ld.obj_name as load, tm.obj_name as tm, cm.obj_name as cm
+  from v_obj req, v_obj ld, v_obj tm, v_obj cm
+ where req.obj_type = 'W' and ld.obj_type in ('L', 'I') and tm.obj_type = 'T' and cm.obj_type = 'C'
+   and req.obj_id = ld.obj_id and ld.obj_id = tm.obj_id and tm.obj_id = cm.obj_id
+   and req.obj_name = 'RR_AHLP_PA'
+   and instr(req.def, ld.obj_id) > 1 and instr(req.def, ld.obj_name) > 1
+   and instr(ld.def, tm.obj_id) > 1 and instr(ld.def, tm.obj_name) > 1
+   and instr(tm.def, cm.obj_id) > 1 and instr(tm.def, cm.obj_name) > 1
+ order by req.obj_id, req.obj_name]]></sql>
+    <desc><![CDATA[Restore, Load or Insert, TM, and CM]]></desc>
   </item>
 </menu>
 

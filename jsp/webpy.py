@@ -89,8 +89,8 @@ for url in viewlist:
         what_i_want = content[startpoint:startpoint+endpoint]
 
         # print url
-        # print (StripTag(what_i_want)+'\n\n')
-        print (what_i_want+'\n\n')
+        print (StripTag(what_i_want)+'\n\n')
+        # print (what_i_want+'\n\n')
         # a= raw_input("")
         # print "next..."
         # db.write(StripTag(what_i_want)+'\n\n')
