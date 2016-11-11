@@ -1689,5 +1689,20 @@ select distinct req.obj_id, req.obj_name as req, ld.obj_name as load, tm.obj_nam
  order by req.obj_id, req.obj_name]]></sql>
     <desc><![CDATA[Restore, Load or Insert, TM, and CM]]></desc>
   </item>
+  <item cat="KAL">
+    <schema>Orale</schema>
+    <name>Start Table</name>
+    <sql><![CDATA[select obj_id, obj_name, obj_type
+     , substr(definition1, instr(definition1, 'START(,,')+8, instr(definition1, ')', instr(definition1, 'START(,,')) - instr(definition1, 'START(,,') -8) as START_TABLE
+--     , seqno, concat(definition1, concat(definition2, concat(definition3, definition4))) as def
+  from pstarchdata.pstobj2
+ where 1=1
+   and obj_type in ('A')
+--   and obj_name like '%AD_CT_PA%'
+   and instr(definition1, 'START(,,') > 1
+--   and instr(definition1, '.AF') + instr(definition2, '.AF') + instr(definition3, '.AF') + instr(definition4, '.AF') > 1
+ order by obj_id, obj_name, seqno]]></sql>
+    <desc><![CDATA[Access Definition의 Start Table]]></desc>
+  </item>
 </menu>
 
