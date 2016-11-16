@@ -11,7 +11,7 @@ enter_point ='http://agora.media.daum.net/debate'
 # enter_point = 'http://agora.media.daum.net/best/best?groupId=1&bbsId=all'
 
 # db_name = 'base.txt' # input data base name
-db_name = 'view.txt' # input data base name
+# db_name = 'view.txt' 
 
 def uniq(seq):
         set = {}
@@ -51,7 +51,7 @@ def StripTag(text):
     s.close()
     return s.gettext() 
 
-db = open(db_name,'w')
+# db = open(db_name,'w')
 allurls = uniq(geturls(enter_point))
 
 # for url in allurls:
@@ -96,6 +96,6 @@ for url in viewlist:
         # db.write(StripTag(what_i_want)+'\n\n')
 
 # db.write('\n\n')
-db.close()
+# db.close()
 # print viewlist
 

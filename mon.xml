@@ -1704,5 +1704,44 @@ select distinct req.obj_id, req.obj_name as req, ld.obj_name as load, tm.obj_nam
  order by obj_id, obj_name, seqno]]></sql>
     <desc><![CDATA[Access Definition의 Start Table]]></desc>
   </item>
+  <item cat="KAL">
+    <schema>Oracle</schema>
+    <name>Archiving Report</name>
+    <sql><![CDATA[with tt as (  
+select to_char(to_date(datetimeofarchive, 'YYYY-MM-DD-HH24.MI.SS'), 'YYYY-MM-DD') as dt, a.groupname, count(1) as cnt
+--, listagg(b.tablename, ', ') within group (order by tablename) as tables
+  from pstarchdata.pstarcvfile2 a, pstarchdata.pstarcvtbl2 b
+ where a.archiveid = b.archiveid
+ group by to_char(to_date(datetimeofarchive, 'YYYY-MM-DD-HH24.MI.SS'), 'YYYY-MM-DD'), a.groupname, a.arcvfilename--, b.tabledbalias
+-- order by 1 desc, a.arcvfilename, b.tabledbalias
+ )
+ select * from (
+	 select to_char(to_date(dt, 'YYYY-MM-DD'), 'YYYY-MM-DD HH24:MI:SS') as TIME, groupname, cnt
+	  from tt
+) PIVOT(sum(cnt) FOR groupname IN(
+'AR',
+'XXPA',
+'BALANCES',
+'XXAHL',
+'XXINV',
+'BUDGET',
+'XLA',
+'XLACA',
+'AHL',
+'XXONT',
+'PA',
+'ZX',
+'XXAR',
+'CST',
+'CSI',
+'JOURNAL',
+'INV',
+'XXCST',
+'WIP'
+)
+)
+order by TIME]]></sql>
+    <desc />
+  </item>
 </menu>
 
