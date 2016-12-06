@@ -476,6 +476,7 @@ function updateCardPane() {
     $E('wrapper').innerHTML = "";
     var eleUl = document.createElement("div"); 
     eleUl.id = "cards"; eleUl.className = "container";
+    var eleLi;
     // var eleLi = document.createElement("li"); eleLi.style = "left:0px;top:0px;visibility:hidden;";
     // eleUl.appendChild(eleLi); 
     // $('[id="wrapper"]').appendChild(eleUl); 
@@ -493,18 +494,19 @@ function updateCardPane() {
     }
     document.getElementsByTagName('head')[0].appendChild(style);
 // console.log("style:\n"+style.innerHTML);
-    var item = x.iterateNext();
-    // var offset=0;
-    // var gap=0;
-    while (item) {
+    var item;// = x.iterateNext();
+    while (item = x.iterateNext()) {
       eleLi = document.createElement("div"); 
       eleLi.className = "card"; 
       eleLi.innerHTML = item.textContent;
-      // eleLi.title = item.parentNode.childNodes[5].textContent;
+      eleLi.title = item.parentNode.childNodes[5].textContent;
+      eleLi.onclick = function(e) {
+        for (var i = 0; i < $(this).index(); i++) {
+          rotate();     }
+      }
       eleUl.appendChild(eleLi);
 
-      item = x.iterateNext();
-      // gap++;
+      // item = x.iterateNext();
     }
   }
 
@@ -528,6 +530,14 @@ function updateCardPane() {
     if (e.originalEvent.wheelDelta >= 0) 
       return rotate();
     else 
+      return rotate_back();
+  });
+
+  $(document).unbind("keyup").on("keyup", function(e) {
+    if (e.ctrlKey || e.altKey) return;
+    if (e.which == 75) 
+      return rotate();
+    else if (e.which == 74)
       return rotate_back();
   });
   // 
@@ -1308,6 +1318,7 @@ function shortKey(evt) {
 	if (target.tagName == 'INPUT' || target.tagName == 'TEXTAREA') return;
 	var key = evt.keyCode;
 	if(evt.ctrlKey) return;
+// console.log("keypress: " + key);
 	if(key == 83) {
 		// $('keyS').fireEvent('onclick');
 		// $('keyS').dispatchEvent(event);
@@ -1333,6 +1344,12 @@ function shortKey(evt) {
 	}else if(key == 72) {
 		$E('gridTable').style.visibility = "hidden";
  		$E('divInfo').style.display = ($E('divInfo').style.display == 'block')? "none" : "block";
-	}
+  }else if(key == 49) {
+    $('#n1').click();
+  }else if(key == 50) {
+    $('#n2').click();
+  }else if(key == 27 && $E('mbox').style.display == 'block') {
+      hm('msgbox');
+  }
 }
 

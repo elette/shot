@@ -17,7 +17,7 @@ public class WebParser {
     public WebParser () {
     }
 
-    public int getWeb(InoutParameter ioParam) {
+     public int getList(InoutParameter ioParam) {
 
         int resultInt = EventDefine.E_DOEXECUTE_INIT;
         HashObject ho = ioParam.getInputHashObject();
@@ -28,7 +28,45 @@ public class WebParser {
             resultInt = EventDefine.E_DOEXECUTE_SUCCESS;
             LoggingWriter.setLogDebug(pgmID,"@Business==== " + MessageDefine.M_SELECT_OK);
 
-            String[] args = {"C:/Python27/python.exe", (String)ho.get("PY",HashObject.YES)} ;
+            String[] args = {"C:/Python27/python.exe", (String)ho.get("PY",HashObject.YES), (String)ho.get("ARG",HashObject.YES)} ;
+            Process p = Runtime.getRuntime().exec(args);
+            BufferedReader in = new BufferedReader(new InputStreamReader(
+                    p.getInputStream(), "UTF-8"));
+
+            String each = null;
+            while ( (each = in.readLine()) != null) {
+                arrResult.add( each ) ;
+                // System.out.println(each);
+            }
+
+            p.waitFor();
+            if(arrResult == null) {
+                resultInt = EventDefine.E_QUERY_NOT_RESULT;
+            } else {
+                ioParam.setResultList(arrResult);
+                ioParam.setMessage(MessageDefine.M_SELECT_OK);
+                resultInt = EventDefine.E_DOEXECUTE_SUCCESS;
+                LoggingWriter.setLogDebug(pgmID,"@Business==== " + MessageDefine.M_SELECT_OK);
+            }
+
+        } catch (Exception e) {
+            resultInt = EventDefine.E_DOEXECUTE_ERROR;
+            e.printStackTrace();
+        }
+        return resultInt;
+    }
+
+   public int getPage(InoutParameter ioParam) {
+
+        int resultInt = EventDefine.E_DOEXECUTE_INIT;
+        HashObject ho = ioParam.getInputHashObject();
+        ArrayList<String> arrResult = new ArrayList<String>();
+        try {
+            ioParam.setResultURL("/jsp/com/getWebpage.jsp"); 
+            resultInt = EventDefine.E_DOEXECUTE_SUCCESS;
+            LoggingWriter.setLogDebug(pgmID,"@Business==== " + MessageDefine.M_SELECT_OK);
+
+            String[] args = {"C:/Python27/python.exe", (String)ho.get("PY",HashObject.YES), (String)ho.get("URL",HashObject.YES)} ;
             Process p = Runtime.getRuntime().exec(args);
             BufferedReader in = new BufferedReader(new InputStreamReader(
                     p.getInputStream(), "UTF-8"));

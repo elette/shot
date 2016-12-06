@@ -31,6 +31,7 @@ public class ServiceDelegator {
 	*/
 	public int doService(InoutParameter ioParam){
 		long startTime = System.currentTimeMillis();
+		long endTime = 0, runningTime = 0;
 		ioParam.setIntResult(EventDefine.E_EVENT_INIT);
 		ioParam.setMessage(MessageDefine.M_UNDEFINED_MESSAGE);
 		int returnResultValue = -1;
@@ -48,8 +49,8 @@ public class ServiceDelegator {
 
 			LoggingWriter.setLogInfo(ioParam.getClassID() ,"@ServiceDelegator==== Message : " + ioParam.getMessage() + " ====");
 			LoggingWriter.setLogDebug(ioParam.getClassID() ,"@ServiceDelegator==== doService End ====");
-			long endTime = System.currentTimeMillis();
-			long runningTime = endTime - startTime;
+			endTime = System.currentTimeMillis();
+			runningTime = endTime - startTime;
 			ho.put("RUNTIME", runningTime);
 		} catch (Exception e) {
 			returnResultValue = EventDefine.E_SERVICE_ERROR;
@@ -58,9 +59,9 @@ public class ServiceDelegator {
 		}
 		ioParam.setInputParam(ho);
 		
-		long endTime = System.currentTimeMillis();
-		long runningTime = endTime - startTime;
-		LoggingWriter.setLogAll(ioParam.getClassID(),"@ServiceDelegator= [runTime  : " + runningTime + " ms] ");
+		// long endTime = System.currentTimeMillis();
+		// long runningTime = endTime - startTime;
+		LoggingWriter.setLogAll(ioParam.getClassID() + "-" + ioParam.getMethodID(),"@ServiceDelegator= [runTime  : " + runningTime + " ms] ");
 		LoggingWriter.setLogAll(ioParam.getClassID() ,"@ServiceDelegator# END   #:");
 		
 		return returnResultValue;

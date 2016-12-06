@@ -70,9 +70,9 @@ ul#cards li:hover {
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
   -webkit-transform-origin: center;
   transform-origin: center;
-  -webkit-transition: 0.4s cubic-bezier(0.28, 0.55, 0.385, 1.65);
+/*  -webkit-transition: 0.4s cubic-bezier(0.28, 0.55, 0.385, 1.65);
   transition: 0.4s cubic-bezier(0.28, 0.55, 0.385, 1.65);
-  cursor: pointer;
+*/  cursor: pointer;
 }
 
 .card:first-child:hover {
