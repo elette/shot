@@ -6,21 +6,20 @@ from bs4 import BeautifulSoup
 reload(sys)
 sys.setdefaultencoding('utf-8')
 
-pageArg = sys.argv[1]
+parPage = sys.argv[1]
+parAnchor = sys.argv[2]
+parFilter = sys.argv[3]
 
-webpage = 'http://agora.media.daum.net/debate' if pageArg=='1' else 'http://agora.media.daum.net/best/best?groupId=1&bbsId=all'
-
-selParam = 'strong > a' if pageArg=='1' else 'td > a'
 viewlist = []
-request = requests.get(webpage)
+request = requests.get(parPage)
 soup = BeautifulSoup(request.text)
 
-for link in soup.select(selParam) :
+for link in soup.select(parAnchor) :
     title = link.text
     url = link.get('href')
     # print (title)
     # print (url)
-    if pageArg=='1' and url.find("agora")>0 or pageArg!='1' and url.find("debate")>0 :
+    if url.find(parFilter)>0 :
         viewlist.append(title+'||'+url)
 
 for strlist in viewlist :

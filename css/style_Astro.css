@@ -147,3 +147,9 @@ circle { fill: #808080; stroke: #fff; }
     padding-bottom: 20px;
 }
 
+#mdb, #msgdetail {
+  color: #000;
+  background: #777;
+  border-radius: 4px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+}

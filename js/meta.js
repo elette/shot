@@ -90,27 +90,27 @@ function XHRDone(req, target) {
     // only if "OK"
     if (req.status == 200 || req.status == 304) {
       results = req.responseText;
-	  if (target == 'pane') {
-		$E(target).innerHTML = results;
-		$E('gridInfo').insertBefore($E('RESULTMSG').firstChild, $E('gridInfo').firstChild);
-		if (results.indexOf("hideGridTable") > 0) {
-			$E('divInfo').style.display = 'none';
-		} else {
-			// eval(results.replace(/\n/gi, "\r\n").replace(/\r\n/gi, " "));
-			hideGridTable();
-			$E('divInfo').style.display = 'block';
-		}
-	  } else {
-		$E(target).innerHTML = results;
-	  }
-	  if (target == 'board') {
-		var board = document.createElement('div');
-		board.innerHTML=results;
-		$E(target).appendChild(board);
-		// console.log(board);
-	  }
+  	  if (target == 'pane') {
+    		$E(target).innerHTML = results;
+    		$E('gridInfo').insertBefore($E('RESULTMSG').firstChild, $E('gridInfo').firstChild);
+    		if (results.indexOf("hideGridTable") > 0) {
+    			$E('divInfo').style.display = 'none';
+    		} else {
+    			// eval(results.replace(/\n/gi, "\r\n").replace(/\r\n/gi, " "));
+    			hideGridTable();
+    			$E('divInfo').style.display = 'block';
+    		}
+  	  } else {
+    		$E(target).innerHTML = results;
+  	  }
+  	  if (target == 'board') {
+    		var board = document.createElement('div');
+    		board.innerHTML=results;
+    		$E(target).appendChild(board);
+    		// console.log(board);
+  	  }
       if (target == 'ConnStatus') {$(target).innerHTML = '&nbsp;&nbsp;'; setTimeout(function(){checkConn();}, 200);}
-	  else if (target == 'DBInfo') $E('DBInfo').style.display = ($E('DBInfo').innerHTML!="")?"block":"none";
+  	  else if (target == 'DBInfo') $E('DBInfo').style.display = ($E('DBInfo').innerHTML!="")?"block":"none";
       else if (target == 'pane') resizeTables();
       else if (target == 'paneDOM') callXML('true');
     } else {
@@ -209,6 +209,18 @@ function callCard(bTot) {
   xmlHttp.send(null);
 }
 
+function callNews(bTot) {
+  var url = "CommandAction?CID=News&CMD=list&" + Math.random();
+
+  xmlHttp.open("GET", url, true);
+  if (bTot == 'true') {
+    xmlHttp.onreadystatechange = updateNewsPane;
+    wheel(0, 'DomStatus');
+  }
+
+  xmlHttp.send(null);
+}
+
 function callXMLClient(bTot) {
   var url = "CommandAction?CID=Client&CMD=list&" + Math.random();
 
@@ -269,6 +281,31 @@ function callServerPage(PY, URL) {
   // xmlHttp.send(null);
   XHR(url, 'msgdetail');
   sm('msgbox', 600, 300);
+}
+
+// function callServerNewsList(ARG1, ARG2, ARG3) {
+function callServerNewsList(element) {
+  // var ARG1 = element.getAttribute("page");  
+  var url = "CommandAction?CID=WebP&CMD=getList&PY=" + urlfmt('C:/apache-tomcat-6.0.43/webapps/shot/jsp/weblist.py') + "&ARG1=" + element.getAttribute("page") + "&ARG2=" + element.getAttribute("anchor") + "&ARG3=" + element.getAttribute("filter") + "&" + Math.random();
+  $E('wrapper').setAttribute("selectedItemTitle", element.getAttribute("title"));
+  $E('wrapper').setAttribute("selectedItemContent", element.getAttribute("content"));
+
+  xmlHttp.open("GET", url, true);
+  // xmlHttp.setRequestHeader('Content-Type', 'text/xml');
+  xmlHttp.onreadystatechange = updateNewsSubPane;
+  wheel(0, 'DomStatus');
+  xmlHttp.send(null);
+}
+
+function callServerNewsPage(element) {
+  var url = "CommandAction?CID=WebP&CMD=getPage&PY=" + urlfmt('C:/apache-tomcat-6.0.43/webapps/shot/jsp/webpage.py') + "&ARG1=" + element.getAttribute("url") + "&ARG2=" + $E('wrapper').getAttribute("selectedItemTitle") + "&ARG3=" + $E('wrapper').getAttribute("selectedItemContent") + "&" + Math.random();
+// console.log("... :" + url);
+  // xmlHttp.open("GET", url, true);
+  // xmlHttp.onreadystatechange = updateNewsPagePane;
+  // wheel(0, 'DomStatus');
+  // xmlHttp.send(null);
+  XHR(url, 'msgdetail');
+  sm('msgbox', 400, 300);
 }
 
 function callServerUpdate(SQL) {
@@ -472,7 +509,6 @@ function updateCardPane() {
   // 
   function updateCardSubPane(xmlDoc, category) {
 
-    // $('[id="wrapper"]').innerHTML = "";
     $E('wrapper').innerHTML = "";
     var eleUl = document.createElement("div"); 
     eleUl.id = "cards"; eleUl.className = "container";
@@ -481,7 +517,6 @@ function updateCardPane() {
     // eleUl.appendChild(eleLi); 
     // $('[id="wrapper"]').appendChild(eleUl); 
     $E('wrapper').appendChild(eleUl); 
-
 
     var intCnt = xmlDoc.evaluate("count(/menu/item[@cat='" + category + "']/name)", xmlDoc, null, XPathResult.ANY_TYPE , null).numberValue;
     
@@ -543,6 +578,147 @@ function updateCardPane() {
   // 
   // End - vertical scroll
   // 
+}
+
+function updateNewsPane() {
+  if (xmlHttp.readyState == 4) {
+    var xmlDoc=xmlHttp.responseXML;
+    var list = "<table width=100%><tr><td align=right><button onclick='javascript:$E(\"paneCard\").style.display=\"none\";'>X</button></td></tr></table>";
+    $E('paneCard').innerHTML = list;  //dyn
+
+    var cat = xmlDoc.evaluate("/menu/item", xmlDoc, null, XPathResult.UNORDERED_NODE_ITERATOR_TYPE , null);
+  // console.info("list : " + cat.type);
+    // var category = new Array();
+    var eleTab = document.createElement("table"); eleTab.style = "vertical-align:top;border:1px #808080"; 
+    var Tr = document.createElement("tr"); //Tr.className = "line_td"; 
+    var Td = document.createElement("td"); Td.className = "line_td"; 
+    var Td2 = document.createElement("td"); Td2.rowSpan = 100;  
+    var Div = document.createElement("div"); Div.id = "wrapper"; Td2.appendChild(Div); 
+    Tr.appendChild(Td); Tr.appendChild(Td2); eleTab.appendChild(Tr);
+    var c = cat.iterateNext();
+    while(c) {
+  // console.log(c.value + ", " + category.length);
+    // if (category.length == 0 || category.indexOf(c.value) == -1) category.push(c.value);
+    //   c = cat.iterateNext();
+    // }
+
+    // for (i=0; i<category.length; i++) {
+      var eleTr = document.createElement("tr");
+      var eleTd = document.createElement("td"); eleTd.className = "line_td"; 
+      // var strCat = category[i];
+      var nodename = c.getElementsByTagName("name")[0].textContent;
+      eleTd.setAttribute("page", c.getElementsByTagName("page")[0].textContent);
+      eleTd.setAttribute("anchor", c.getElementsByTagName("anchor")[0].textContent);
+      eleTd.setAttribute("filter", c.getElementsByTagName("filter")[0].textContent);
+      eleTd.setAttribute("title", c.getElementsByTagName("title")[0].textContent);
+      eleTd.setAttribute("content", c.getElementsByTagName("content")[0].textContent);
+      // console.info("name: " + nodename);
+
+      eleTd.innerHTML = nodename;
+      var clickHandler = function(clickedTD) { 
+        return function() {
+          callServerNewsList(clickedTD);
+          // updateNewsSubPane(xmlDoc, clickedTD.innerHTML); 
+        };
+      };
+      eleTd.onclick = clickHandler(eleTd);
+
+      eleTr.appendChild(eleTd); eleTab.appendChild(eleTr);
+      c = cat.iterateNext();
+    }
+    $E('paneCard').appendChild(eleTab);
+    clearTimeout(runc);
+    $E('DomStatus').innerHTML = '&nbsp;&nbsp;';
+
+    toggle('DomBox', 'L');
+    $E('paneCard').style.display = "block";
+
+  }
+}
+
+function updateNewsSubPane() {
+  if (xmlHttp.readyState == 4) {
+    var xmlDoc=xmlHttp.responseXML;
+    // var xmlDoc=xmlHttp.responseText;
+// console.log("xml response: " + xmlDoc);
+
+    $('#wrapper').innerHTML = "";
+    var eleUl = document.createElement("div"); 
+    eleUl.id = "cards"; eleUl.className = "container";
+    $E('wrapper').appendChild(eleUl); 
+// console.info("pane contains: " + $E('paneCard').innerHTML);
+
+    var intCnt = xmlDoc.evaluate("count(/news/item)", xmlDoc, null, XPathResult.ANY_TYPE , null).numberValue;
+// console.info("count: " + intCnt);
+    
+    var x = xmlDoc.evaluate("/news/item", xmlDoc, null, XPathResult.ORDERED_NODE_ITERATOR_TYPE , null);
+    
+    var style = document.createElement('style');
+    style.type = 'text/css';
+    for (i=0; i<intCnt; i++) {
+      style.innerHTML += '.card:nth-child(' + (i+1) + ') { z-index:' + (intCnt-i) + '; top:' + i*-20 + 'px; -webkit-transform-origin: top; transform-origin: top; -webkit-transform: scale(' + (1.0-i/20) + '); transform: scale(' + (1.0-i/20) + '); opacity:' + (1.0-i/10) + '; }\n';
+    }
+    document.getElementsByTagName('head')[0].appendChild(style);
+
+    var item;
+    while (item = x.iterateNext()) {
+      var eleLi = document.createElement("div"); 
+      eleLi.className = "card"; 
+      eleLi.innerHTML = item.getElementsByTagName("title")[0].textContent;
+      eleLi.setAttribute("url", item.getElementsByTagName("url")[0].textContent);
+      var clickHandler = function(clickedLi) { 
+        return function() {
+        if ($(this).index() == 0) {
+          callServerNewsPage(clickedLi);
+        }
+        else {
+          for (var i = 0; i < $(this).index(); i++) {
+            rotate();     }
+        }
+        };
+      };
+      eleLi.onclick = clickHandler(eleLi);
+
+      eleUl.appendChild(eleLi);
+
+    }
+    clearTimeout(runc);
+    $E('DomStatus').innerHTML = '&nbsp;&nbsp;';
+
+    var rotate, rotate_back;
+
+    rotate = function() {
+      return $('.card:first-child').fadeOut(100, 'swing', function() {
+        return $('.card:first-child').appendTo('.container').hide();
+      }).fadeIn(100, 'swing');
+    };
+
+    rotate_back = function() {
+      return $('.card:last-child').fadeOut(100, 'swing', function() {
+        return $('.card:last-child').prependTo('.container').hide();
+      }).fadeIn(100, 'swing');
+    };
+
+    // $('[id="wrapper"]').scroll(function(e) {
+    // $('[id="wrapper"]').click(function() {
+    $('[id="wrapper"]').bind('mousewheel', function(e) {
+      if (e.originalEvent.wheelDelta >= 0) 
+        return rotate();
+      else 
+        return rotate_back();
+    });
+
+    $(document).unbind("keyup").on("keyup", function(e) {
+      if (e.ctrlKey || e.altKey) return;
+      if (e.which == 75) 
+        return rotate();
+      else if (e.which == 74)
+        return rotate_back();
+      else if (e.which == 79) {
+        $('.card:first-child').click(); return;
+      }
+    });
+  }
 }
 
 function updateClientPane() {

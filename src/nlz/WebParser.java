@@ -24,19 +24,18 @@ public class WebParser {
         ArrayList<String> arrResult = new ArrayList<String>();
         String[] strSplit = null;
         try {
-            ioParam.setResultURL("/jsp/com/listWeb.jsp"); 
+            ioParam.setResultURL("/jsp/com/listNews.jsp"); 
             resultInt = EventDefine.E_DOEXECUTE_SUCCESS;
             LoggingWriter.setLogDebug(pgmID,"@Business==== " + MessageDefine.M_SELECT_OK);
 
-            String[] args = {"C:/Python27/python.exe", (String)ho.get("PY",HashObject.YES), (String)ho.get("ARG",HashObject.YES)} ;
+            String[] args = {"C:/Python27/python.exe", (String)ho.get("PY",HashObject.YES), (String)ho.get("ARG1",HashObject.YES), (String)ho.get("ARG2",HashObject.YES), (String)ho.get("ARG3",HashObject.YES)} ;
             Process p = Runtime.getRuntime().exec(args);
-            BufferedReader in = new BufferedReader(new InputStreamReader(
-                    p.getInputStream(), "UTF-8"));
+            BufferedReader in = new BufferedReader(new InputStreamReader(p.getInputStream(), "UTF-8"));
 
             String each = null;
             while ( (each = in.readLine()) != null) {
                 arrResult.add( each ) ;
-                // System.out.println(each);
+// System.out.println(each);
             }
 
             p.waitFor();
@@ -66,10 +65,9 @@ public class WebParser {
             resultInt = EventDefine.E_DOEXECUTE_SUCCESS;
             LoggingWriter.setLogDebug(pgmID,"@Business==== " + MessageDefine.M_SELECT_OK);
 
-            String[] args = {"C:/Python27/python.exe", (String)ho.get("PY",HashObject.YES), (String)ho.get("URL",HashObject.YES)} ;
+            String[] args = {"C:/Python27/python.exe", (String)ho.get("PY",HashObject.YES), (String)ho.get("ARG1",HashObject.YES), (String)ho.get("ARG2",HashObject.YES), (String)ho.get("ARG3",HashObject.YES)} ;
             Process p = Runtime.getRuntime().exec(args);
-            BufferedReader in = new BufferedReader(new InputStreamReader(
-                    p.getInputStream(), "UTF-8"));
+            BufferedReader in = new BufferedReader(new InputStreamReader(p.getInputStream(), "UTF-8"));
             // System.out.println(in.readLine());
 
             // strSplit = in.readLine().split("\n\n");
@@ -79,7 +77,7 @@ public class WebParser {
             String each = null;
             while ( (each = in.readLine()) != null) {
                 arrResult.add( each ) ;
-                // System.out.println(each);
+// System.out.println(each);
             }
 
             p.waitFor();

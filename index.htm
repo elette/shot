@@ -89,8 +89,7 @@ function OKSelected() {
             <tr><td height="20" colspan="2" align="center">
             <button onclick="javascript:callXML('true');">Get</button>
             <button onclick="javascript:callCard('true');">Card</button>
-            <button id="n1" onclick="javascript:callServerWeb('C:/apache-tomcat-6.0.43/webapps/shot/jsp/weblist.py',1);">1</button>
-            <button id="n2" onclick="javascript:callServerWeb('C:/apache-tomcat-6.0.43/webapps/shot/jsp/weblist.py',2);">2</button>
+            <button onclick="javascript:callNews('true');">News</button>
             <button onclick="javascript:sm('ItemBox', 307, 199);">+</button>
             <button onclick="javascript:removeItem();">×</button>
             </td></tr>
@@ -192,11 +191,13 @@ function OKSelected() {
 </div>
 <div id="paneCard" class="scrollbar" style="position:absolute; width:90%; height:90%; left:40; top:60;display:none;"></div>
 <span id="msgbox" style="border:none;display:none;">
-<table width="100%" border="0" cellspacing="0" cellpadding="1"><tr><th align="left">Message detail</th>
+<table width="100%" border="0" cellspacing="0" cellpadding="1">
+<tr><td align="left">Message detail</td>
 <th style="display:none;"><div id="SQLMSG"></div></th>
-<th align="right"><a href="javascript:hm('msgbox');" style="text-decoration:underline;">X</a>&nbsp;&nbsp;</th></tr>
+<!-- <th align="right"><a href="javascript:hm('msgbox');" style="text-decoration:underline;">X</a>&nbsp;&nbsp;</th> -->
+</tr>
 <tr><td colspan="2">
-<textarea id="msgdetail" cols="70" rows="18" class="scrollbar" style="padding:2px; border-bottom:none;"></textarea>
+<div id="msgdetail" class="scrollbar" style="width:400px;height:300px;padding:2px; border-bottom:none;word-wrap:break-word;white-space:normal;"></div>
 </td></tr></table>
 </span>
 

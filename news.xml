@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<menu>
+  <item cat="portal">
+    <name>Naver news</name>
+    <page><![CDATA[http://news.naver.com]]></page>
+    <anchor><![CDATA[ul > li > a]]></anchor>
+    <filter><![CDATA[read.nhn]]></filter>
+    <title><![CDATA[h3[id="articleTitle"]]]></title>
+    <content><![CDATA[div[id="articleBodyContents"]]]></content>
+  </item>
+  <item cat="portal">
+    <name>Daum agora</name>
+    <page><![CDATA[http://agora.media.daum.net/debate]]></page>
+    <anchor><![CDATA[strong > a]]></anchor>
+    <filter><![CDATA[agora]]></filter>
+    <title><![CDATA[p[class="title"]]]></title>
+    <content><![CDATA[div[class="tx-content-container"]]]></content>
+  </item>
+</menu>
+

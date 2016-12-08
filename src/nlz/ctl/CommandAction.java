@@ -21,6 +21,7 @@ import nlz.com.MessageDefine;
 import nlz.com.ServiceDelegator;
 import nlz.db.ConnectionPool;
 import nlz.DOM;
+import nlz.News;
 import nlz.Client;
 import nlz.Log;
 import nlz.Mon;
@@ -32,6 +33,7 @@ public class CommandAction extends HttpServlet {
     private static ConnectionPool pool  = null;
     private String CTX_PATH             = "";
     private DOM xmlDom                  = null;
+    private News xmlNews                = null;
     private Client xmlDomClient         = null;
 	private Log fileLog					= null;
 
@@ -49,12 +51,14 @@ public class CommandAction extends HttpServlet {
             String FILE_OUT    = config.getInitParameter("FILE_OUT");
             String LOG_DIR     = config.getInitParameter("LOG_DIR");
             String CONFIG_PATH = config.getInitParameter("CONFIG_PATH"); //XML파일 output (설정, 쿼리, snap)
+            String NEWS_PATH   = config.getInitParameter("NEWS_PATH");
             String CLIENT_PATH = config.getInitParameter("CLIENT_PATH"); //고객 접속정보
             String LOG_PATH    = config.getInitParameter("LOG_PATH"); //로그 저장 경로
             String HIST_PATH   = config.getInitParameter("HIST_PATH"); //Query history
 
             loggingWriter = new LoggingWriter(LOG_LEVEL,SYS_OUT,FILE_OUT,LOG_DIR);
             xmlDom        = new DOM(CONFIG_PATH);
+            xmlNews       = new News(NEWS_PATH);
             xmlDomClient  = new Client(CLIENT_PATH);
 			fileLog       =	new Log(LOG_PATH);
             new Mon(HIST_PATH);
