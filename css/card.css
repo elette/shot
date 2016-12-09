@@ -73,6 +73,7 @@ ul#cards li:hover {
 /*  -webkit-transition: 0.4s cubic-bezier(0.28, 0.55, 0.385, 1.65);
   transition: 0.4s cubic-bezier(0.28, 0.55, 0.385, 1.65);
 */  cursor: pointer;
+	word-wrap:break-word; white-space:normal; 
 }
 
 .card:first-child:hover {

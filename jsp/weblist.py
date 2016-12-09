@@ -10,12 +10,13 @@ parPage = sys.argv[1]
 parAnchor = sys.argv[2]
 parFilter = sys.argv[3]
 
+headers = {'Accept-Encoding': 'none'}
 viewlist = []
-request = requests.get(parPage)
+request = requests.get(parPage, headers=headers)
 soup = BeautifulSoup(request.text)
 
 for link in soup.select(parAnchor) :
-    title = link.text
+    title = link.text.replace('\n', '')
     url = link.get('href')
     # print (title)
     # print (url)

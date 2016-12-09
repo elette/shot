@@ -102,6 +102,7 @@ function XHRDone(req, target) {
     		}
   	  } else {
     		$E(target).innerHTML = results;
+        $E(target).focus();
   	  }
   	  if (target == 'board') {
     		var board = document.createElement('div');
@@ -287,7 +288,7 @@ function callServerPage(PY, URL) {
 function callServerNewsList(element) {
   // var ARG1 = element.getAttribute("page");  
   var url = "CommandAction?CID=WebP&CMD=getList&PY=" + urlfmt('C:/apache-tomcat-6.0.43/webapps/shot/jsp/weblist.py') + "&ARG1=" + element.getAttribute("page") + "&ARG2=" + element.getAttribute("anchor") + "&ARG3=" + element.getAttribute("filter") + "&" + Math.random();
-  $E('wrapper').setAttribute("selectedItemTitle", element.getAttribute("title"));
+  $E('wrapper').setAttribute("selectedItemTitle", element.getAttribute("_title"));
   $E('wrapper').setAttribute("selectedItemContent", element.getAttribute("content"));
 
   xmlHttp.open("GET", url, true);
@@ -610,7 +611,7 @@ function updateNewsPane() {
       eleTd.setAttribute("page", c.getElementsByTagName("page")[0].textContent);
       eleTd.setAttribute("anchor", c.getElementsByTagName("anchor")[0].textContent);
       eleTd.setAttribute("filter", c.getElementsByTagName("filter")[0].textContent);
-      eleTd.setAttribute("title", c.getElementsByTagName("title")[0].textContent);
+      eleTd.setAttribute("_title", c.getElementsByTagName("title")[0].textContent);
       eleTd.setAttribute("content", c.getElementsByTagName("content")[0].textContent);
       // console.info("name: " + nodename);
 
@@ -642,7 +643,7 @@ function updateNewsSubPane() {
     // var xmlDoc=xmlHttp.responseText;
 // console.log("xml response: " + xmlDoc);
 
-    $('#wrapper').innerHTML = "";
+    $E('wrapper').innerHTML = "";
     var eleUl = document.createElement("div"); 
     eleUl.id = "cards"; eleUl.className = "container";
     $E('wrapper').appendChild(eleUl); 
@@ -652,9 +653,11 @@ function updateNewsSubPane() {
 // console.info("count: " + intCnt);
     
     var x = xmlDoc.evaluate("/news/item", xmlDoc, null, XPathResult.ORDERED_NODE_ITERATOR_TYPE , null);
-    
+
+    if ($E('csscard')) $E('csscard').remove();
     var style = document.createElement('style');
     style.type = 'text/css';
+    style.id = 'csscard';
     for (i=0; i<intCnt; i++) {
       style.innerHTML += '.card:nth-child(' + (i+1) + ') { z-index:' + (intCnt-i) + '; top:' + i*-20 + 'px; -webkit-transform-origin: top; transform-origin: top; -webkit-transform: scale(' + (1.0-i/20) + '); transform: scale(' + (1.0-i/20) + '); opacity:' + (1.0-i/10) + '; }\n';
     }
@@ -701,10 +704,10 @@ function updateNewsSubPane() {
 
     // $('[id="wrapper"]').scroll(function(e) {
     // $('[id="wrapper"]').click(function() {
-    $('[id="wrapper"]').bind('mousewheel', function(e) {
-      if (e.originalEvent.wheelDelta >= 0) 
+    $('[id="wrapper"]').unbind('mousewheel').bind('mousewheel', function(e) {
+      if (e.originalEvent.wheelDelta > 50) 
         return rotate();
-      else 
+      else if (e.originalEvent.wheelDelta < -50) 
         return rotate_back();
     });
 
@@ -1313,7 +1316,7 @@ function selectRow(mEvent) {
     trackItemHighlight(mEvent);
     $E('selectedRow').value = strID;
 	if(!arrBtnR['SQLBox']) toggle('SQLBox','R');
-  document.getElementById("SQL").focus()
+  document.getElementById("SQL").focus();
   // $E('SQL').focus();
   // $('#SQL').trigger('focus');
 

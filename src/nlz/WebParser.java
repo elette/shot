@@ -29,13 +29,16 @@ public class WebParser {
             LoggingWriter.setLogDebug(pgmID,"@Business==== " + MessageDefine.M_SELECT_OK);
 
             String[] args = {"C:/Python27/python.exe", (String)ho.get("PY",HashObject.YES), (String)ho.get("ARG1",HashObject.YES), (String)ho.get("ARG2",HashObject.YES), (String)ho.get("ARG3",HashObject.YES)} ;
+// System.out.println(args[1]);
+// System.out.println(args[2]);
+// System.out.println(args[3]);
+// System.out.println(args[4]);
             Process p = Runtime.getRuntime().exec(args);
             BufferedReader in = new BufferedReader(new InputStreamReader(p.getInputStream(), "UTF-8"));
 
             String each = null;
             while ( (each = in.readLine()) != null) {
-                arrResult.add( each ) ;
-// System.out.println(each);
+                if (each.length()>0) arrResult.add( each ) ;
             }
 
             p.waitFor();
