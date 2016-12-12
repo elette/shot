@@ -667,7 +667,7 @@ function updateNewsSubPane() {
     while (item = x.iterateNext()) {
       var eleLi = document.createElement("div"); 
       eleLi.className = "card"; 
-      eleLi.innerHTML = item.getElementsByTagName("title")[0].textContent;
+      eleLi.innerHTML = decodeURI(item.getElementsByTagName("title")[0].textContent);
       eleLi.setAttribute("url", item.getElementsByTagName("url")[0].textContent);
       var clickHandler = function(clickedLi) { 
         return function() {

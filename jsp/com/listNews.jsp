@@ -10,8 +10,8 @@ if (!arrList.isEmpty()) {
 		if (strLine.length() > 0) { 
 			arrS = strLine.split("\\|\\|");%>
 	<item>
-		<title><%=arrS[0]%></title>
-		<url><%=URLEncoder.encode(arrS[1])%></url>
+		<title><%=URLEncoder.encode(arrS[0], "UTF-8").replaceAll("\\+","%20")%></title>
+		<url><%=URLEncoder.encode(arrS[1], "UTF-8")%></url>
 	</item><%
 		}
 	}

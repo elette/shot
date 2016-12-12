@@ -15,6 +15,6 @@ soup = BeautifulSoup(request.text)
 
 title = soup.select(parTitle)[0].text
 print (title + '<br>')
-content = soup.select(parContent)[0].text
-print (content)
+for content in soup.select(parContent) :
+	print (content.text)
 
