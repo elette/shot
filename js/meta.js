@@ -413,6 +413,11 @@ function updateCardPane() {
 
       eleTr.appendChild(eleTd); eleTab.appendChild(eleTr);
     }
+    // add empty tr
+    var eleTr = document.createElement("tr"); eleTr.style= "height:100%";
+    var eleTd = document.createElement("td"); 
+    eleTr.appendChild(eleTd); eleTab.appendChild(eleTr);
+
     $E('paneCard').appendChild(eleTab);
     clearTimeout(runc);
     $E('DomStatus').innerHTML = '&nbsp;&nbsp;';
@@ -627,6 +632,11 @@ function updateNewsPane() {
       eleTr.appendChild(eleTd); eleTab.appendChild(eleTr);
       c = cat.iterateNext();
     }
+    // add empty tr
+    var eleTr = document.createElement("tr"); eleTr.style= "height:100%";
+    var eleTd = document.createElement("td"); 
+    eleTr.appendChild(eleTd); eleTab.appendChild(eleTr);
+
     $E('paneCard').appendChild(eleTab);
     clearTimeout(runc);
     $E('DomStatus').innerHTML = '&nbsp;&nbsp;';
@@ -659,7 +669,7 @@ function updateNewsSubPane() {
     style.type = 'text/css';
     style.id = 'csscard';
     for (i=0; i<intCnt; i++) {
-      style.innerHTML += '.card:nth-child(' + (i+1) + ') { z-index:' + (intCnt-i) + '; top:' + i*-20 + 'px; -webkit-transform-origin: top; transform-origin: top; -webkit-transform: scale(' + (1.0-i/20) + '); transform: scale(' + (1.0-i/20) + '); opacity:' + (1.0-i/10) + '; }\n';
+      style.innerHTML += '.card:nth-child(' + (i+1) + ') { z-index:' + (intCnt-i) + '; top:' + i*-30 + 'px; -webkit-transform-origin: top; transform-origin: top; -webkit-transform: scale(' + (1.0-i/20) + '); transform: scale(' + (1.0-i/20) + '); opacity:' + (1.0-i/10) + '; }\n';
     }
     document.getElementsByTagName('head')[0].appendChild(style);
 
@@ -1523,10 +1533,8 @@ function shortKey(evt) {
 	}else if(key == 72) {
 		$E('gridTable').style.visibility = "hidden";
  		$E('divInfo').style.display = ($E('divInfo').style.display == 'block')? "none" : "block";
-  }else if(key == 49) {
-    $('#n1').click();
-  }else if(key == 50) {
-    $('#n2').click();
+  }else if(key == 78) {
+    $('#btnNews').click();
   }else if(key == 27 && $E('mbox').style.display == 'block') {
       hm('msgbox');
   }

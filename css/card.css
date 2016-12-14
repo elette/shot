@@ -12,7 +12,7 @@
 
 #wrapper {
 	width:800px;
-	height:200px;
+	height:250px;
 	overflow:scroll;
 	margin:0 auto;
 }
@@ -30,6 +30,7 @@ ul#cards {
 	/*width: 350px;*/
 	/*height: 400px;*/
 	margin: 100px auto;
+	/*top: 100px;*/
 }
 /*
 ul#cards li {
@@ -62,11 +63,13 @@ ul#cards li:hover {
   position: absolute;
   /*top: 0;*/
   left: 20;
-  color: #000;
-  background: #777;
-  width: 300px;
+  color: #707070;
+  background: #222;
+  width: 400px;
   height: 50px;
+  padding: 8px;
   border-radius: 4px;
+  border: 1px solid #333; 
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
   -webkit-transform-origin: center;
   transform-origin: center;

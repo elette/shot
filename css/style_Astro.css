@@ -148,8 +148,10 @@ circle { fill: #808080; stroke: #fff; }
 }
 
 #mdb, #msgdetail {
-  color: #000;
-  background: #777;
+  font-family: HY견명조; font-size: 10pt;
+  line-height: 140%; padding: 5px;
+  color: #777;
+  background: #222;
   border-radius: 4px;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
 }

@@ -3,7 +3,7 @@
   <item cat="portal">
     <name>Naver news</name>
     <page><![CDATA[http://news.naver.com]]></page>
-    <anchor><![CDATA[ul > li > a]]></anchor>
+    <anchor><![CDATA[li > a]]></anchor>
     <filter><![CDATA[read.nhn]]></filter>
     <title><![CDATA[h3[id="articleTitle"]]]></title>
     <content><![CDATA[div[id="articleBodyContents"]]]></content>
@@ -15,6 +15,30 @@
     <filter><![CDATA[agora]]></filter>
     <title><![CDATA[p[class="title"]]]></title>
     <content><![CDATA[div[class="tx-content-container"]]]></content>
+  </item>
+  <item cat="portal">
+    <name>Daum news</name>
+    <page><![CDATA[http://www.daum.net]]></page>
+    <anchor><![CDATA[li > a]]></anchor>
+    <filter><![CDATA[daum]]></filter>
+    <title><![CDATA[h3[class="tit_view"]]]></title>
+    <content><![CDATA[div[class="article_view"]]]></content>
+  </item>
+  <item cat="portal">
+    <name>Huffington</name>
+    <page><![CDATA[http://www.huffingtonpost.kr]]></page>
+    <anchor><![CDATA[h2 > a]]></anchor>
+    <filter><![CDATA[huffingtonpost]]></filter>
+    <title><![CDATA[h1[class="title"]]]></title>
+    <content><![CDATA[p]]></content>
+  </item>
+  <item cat="portal">
+    <name>itcle</name>
+    <page><![CDATA[http://www.itcle.com]]></page>
+    <anchor><![CDATA[h3 > a]]></anchor>
+    <filter><![CDATA[itcle]]></filter>
+    <title><![CDATA[h1[class="entry-title"]]]></title>
+    <content><![CDATA[div[class="td-post-text-content"]]]></content>
   </item>
 </menu>
 
