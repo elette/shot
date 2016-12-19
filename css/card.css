@@ -79,7 +79,8 @@ ul#cards li:hover {
 	word-wrap:break-word; white-space:normal; 
 }
 
-.card:first-child:hover {
+.card:first-child {
+  color: #909090;
   box-shadow: 0 0 20px rgba(0, 0, 0, 0.4);
   -webkit-transform: scale(1.05);
   transform: scale(1.05);

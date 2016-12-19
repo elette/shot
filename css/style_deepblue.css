@@ -26,9 +26,9 @@ url('/shot/css/HPSimplifiedW01-Regular.ttf') format('truetype');
 font-family: Hack;
 }
  
-html, body { background-color:#202020; height:90%; font-family:Hack; font-size:9pt; color:#C0C0C0; letter-spacing : 0px; scrollbar-track-color:#202020; overflow: hidden;}
+html, body { background-color:#042029; height:90%; font-family:Hack; font-size:9pt; color:#C0C0C0; letter-spacing : 0px; scrollbar-track-color:#042029; overflow: hidden;}
 
-table { background-color:#202020; font-family:Hack; font-size:9pt;  white-space: nowrap; }
+table { background-color:#042029; font-family:Hack; font-size:9pt;  white-space: nowrap; }
 th { font-family:Hack, Verdana; font-size:9pt; color:#808080; line-height:120%; white-space: nowrap;}
 .paneheader {font-family:Hack; color:#404040;}
 td { font-family:Hack, Consolas, Arial, sans-serif; font-size:9pt; color:#808080; line-height:120%;}
@@ -38,7 +38,7 @@ button { /*background-color:#303030; */  border:1px solid #B0B0B0; font-family:H
 ul {margin:10;padding:0;}
 
 button {
-    background-color: #202020;
+    background-color: #042029;
     border-radius:2px;
     color: #808080;
     text-decoration: none;
@@ -52,7 +52,7 @@ button:hover {
     box-shadow: 0px 0px 1px #777;
 }
 
-select,form,input,option,textarea { background-color:#202020; color:#808080; font-size:9pt; font-family: Consolas; border:1px solid #B0B0B0; border-top:0px;border-left:0px;border-right:0px; padding:2px;}
+select,form,input,option,textarea { background-color:#042029; color:#808080; font-size:9pt; font-family: Consolas; border:1px solid #B0B0B0; border-top:0px;border-left:0px;border-right:0px; padding:2px;}
 textarea { /*background-color:#E0E0E0; */ color:#808080; font-size:9pt; font-family: Consolas; /* border:1px solid #B0B0B0;  */border-top:0px;border-left:0px;border-right:0px; padding:2px;}
 .checkbox { border:0  }
 .INPUT { color: #404040; border-top:0px;border-left:0px;border-right:0px;}
@@ -66,7 +66,7 @@ OPTION { color: #000000; }
 .scrollbar::-webkit-scrollbar-thumb { -webkit-border-radius: 10px; border-radius: 10px; background: #404040; }
 .buttonbox{font-family:Courier; position:absolute;top:0px; text-align:center; font-size:12pt; /* color:#B0B0B0; */cursor:default; border-spacing:4px;}
 .buttoncircle{font-family:Courier; text-align:center;font-size:6pt; /* border-radius:8px; */ box-shadow: 2px 2px 4px #A0A0A0; border:1px solid #404040; }
-.infocircle{font-family:Arial; font-size:4pt; font-weight:bold; color:#202020; background-color:#D44; text-align:center; border-radius:16px; border:1px solid #D44; }
+.infocircle{font-family:Arial; font-size:4pt; font-weight:bold; color:#042029; background-color:#D44; text-align:center; border-radius:16px; border:1px solid #D44; }
 .buttontd{text-align:center;font-size:12pt; color:#B0B0B0;}
 .database, .dom, .client{font-family:sans-serif;position:absolute; z-index:99; top:26px; left:22px;
 box-shadow: 2px 2px 1px #505050;
@@ -88,6 +88,12 @@ border:1px solid ;
 
 .line_td {
 border-bottom:1px solid #B0B0B0; vertical-align:top;
+}
+
+.news_td {
+  padding:5px;
+border-left:1px solid #808080; border-right:1px solid #808080; vertical-align:top;
+  border-radius: 4px;
 }
 
 .axis path,

@@ -306,7 +306,7 @@ function callServerNewsPage(element) {
   // wheel(0, 'DomStatus');
   // xmlHttp.send(null);
   XHR(url, 'msgdetail');
-  sm('msgbox', 400, 300);
+  sm('msgbox', 312, 476);
 }
 
 function callServerUpdate(SQL) {
@@ -597,7 +597,7 @@ function updateNewsPane() {
     // var category = new Array();
     var eleTab = document.createElement("table"); eleTab.style = "vertical-align:top;border:1px #808080"; 
     var Tr = document.createElement("tr"); //Tr.className = "line_td"; 
-    var Td = document.createElement("td"); Td.className = "line_td"; 
+    var Td = document.createElement("td"); Td.className = ""; 
     var Td2 = document.createElement("td"); Td2.rowSpan = 100;  
     var Div = document.createElement("div"); Div.id = "wrapper"; Td2.appendChild(Div); 
     Tr.appendChild(Td); Tr.appendChild(Td2); eleTab.appendChild(Tr);
@@ -610,7 +610,7 @@ function updateNewsPane() {
 
     // for (i=0; i<category.length; i++) {
       var eleTr = document.createElement("tr");
-      var eleTd = document.createElement("td"); eleTd.className = "line_td"; 
+      var eleTd = document.createElement("td"); eleTd.className = "news_td"; 
       // var strCat = category[i];
       var nodename = c.getElementsByTagName("name")[0].textContent;
       eleTd.setAttribute("page", c.getElementsByTagName("page")[0].textContent);
@@ -669,7 +669,7 @@ function updateNewsSubPane() {
     style.type = 'text/css';
     style.id = 'csscard';
     for (i=0; i<intCnt; i++) {
-      style.innerHTML += '.card:nth-child(' + (i+1) + ') { z-index:' + (intCnt-i) + '; top:' + i*-30 + 'px; -webkit-transform-origin: top; transform-origin: top; -webkit-transform: scale(' + (1.0-i/20) + '); transform: scale(' + (1.0-i/20) + '); opacity:' + (1.0-i/10) + '; }\n';
+      style.innerHTML += '.card:nth-child(' + (i+1) + ') { z-index:' + (intCnt-i) + '; top:' + i*-24 + 'px; -webkit-transform-origin: top; transform-origin: top; -webkit-transform: scale(' + (1.0-i/20) + '); transform: scale(' + (1.0-i/20) + '); opacity:' + (1.0-i/10) + '; }\n';
     }
     document.getElementsByTagName('head')[0].appendChild(style);
 
@@ -1537,6 +1537,9 @@ function shortKey(evt) {
     $('#btnNews').click();
   }else if(key == 27 && $E('mbox').style.display == 'block') {
       hm('msgbox');
+  }else if(key >= 49 && key <= 58) {
+    // $('.news_td:nth-child('+(key-48)+')').click();
+    $('.news_td')[key-49].click();
   }
 }
 
