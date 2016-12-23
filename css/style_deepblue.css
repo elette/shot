@@ -157,7 +157,7 @@ circle { fill: #808080; stroke: #fff; }
   font-family: HY견명조; font-size: 9pt;
   line-height: 140%; padding: 5px;
   color: #777;
-  background: #222;
+  /*background: #222;*/
   border-radius: 4px;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
 }

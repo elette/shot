@@ -11,8 +11,8 @@
 
 
 #wrapper {
-	width:800px;
-	height:250px;
+	width:600px;
+	height:300px;
 	overflow:scroll;
 	margin:0 auto;
 }
@@ -28,8 +28,8 @@ ul#cards {
 .container {
 	position: relative;
 	/*width: 350px;*/
-	/*height: 400px;*/
-	margin: 100px auto;
+	height: 300px;
+	margin: 200px auto;
 	/*top: 100px;*/
 }
 /*
@@ -63,7 +63,10 @@ ul#cards li:hover {
   position: absolute;
   /*top: 0;*/
   left: 20;
-  color: #707070;
+  /*color: #17B8EB;*/
+  /*color: #379DDF;*/
+  /*color: #8FB8E2;*/
+  /*color: #77A6DC;*/
   background: #222;
   width: 400px;
   height: 50px;
@@ -81,6 +84,7 @@ ul#cards li:hover {
 
 .card:first-child {
   color: #909090;
+  /*color: #379DDF;*/
   box-shadow: 0 0 20px rgba(0, 0, 0, 0.4);
   -webkit-transform: scale(1.05);
   transform: scale(1.05);

@@ -287,12 +287,13 @@ function callServerPage(PY, URL) {
 // function callServerNewsList(ARG1, ARG2, ARG3) {
 function callServerNewsList(element) {
   // var ARG1 = element.getAttribute("page");  
-  var url = "CommandAction?CID=WebP&CMD=getList&PY=" + urlfmt('C:/apache-tomcat-6.0.43/webapps/shot/jsp/weblist.py') + "&ARG1=" + element.getAttribute("page") + "&ARG2=" + element.getAttribute("anchor") + "&ARG3=" + element.getAttribute("filter") + "&" + Math.random();
+  // var url = "CommandAction?CID=WebP&CMD=getList&PY=" + urlfmt('C:/apache-tomcat-6.0.43/webapps/shot/jsp/weblist.py') + "&ARG1=" + element.getAttribute("page") + "&ARG2=" + element.getAttribute("anchor") + "&ARG3=" + element.getAttribute("filter") + "&" + Math.random();
   $E('wrapper').setAttribute("selectedItemTitle", element.getAttribute("_title"));
   $E('wrapper').setAttribute("selectedItemContent", element.getAttribute("content"));
 
+  var url = "http://localhost:9090/list?site=" + element.getAttribute("site");
+
   xmlHttp.open("GET", url, true);
-  // xmlHttp.setRequestHeader('Content-Type', 'text/xml');
   xmlHttp.onreadystatechange = updateNewsSubPane;
   wheel(0, 'DomStatus');
   xmlHttp.send(null);
@@ -618,6 +619,7 @@ function updateNewsPane() {
       eleTd.setAttribute("filter", c.getElementsByTagName("filter")[0].textContent);
       eleTd.setAttribute("_title", c.getElementsByTagName("title")[0].textContent);
       eleTd.setAttribute("content", c.getElementsByTagName("content")[0].textContent);
+      eleTd.setAttribute("site", nodename);
       // console.info("name: " + nodename);
 
       eleTd.innerHTML = nodename;
@@ -651,7 +653,7 @@ function updateNewsSubPane() {
   if (xmlHttp.readyState == 4) {
     var xmlDoc=xmlHttp.responseXML;
     // var xmlDoc=xmlHttp.responseText;
-// console.log("xml response: " + xmlDoc);
+// console.info("xml response: " + xmlDoc);
 
     $E('wrapper').innerHTML = "";
     var eleUl = document.createElement("div"); 
@@ -669,7 +671,7 @@ function updateNewsSubPane() {
     style.type = 'text/css';
     style.id = 'csscard';
     for (i=0; i<intCnt; i++) {
-      style.innerHTML += '.card:nth-child(' + (i+1) + ') { z-index:' + (intCnt-i) + '; top:' + i*-24 + 'px; -webkit-transform-origin: top; transform-origin: top; -webkit-transform: scale(' + (1.0-i/20) + '); transform: scale(' + (1.0-i/20) + '); opacity:' + (1.0-i/10) + '; }\n';
+      style.innerHTML += '.card:nth-child(' + (i+1) + ') { z-index:' + (intCnt-i) + '; top:' + i*-24 + 'px; -webkit-transform-origin: top; transform-origin: top; -webkit-transform: scale(' + (1.0-i/40) + '); transform: scale(' + (1.0-i/40) + '); opacity:' + (1.0-i/20) + '; }\n';
     }
     document.getElementsByTagName('head')[0].appendChild(style);
 

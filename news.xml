@@ -18,8 +18,8 @@
   </item>
   <item cat="portal">
     <name>Daum news</name>
-    <page><![CDATA[http://www.daum.net]]></page>
-    <anchor><![CDATA[li > a]]></anchor>
+    <page><![CDATA[http://media.daum.net]]></page>
+    <anchor><![CDATA[strong > a]]></anchor>
     <filter><![CDATA[daum]]></filter>
     <title><![CDATA[h3[class="tit_view"]]]></title>
     <content><![CDATA[div[class="article_view"]]]></content>
@@ -39,6 +39,14 @@
     <filter><![CDATA[itcle]]></filter>
     <title><![CDATA[h1[class="entry-title"]]]></title>
     <content><![CDATA[div[class="td-post-text-content"]]]></content>
+  </item>
+  <item cat="paper">
+    <name>경향신문</name>
+    <page><![CDATA[http://news.khan.co.kr/kh_recent/]]></page>
+    <anchor><![CDATA[strong > a]]></anchor>
+    <filter><![CDATA[artid]]></filter>
+    <title><![CDATA[h1[id="article_title"]]]></title>
+    <content><![CDATA[p]]]></content>
   </item>
 </menu>
 

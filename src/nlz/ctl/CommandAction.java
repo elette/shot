@@ -102,6 +102,9 @@ public class CommandAction extends HttpServlet {
 
         PrintWriter out        = null;
 
+        // res.setHeader("Access-Control-Allow-Origin", "*");
+        // res.setHeader("Access-Control-Allow-Headers", "X-Requested-With");
+
         try {
             ho.put("IP",req.getRemoteAddr());
 
