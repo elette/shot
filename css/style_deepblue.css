@@ -92,7 +92,8 @@ border-bottom:1px solid #B0B0B0; vertical-align:top;
 
 .news_td {
   padding:5px;
-border-left:1px solid #808080; border-right:1px solid #808080; vertical-align:top;
+border-bottom:1px solid #808080;
+/*border-right:1px solid #808080; vertical-align:top;*/
   border-radius: 4px;
 }
 
@@ -156,7 +157,7 @@ circle { fill: #808080; stroke: #fff; }
 #mdb, #msgdetail {
   font-family: HY견명조; font-size: 9pt;
   line-height: 140%; padding: 5px;
-  color: #777;
+  color: #144B66;
   /*background: #222;*/
   border-radius: 4px;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
