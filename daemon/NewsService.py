@@ -15,13 +15,13 @@ sys.setdefaultencoding('utf-8')
 
 xmlFile = sys.argv[1]
 _sites = {}
+_pages = {}
 env = Environment(loader=FileSystemLoader('template'))
 
 class NewsList(object):
-	# _sites = {}
 	def __init__(self, par):
 		headers = {'Accept-Encoding': 'none'}
-		global _sites
+		global _sites, _pages
 		viewlist = []
 		request = requests.get(par[1], headers=headers)
 		soup = BeautifulSoup(request.text)
@@ -36,6 +36,21 @@ class NewsList(object):
 
 		_sites[par[0]] = viewlist
 
+		for page in viewlist:
+			request = requests.get(urllib.unquote(page['url']))
+			soup = BeautifulSoup(request.text)
+			contents = ''
+			# print (par[0] + ', ' + par[4])
+			try:
+				title = soup.select(par[4])[0].text + '<br>'
+			except IndexError :
+				title = ''
+			for content in soup.select(par[5]) :
+				contents += content.text + '<br>'
+
+			_pages[page['url']] = title.encode('utf-8') + contents.encode('utf-8') 
+		# print (_pages.keys() )
+
 
 class Init(object):
 	doc = ET.parse(xmlFile)
@@ -43,23 +58,27 @@ class Init(object):
 	for news in root.iter("item"):
 		# print (NewsList([news.findtext("name"), news.findtext("page"), news.findtext("anchor"), news.findtext("filter"), news.findtext("title"), news.findtext("content")]).getNewsList(news.findtext("name")))
 
+		print (news.findtext("name") + '\n' + news.findtext("page") + '\n' + news.findtext("anchor") + '\n' + news.findtext("filter") + '\n' + news.findtext("title") + '\n' + news.findtext("content"))
+
 		NewsList([news.findtext("name"), news.findtext("page"), news.findtext("anchor"), news.findtext("filter"), news.findtext("title"), news.findtext("content")])
 
 	@expose
 	def list(self, site):
 		cherrypy.response.headers['Access-Control-Allow-Origin'] = '*'
 		cherrypy.response.headers['Content-Type'] = 'text/xml'
-		# cherrypy.response.headers['Access-Control-Allow-Origin'] = 'http:\/\/localhost:8080'
-		# cherrypy.response.headers['Access-Control-Allow-Credentials'] = 'true'
-		# cherrypy.response.headers['Access-Control-Allow-Methods'] = 'GET,POST,PUT,DELETE,OPTIONS'
-		# # cherrypy.response.headers['Access-Control-Allow-Headers'] = '*'
-		# cherrypy.response.headers['Access-Control-Allow-Headers'] = 'Origin,Accept,X-Requested-With,Content-Type,Access-Control-Request-Method,Access-Control-Request-Headers,Authorization'
 
 		# return _sites.get(site)	
 		templateVars = { "items" : _sites.get(site)	}
 		tmpl = env.get_template('newslist.xml')
 		return tmpl.render(templateVars)
 
+	@expose
+	def get(self, page):
+		cherrypy.response.headers['Access-Control-Allow-Origin'] = '*'
+		cherrypy.response.headers['Content-Type'] = 'text/html'
+
+		tmpl = env.get_template('newspage.html')
+		return tmpl.render(content=_pages.get(urllib.quote_plus(page.encode('utf-8'))))
 
 # print (_sites['Daum agora'])
 

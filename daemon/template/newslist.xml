@@ -1,9 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<news>{% 
-for key in items %}
+<news>{% for key in items %}
 	<item>
 		<title>{{ key['title'] }}</title>
 		<url>{{ key['url'] }}</url>
-	</item>{% 
-endfor %}
+	</item>{% endfor %}
 </news>
