@@ -33,6 +33,7 @@ def NewsList(cluster, interval, lock, shared_sites, shared_pages, par):
 			title = link.text.replace('\n', '')
 			url = link.get('href')
 			title = urllib.quote(title.encode('utf-8')).replace('\+','%20')
+			# title = title.encode('utf-8')
 			url = urllib.quote_plus(url.encode('utf-8'))
 			if url.find(par[3])>0 :
 				viewlist.append({"title":title, "url":url})
