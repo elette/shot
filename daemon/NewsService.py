@@ -6,6 +6,8 @@ import os, sys, requests, urllib
 from jinja2 import Environment, FileSystemLoader
 from bs4 import BeautifulSoup
 import xml.etree.ElementTree as ET
+import multiprocessing
+import time, datetime
 
 reload(sys)
 sys.setdefaultencoding('utf-8')
@@ -14,18 +16,19 @@ sys.setdefaultencoding('utf-8')
 # sys.setdefaultencoding('utf-8')
 
 xmlFile = sys.argv[1]
-_sites = {}
-_pages = {}
+# _sites = {}
+# _pages = {}
 env = Environment(loader=FileSystemLoader('template'))
 
-class NewsList(object):
-	def __init__(self, par):
-		headers = {'Accept-Encoding': 'none'}
-		global _sites, _pages
+def NewsList(cluster, interval, lock, shared_sites, shared_pages, par):
+	headers = {'Accept-Encoding': 'none'}
+	sites = {}
+	pages = {}
+	while True:
 		viewlist = []
 		request = requests.get(par[1], headers=headers)
 		soup = BeautifulSoup(request.text)
-
+		# print (par)
 		for link in soup.select(par[2]) :
 			title = link.text.replace('\n', '')
 			url = link.get('href')
@@ -34,7 +37,12 @@ class NewsList(object):
 			if url.find(par[3])>0 :
 				viewlist.append({"title":title, "url":url})
 
-		_sites[par[0]] = viewlist
+		sites[par[0]] = viewlist
+		# print (par[0])
+		# print (_sites.values())
+		with lock:
+			# shared_sites[par[0]] = viewlist
+			shared_sites.update(sites)
 
 		for page in viewlist:
 			request = requests.get(urllib.unquote(page['url']))
@@ -48,19 +56,50 @@ class NewsList(object):
 			for content in soup.select(par[5]) :
 				contents += content.text + '<br>'
 
-			_pages[page['url']] = title.encode('utf-8') + contents.encode('utf-8') 
-		# print (_pages.keys() )
+			pages[page['url']] = title.encode('utf-8') + contents.encode('utf-8') 
+
+		with lock:
+			shared_pages.update(pages)
+
+		log (shared_sites.keys() )
+		time.sleep(interval)
+
+def log(message):
+	ts = time.time()
+	sts = datetime.datetime.fromtimestamp(ts).strftime('%Y-%m-%d %H:%M:%S')
+	print ("[%s] : %s"% (sts, message))
 
 
 class Init(object):
-	doc = ET.parse(xmlFile)
-	root = doc.getroot()
-	for news in root.iter("item"):
-		# print (NewsList([news.findtext("name"), news.findtext("page"), news.findtext("anchor"), news.findtext("filter"), news.findtext("title"), news.findtext("content")]).getNewsList(news.findtext("name")))
+	def __init__(self):
+		# self._sites = {}
+		# self._pages = {}
 
-		print (news.findtext("name") + '\n' + news.findtext("page") + '\n' + news.findtext("anchor") + '\n' + news.findtext("filter") + '\n' + news.findtext("title") + '\n' + news.findtext("content"))
+		self.news_lock = multiprocessing.Lock()
+		self.manager = multiprocessing.Manager()
+		self.shared_sites = self.manager.dict()
+		self.shared_pages = self.manager.dict()
+		self.news_process = []
 
-		NewsList([news.findtext("name"), news.findtext("page"), news.findtext("anchor"), news.findtext("filter"), news.findtext("title"), news.findtext("content")])
+		doc = ET.parse(xmlFile)
+		root = doc.getroot()
+		i = 0
+		for news in root.iter("item"):
+			par = [news.findtext("name"), news.findtext("page"), news.findtext("anchor"), news.findtext("filter"), news.findtext("title"), news.findtext("content")]
+			arg_list = ("news", 60.0, self.news_lock, self.shared_sites, self.shared_pages, par)
+			self.news_process.append(multiprocessing.Process(target=NewsList, args=arg_list))
+			self.news_process[i].daemon = True
+			self.news_process[i].start()
+			i = i + 1
+
+	# doc = ET.parse(xmlFile)
+	# root = doc.getroot()
+	# for news in root.iter("item"):
+	# 	# print (NewsList([news.findtext("name"), news.findtext("page"), news.findtext("anchor"), news.findtext("filter"), news.findtext("title"), news.findtext("content")]).getNewsList(news.findtext("name")))
+
+	# 	print (news.findtext("name") + '\n' + news.findtext("page") + '\n' + news.findtext("anchor") + '\n' + news.findtext("filter") + '\n' + news.findtext("title") + '\n' + news.findtext("content"))
+
+	# 	NewsList([news.findtext("name"), news.findtext("page"), news.findtext("anchor"), news.findtext("filter"), news.findtext("title"), news.findtext("content")])
 
 	@expose
 	def list(self, site):
@@ -68,7 +107,7 @@ class Init(object):
 		cherrypy.response.headers['Content-Type'] = 'text/xml'
 
 		# return _sites.get(site)	
-		templateVars = { "items" : _sites.get(site)	}
+		templateVars = { "items" : self.shared_sites.get(site)	}
 		tmpl = env.get_template('newslist.xml')
 		return tmpl.render(templateVars)
 
@@ -78,92 +117,12 @@ class Init(object):
 		cherrypy.response.headers['Content-Type'] = 'text/html'
 
 		tmpl = env.get_template('newspage.html')
-		return tmpl.render(content=_pages.get(urllib.quote_plus(page.encode('utf-8'))))
-
-# print (_sites['Daum agora'])
-
-cherrypy.config.update({'server.socket_host': '127.0.0.1',
-                        'server.socket_port': 9090,
-						                         })
-cherrypy.quickstart(Init(), "/")
+		return tmpl.render(content=self.shared_pages.get(urllib.quote_plus(page.encode('utf-8'))))
 
 
+if __name__ == '__main__':
+	cherrypy.config.update({'server.socket_host': '127.0.0.1',
+	                        'server.socket_port': 9090,
+							                         })
+	cherrypy.quickstart(Init(), "/")
 
-
-
-
-
-
-# env = Environment(loader=FileSystemLoader('static'))
-
-# person_mentions = {}
-# with open("./word_count.txt") as f:
-# 	for line in f:
-# 		(key, val) = line.split("|")
-# 		person_mentions[key] = int(val)
-
-# keys = person_mentions.keys()
-# vals = person_mentions.values()
-
-# class ReferCount:
-
-# 	@expose
-# 	def index(self):
-# 		if person_mentions.values() == 0:
-# 			return "No Mention Data"
-# 		else:
-# 			retval = ""
-# 			for key in keys:
-# 				retval += (key+", "+str(person_mentions[key])+"<br>")
-# 			return  retval
-
-# 	@expose
-# 	def who(self, name):
-# 		retdic = {}
-# 		total_cnt = 0
-# 		for key in keys:
-# 			try:
-# 				if name in key:
-# 					retdic[key] =  person_mentions[key]
-# 					print retdic[key]
-# 					#retdic.append({key: person_mentions[key]})
-# 			except UnicodeDecodeError as e:
-# 				print "예외발생: 문자열: "+key
-
-# 		total_cnt = reduce(lambda x, y : x + y, retdic.values())
-
-# 		retdic.update({"TOTAL_CNT": total_cnt})
-
-# 		templateVars = {"name" : name,
-# 						"items" : retdic
-# 						}
-
-# 		tmpl = env.get_template('who.html')
-# 		return tmpl.render(templateVars)
-
-# 	@expose
-# 	def compare(self, namelist):
-# 		retdic = {}
-# 		total_cnt = 0
-# 		whos = namelist.split(",")
-
-# 		for who in whos:
-# 			retdic.update({who:0})
-
-# 		for key in keys:
-# 			try:
-# 				for who in whos:
-# 					if who in key:
-# 						retdic.update({who:(retdic[who]+person_mentions[key])})
-# 			except UnicodeDecodeError as e:
-# 				print "예외발생: 문자열: "+key
-
-
-# 		templateVars = { "items" : retdic,
-# 						"values" : retdic.values(),
-# 						}
-
-# 		tmpl = env.get_template('compare.html')
-# 		return tmpl.render(templateVars)
-
-# cherrypy.quickstart(ReferCount(), "/", 'server.conf')
