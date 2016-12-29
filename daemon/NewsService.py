@@ -32,12 +32,12 @@ def NewsList(cluster, interval, lock, shared_sites, shared_pages, par):
 		soup = BeautifulSoup(request.text)
 
 		for link in soup.select(par[2]) :
-			title = link.text.replace('\n', '')
+			title = link.text.encode('utf-8')
+			# print (par[0] + '-------' + title)
 			url = link.get('href')
 			url = (baseurl + url) if url.find('http') < 0 else url
-			print (url)
-			title = urllib.quote(title.encode('utf-8')).replace('\+','%20')
-			# title = title.encode('utf-8')
+			# print (url)
+			title = urllib.quote(title).replace('\+','%20')
 			url = urllib.quote_plus(url.encode('utf-8'))
 			if url.find(par[3])>0 :
 				viewlist.append({"title":title, "url":url})
