@@ -155,10 +155,11 @@ circle { fill: #808080; stroke: #fff; }
 }
 
 #mdb, #msgdetail {
-  font-family: HY견명조; font-size: 9pt;
+  font-family: HYGungSo; font-size: 10pt;
   line-height: 140%; padding: 5px;
-  color: #144B66;
-  /*background: #222;*/
+  /*color: #1A6184;*/
+  /*color: #004B5C;*/
+  /*background: #002B35;*/
   border-radius: 4px;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
 }

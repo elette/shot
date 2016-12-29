@@ -1,4 +1,6 @@
 C:\apache-tomcat-6.0.43\webapps\shot\src\nlz\ctl>
-javac -cp ..\..\..\WEB-INF\classes;C:\apache-tomcat-6.0.43\lib;C:\apache-tomcat-6.0.43\lib\tomcat-jdbc.jar;C:\apache-tomcat-6.0.43\lib\nzjdbc.jar;C:\apache-tomcat-6.0.43\lib\db2jcc.jar;C:\apache-tomcat-6.0.43\lib\jdom.jar -d ..\..\..\WEB-INF\classes CommandAction.java
+javac -cp ..\..\..\WEB-INF\classes;C:\apache-tomcat-6.0.43\lib;C:\apache-tomcat-6.0.43\lib\tomcat-jdbc.jar;C:\apache-tomcat-6.0.43\lib\nzjdbc.jar;C:\apache-tomcat-6.0.43\lib\db2jcc.jar;C:\apache-tomcat-6.0.43\lib\jdom.jar;C:\apache-tomcat-6.0.43\lib\gsp.jar -d ..\..\..\WEB-INF\classes CommandAction.java
 
 set JAVA_OPTS=-javaagent:C:\apache-tomcat-6.0.43\lib\profile.jar -Dprofile.properties=C:\apache-tomcat-6.0.43\conf\webapp.profile.properties
+
+gsp.jar

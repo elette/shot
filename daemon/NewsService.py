@@ -26,24 +26,28 @@ def NewsList(cluster, interval, lock, shared_sites, shared_pages, par):
 	pages = {}
 	while True:
 		viewlist = []
+		end = par[1].find('/', 8) if par[1].find('/', 8) > -1 else len(par[1])
+		baseurl = par[1][:end]
 		request = requests.get(par[1], headers=headers)
 		soup = BeautifulSoup(request.text)
-		# print (par)
+
 		for link in soup.select(par[2]) :
 			title = link.text.replace('\n', '')
 			url = link.get('href')
+			url = (baseurl + url) if url.find('http') < 0 else url
+			print (url)
 			title = urllib.quote(title.encode('utf-8')).replace('\+','%20')
 			# title = title.encode('utf-8')
 			url = urllib.quote_plus(url.encode('utf-8'))
 			if url.find(par[3])>0 :
 				viewlist.append({"title":title, "url":url})
-
 		sites[par[0]] = viewlist
 		# print (par[0])
-		# print (_sites.values())
+		# print (sites.values())
 		with lock:
 			# shared_sites[par[0]] = viewlist
 			shared_sites.update(sites)
+		sites.clear()
 
 		for page in viewlist:
 			request = requests.get(urllib.unquote(page['url']))
@@ -62,7 +66,8 @@ def NewsList(cluster, interval, lock, shared_sites, shared_pages, par):
 		with lock:
 			shared_pages.update(pages)
 
-		log (shared_sites.keys() )
+		log (par[0] + ' (' + str(len(pages)) + ')' )
+		pages.clear()
 		time.sleep(interval)
 
 def log(message):
@@ -87,7 +92,7 @@ class Init(object):
 		i = 0
 		for news in root.iter("item"):
 			par = [news.findtext("name"), news.findtext("page"), news.findtext("anchor"), news.findtext("filter"), news.findtext("title"), news.findtext("content")]
-			arg_list = ("news", 60.0, self.news_lock, self.shared_sites, self.shared_pages, par)
+			arg_list = ("news", 300.0, self.news_lock, self.shared_sites, self.shared_pages, par)
 			self.news_process.append(multiprocessing.Process(target=NewsList, args=arg_list))
 			self.news_process[i].daemon = True
 			self.news_process[i].start()

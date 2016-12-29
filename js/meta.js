@@ -308,7 +308,8 @@ function callServerNewsPage(element) {
   // wheel(0, 'DomStatus');
   // xmlHttp.send(null);
   XHR(url, 'msgdetail');
-  sm('msgbox', 312, 476);
+  // sm('msgbox', 312, 476);
+  sm('msgbox', 400, 610);
 }
 
 function callServerUpdate(SQL) {
