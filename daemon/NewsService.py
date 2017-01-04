@@ -16,6 +16,7 @@ sys.setdefaultencoding('utf-8')
 # sys.setdefaultencoding('utf-8')
 
 xmlFile = sys.argv[1]
+# xmlFile = 'C:\\apache-tomcat-8.5.9\\webapps\\shot\\news.xml'
 # _sites = {}
 # _pages = {}
 env = Environment(loader=FileSystemLoader('template'))
@@ -61,7 +62,7 @@ def NewsList(cluster, interval, lock, shared_sites, shared_pages, par):
 			for content in soup.select(par[5]) :
 				contents += content.text + '<br>'
 
-			pages[page['url']] = title.encode('utf-8') + contents.encode('utf-8') 
+			pages[page['url']] = title.encode('utf-8') + contents.encode('utf-8')
 
 		with lock:
 			shared_pages.update(pages)
@@ -121,7 +122,6 @@ class Init(object):
 	def get(self, page):
 		cherrypy.response.headers['Access-Control-Allow-Origin'] = '*'
 		cherrypy.response.headers['Content-Type'] = 'text/html'
-
 		tmpl = env.get_template('newspage.html')
 		return tmpl.render(content=self.shared_pages.get(urllib.quote_plus(page.encode('utf-8'))))
 

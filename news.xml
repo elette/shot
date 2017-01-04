@@ -12,7 +12,7 @@
     <name>Daum agora</name>
     <page><![CDATA[http://agora.media.daum.net/debate]]></page>
     <anchor><![CDATA[strong > a]]></anchor>
-    <filter><![CDATA[agora]]></filter>
+    <filter><![CDATA[debate]]></filter>
     <title><![CDATA[p[class="title"]]]></title>
     <content><![CDATA[div[class="tx-content-container"]]]></content>
   </item>
