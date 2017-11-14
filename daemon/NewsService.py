@@ -30,7 +30,7 @@ def NewsList(cluster, interval, lock, shared_sites, shared_pages, par):
 		end = par[1].find('/', 8) if par[1].find('/', 8) > -1 else len(par[1])
 		baseurl = par[1][:end]
 		request = requests.get(par[1], headers=headers)
-		soup = BeautifulSoup(request.text)
+		soup = BeautifulSoup(request.text, 'lxml')
 
 		for link in soup.select(par[2]) :
 			title = link.text.encode('utf-8')
@@ -38,7 +38,7 @@ def NewsList(cluster, interval, lock, shared_sites, shared_pages, par):
 			url = link.get('href')
 			url = (baseurl + url) if url.find('http') < 0 else url
 			# print (url)
-			title = urllib.quote(title).replace('\+','%20')
+			title = urllib.quote(title).replace('\+','%20').replace('%2C',',').replace('%3A',':').replace('%3F','?')
 			url = urllib.quote_plus(url.encode('utf-8'))
 			if url.find(par[3])>0 :
 				viewlist.append({"title":title, "url":url})
@@ -61,6 +61,7 @@ def NewsList(cluster, interval, lock, shared_sites, shared_pages, par):
 				title = ''
 			for content in soup.select(par[5]) :
 				contents += content.text + '<br>'
+			# print (par[0] + "--------------" + title)
 
 			pages[page['url']] = title.encode('utf-8') + contents.encode('utf-8')
 
@@ -127,8 +128,9 @@ class Init(object):
 
 
 if __name__ == '__main__':
-	cherrypy.config.update({'server.socket_host': '127.0.0.1',
-	                        'server.socket_port': 9090,
-							                         })
+	cherrypy.config.update({
+		'server.socket_host': '127.0.0.1',
+        'server.socket_port': 9090,
+		})
 	cherrypy.quickstart(Init(), "/")
 

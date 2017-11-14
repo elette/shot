@@ -59,7 +59,7 @@ public class LoggingWriter {
 	}
 
 	private static void writeLog(String log_level,String className,String str) {
-		if(m_sys_out.equals("Y")) System.out.printf(log_level + " [" + getCurrentTime() + "] : " + "%64s" + ":" + className + "\n", str);
+		if(m_sys_out.equals("Y")) System.out.printf(log_level + " [" + getCurrentTime() + "] : " + "%32s" + ":" + className + "\n", str);
 		if(m_file_out.equals("Y")) writeFileLog(log_level + " [" + getCurrentTime() + "] : " + str + ":" + className + "\n");
 	}
 

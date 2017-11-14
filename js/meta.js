@@ -90,6 +90,7 @@ function XHRDone(req, target) {
     // only if "OK"
     if (req.status == 200 || req.status == 304) {
       results = req.responseText;
+      // console.info("results: " + results);
   	  if (target == 'pane') {
     		$E(target).innerHTML = results;
     		$E('gridInfo').insertBefore($E('RESULTMSG').firstChild, $E('gridInfo').firstChild);

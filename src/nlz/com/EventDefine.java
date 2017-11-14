@@ -21,7 +21,7 @@ public class EventDefine {
 
 	/* doExecute 에서 사용하는 변수*/
 	public final static int E_DOEXECUTE_INIT 	 = 400;	// 초기값.
-	public final static int E_DOEXECUTE_SUCCESS 	 = 401;	// 성공.
+	public final static int E_DOEXECUTE_SUCCESS  = 401;	// 성공.
 	public final static int E_DOEXECUTE_ERROR 	 = 402;	// 실패.
 
 	/* Login 에서 사용하는 변수*/

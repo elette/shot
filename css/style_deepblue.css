@@ -61,7 +61,7 @@ OPTION { color: #000000; }
 
 .scrollbar { overflow-x:hidden; overflow-y:auto; padding:10px; margin: 0px;}
 
-.scrollbar::-webkit-scrollbar { width: 8px; }
+.scrollbar::-webkit-scrollbar { width: 4px; }
 .scrollbar::-webkit-scrollbar-track { -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3); -webkit-border-radius: 10px; border-radius: 10px; }
 .scrollbar::-webkit-scrollbar-thumb { -webkit-border-radius: 10px; border-radius: 10px; background: #404040; }
 .buttonbox{font-family:Courier; position:absolute;top:0px; text-align:center; font-size:12pt; /* color:#B0B0B0; */cursor:default; border-spacing:4px;}
@@ -155,13 +155,14 @@ circle { fill: #808080; stroke: #fff; }
 }
 
 #mdb, #msgdetail {
-  /*font-family: 휴먼아미체; font-size: 12pt;*/
-  /*font-family: HYSinMyeongJo; font-size: 9pt;*/
-  /*font-family: 한겨레결체; font-size: 9pt;*/
-  /*font-family: 서울한강 장체L; font-size: 10pt;*/
-  /*font-family: 대한; font-size: 9pt;*/
-  font-family: KoPubBatang; font-size: 9pt;
-  line-height: 140%; padding: 5px;
+  /*font-family: 휴먼아미체; */
+  /*font-family: HYSinMyeongJo; */
+  /*font-family: 한겨레결체; */
+  font-family: 서울한강 장체L; 
+  /*font-family: 대한; */
+  /*font-family: KoPubBatang; */
+  font-size: 11pt;
+  line-height: 150%; padding: 5px;
   /*color: #1A6184;*/
   /*color: #004B5C;*/
   /*background: #002B35;*/
