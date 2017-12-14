@@ -166,5 +166,16 @@
     <version />
     <desc />
   </item>
+  <item name="PDA_KSNET" cseq="20170721143135">
+    <dbms>NETEZZA</dbms>
+    <system>N3001</system>
+    <server>192.168.93.72</server>
+    <port>5480</port>
+    <database>ksnet_wh</database>
+    <instance>admin</instance>
+    <pass>password</pass>
+    <version />
+    <desc />
+  </item>
 </customer>
 

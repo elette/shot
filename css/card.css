@@ -68,7 +68,13 @@ ul#cards li:hover {
   /*color: #8FB8E2;*/
   /*color: #77A6DC;*/
   /*background: #222;*/
-  font-family: 서울한강 장체L; font-size: 10pt;
+  /*font-family: 휴먼아미체; */
+  /*font-family: HYSinMyeongJo; */
+  font-family: 한겨레결체; 
+  /*font-family: 서울한강 장체L; */
+  /*font-family: 대한; */
+  /*font-family: KoPubBatang; */
+  font-size: 10pt;
   /*width: 360px;*/
   height: 18px;
   padding: 6px;

@@ -3,7 +3,7 @@
 //     HashObject ho           = ioParam.getInputHashObject();
 int temp = 0;
 int intResult = ioParam.getIntResult();
-if (intResult == EventDefine.E_DOEXCUTE_SUCCESS) {
+if (intResult == EventDefine.E_DOEXECUTE_SUCCESS) {
     temp = 0;
 %>&nbsp;&nbsp;<%
 } else {

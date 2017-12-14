@@ -34,27 +34,27 @@
         </init-param>
         <init-param>
             <param-name>LOG_DIR</param-name>
-            <param-value>C:/apache-tomcat-6.0.43/logs/nlz</param-value>
+            <param-value>C:/apache-tomcat-8.5.9/logs/nlz</param-value>
         </init-param>
         <init-param>
             <param-name>CONFIG_PATH</param-name>
-            <param-value>C:/apache-tomcat-6.0.43/webapps/shot/mon.xml</param-value>
+            <param-value>C:/apache-tomcat-8.5.9/webapps/shot/mon.xml</param-value>
         </init-param>
         <init-param>
             <param-name>NEWS_PATH</param-name>
-            <param-value>C:/apache-tomcat-6.0.43/webapps/shot/news.xml</param-value>
+            <param-value>C:/apache-tomcat-8.5.9/webapps/shot/news.xml</param-value>
         </init-param>
         <init-param>
             <param-name>CLIENT_PATH</param-name>
-            <param-value>C:/apache-tomcat-6.0.43/webapps/shot/client.xml</param-value>
+            <param-value>C:/apache-tomcat-8.5.9/webapps/shot/client.xml</param-value>
         </init-param>
         <init-param>
             <param-name>LOG_PATH</param-name>
-            <param-value>C:/apache-tomcat-6.0.43/webapps/shot/logs</param-value>
+            <param-value>C:/apache-tomcat-8.5.9/webapps/shot/logs</param-value>
         </init-param>
         <init-param>
             <param-name>HIST_PATH</param-name>
-            <param-value>C:/apache-tomcat-6.0.43/webapps/shot/history</param-value>
+            <param-value>C:/apache-tomcat-8.5.9/webapps/shot/history</param-value>
         </init-param>
         <load-on-startup>1</load-on-startup>
     </servlet>

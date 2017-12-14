@@ -53,14 +53,14 @@ def NewsList(cluster, interval, lock, shared_sites, shared_pages, par):
 		for page in viewlist:
 			request = requests.get(urllib.unquote(page['url']))
 			soup = BeautifulSoup(request.text)
-			contents = ''
+			contents = ""
 			# print (par[0] + ', ' + par[4])
 			try:
-				title = soup.select(par[4])[0].text + '<br>'
+				title = soup.select(par[4])[0].text.join('<br>')
 			except IndexError :
 				title = ''
 			for content in soup.select(par[5]) :
-				contents += content.text + '<br>'
+				contents += content.text+'<br>'
 			# print (par[0] + "--------------" + title)
 
 			pages[page['url']] = title.encode('utf-8') + contents.encode('utf-8')
