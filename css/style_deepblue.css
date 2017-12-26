@@ -157,11 +157,12 @@ circle { fill: #808080; stroke: #fff; }
 #mdb, #msgdetail {
   /*font-family: 휴먼아미체; */
   /*font-family: HYSinMyeongJo; */
-  font-family: 한겨레결체; 
+  /*font-family: 한겨레결체; */
   /*font-family: 서울한강 장체L; */
   /*font-family: 대한; */
   /*font-family: KoPubBatang; */
-  font-size: 10pt;
+  font-family: 나눔고딕; 
+   font-size: 10pt;
   line-height: 150%; padding: 5px;
   /*color: #1A6184;*/
   /*color: #004B5C;*/

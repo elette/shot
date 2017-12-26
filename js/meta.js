@@ -303,7 +303,7 @@ function callServerNewsList(element) {
 function callServerNewsPage(element) {
   // var url = "CommandAction?CID=WebP&CMD=getPage&PY=" + urlfmt('C:/apache-tomcat-6.0.43/webapps/shot/jsp/webpage.py') + "&ARG1=" + element.getAttribute("url") + "&ARG2=" + $E('wrapper').getAttribute("selectedItemTitle") + "&ARG3=" + $E('wrapper').getAttribute("selectedItemContent") + "&" + Math.random();
   var url = "http://localhost:9090/get?page=" + element.getAttribute("url") ;
-// console.log("... :" + url);
+
   // xmlHttp.open("GET", url, true);
   // xmlHttp.onreadystatechange = updateNewsPagePane;
   // wheel(0, 'DomStatus');
@@ -697,7 +697,7 @@ function updateNewsSubPane() {
         };
       };
       eleLi.onclick = clickHandler(eleLi);
-
+// console.info(item.getElementsByTagName("url")[0].textContent);
       eleUl.appendChild(eleLi);
 
     }
