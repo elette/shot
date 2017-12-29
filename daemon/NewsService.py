@@ -60,7 +60,7 @@ def NewsList(cluster, interval, lock, shared_sites, shared_pages, par):
 			url = link.get('href')
 			url = (baseurl + url) if url.find('http') < 0 else url
 			# print (url) 
-			title = urllib.quote(title).replace('\+','%20').replace('%2C',',').replace('%3A',':').replace('%3F','?').replace('%3D','=').replace('%26','&')
+			title = urllib.quote(title).replace('\+','%20').replace('%2C',',').replace('%3A',':').replace('%3F','?').replace('%3D','=').replace('%26','&').replace('%24','$').replace('%2B','+')
 			# title = urllib.quote(title)
 			url = urllib.quote_plus(url.encode('utf-8'))
 			if url.find(par[3])>0 :

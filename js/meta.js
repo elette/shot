@@ -655,8 +655,8 @@ function updateNewsPane() {
 function updateNewsSubPane() {
   if (xmlHttp.readyState == 4) {
     var xmlDoc=xmlHttp.responseXML;
-    // var xmlDoc=xmlHttp.responseText;
-// console.info("xml response: " + xmlDoc);
+    // var xmlDoc = xmlHttp.responseText;
+// console.info("xml response: " + xmlHttp.responseText);
 
     $E('wrapper').innerHTML = "";
     var eleUl = document.createElement("div"); 

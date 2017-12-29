@@ -45,7 +45,7 @@
     <page><![CDATA[http://www.mediatoday.co.kr/?mod=news&act=articleList&sc_code=&sc_area=A&sc_level=T&view_type=T]]></page>
     <anchor><![CDATA[li > a]]></anchor>
     <filter><![CDATA[articleView]]></filter>
-    <title><![CDATA[h1[class="art_view_title"]]]></title>
+    <title><![CDATA[h1[class="arl_view_title"]]]></title>
     <content><![CDATA[p]]></content>
   </item>
 </menu>
