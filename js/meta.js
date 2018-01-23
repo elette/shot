@@ -1549,3 +1549,7 @@ function shortKey(evt) {
   }
 }
 
+function toggleTheme(input) {
+  var link  = document.getElementById("maincss");
+  link.href = (input == 1)? './css/style_deepblue.css': './css/style_normal.css';
+}

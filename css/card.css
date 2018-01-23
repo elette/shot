@@ -80,7 +80,7 @@ ul#cards li:hover {
   height: 18px;
   padding: 6px;
   border-radius: 4px;
-  border: 0px solid #333; 
+  /*border: 0px solid #333; */
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
   -webkit-transform-origin: center;
   transform-origin: center;

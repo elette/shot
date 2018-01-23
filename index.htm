@@ -2,7 +2,7 @@
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <head>
     <title></title>
-<link rel="stylesheet" href="./css/style_deepblue.css" type="text/css" />
+<link id="maincss" rel="stylesheet" href="./css/style_deepblue.css" type="text/css" />
 <link rel="stylesheet" href="./css/modaldbox.css" type="text/css" />
 <link rel="stylesheet" href="./css/dhtmlxchart.css" type="text/css" />
 <link rel="stylesheet" href="./css/card.css" type="text/css" />
@@ -41,9 +41,9 @@ function OKSelected() {
 <body onkeydown="shortKey(event);">
     <!--DB2 Monitoring-->
 <table class="buttonbox" style="left:0px"><tr>
-<td class="buttoncircle" id="ConnStatus" title="Database" onclick="javascript:toggle('StatusBox', 'L');">&nbsp;&nbsp;</td>
-<td class="buttoncircle" id="DomStatus" title="Monitoring" onclick="javascript:toggle('DomBox', 'L');">&nbsp;&nbsp;</td>
-<td class="buttoncircle" id="History" title="History" onclick="javascript:toggle('HistBox', 'L');">&nbsp;&nbsp;</td>
+<td class="buttoncircle" id="ConnStatus" title="Database" onclick="javascript:toggle('StatusBox', 'L');">&nbsp;</td>
+<td class="buttoncircle" id="DomStatus" title="Monitoring" onclick="javascript:toggle('DomBox', 'L');">&nbsp</td>
+<td class="buttoncircle" id="History" title="History" onclick="javascript:toggle('HistBox', 'L');">&nbsp;</td>
 </tr></table>
 <table class="buttonbox" style="left:84px;"><tr>
 <td id="DBInfo" style="display:none"></td>
@@ -57,7 +57,9 @@ function OKSelected() {
 <td onclick="javascript:$E('gridTable').style.visibility ='visible';$E('divInfo').style.display = 'none';">T</td>
 <td onclick="javascript:$E('divInfo').style.display = 'block';hideGridTable();">H</td>
 </tr>
-<tr><td class="buttontd" colspan="2" onclick="javascript:toggle('Property', 'L');">▒▒</td></tr></table>
+<tr><td class="buttontd" colspan="2" onclick="javascript:toggle('Property', 'L');">▒▒</td></tr>
+<tr><td onclick="javascript:toggleTheme(1);">&nbsp;</td><td onclick="javascript:toggleTheme(2);">&nbsp;</td></tr>
+</table>
 
 <table id="StatusBox" class="database">
 <tr><th colspan="2" style="text-align:left">Database</th></tr>
