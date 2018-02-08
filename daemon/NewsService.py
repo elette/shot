@@ -10,6 +10,7 @@ from bs4 import BeautifulSoup
 import xml.etree.ElementTree as ET
 import multiprocessing
 import time, datetime
+from newspaper import Article
 
 reload(sys)
 sys.setdefaultencoding('utf-8')
@@ -51,8 +52,8 @@ def NewsList(cluster, interval, lock, shared_sites, shared_pages, par):
 		viewlist = []
 		end = par[1].find('/', 8) if par[1].find('/', 8) > -1 else len(par[1])
 		baseurl = par[1][:end]
-		request = requests.get(par[1], headers=headers)
-		soup = BeautifulSoup(request.text, 'html.parser')
+		response = requests.get(par[1], headers=headers)
+		soup = BeautifulSoup(response.text, 'html.parser')
 
 		for link in soup.select(par[2]) :
 			title = link.text.encode('utf-8')
@@ -74,23 +75,37 @@ def NewsList(cluster, interval, lock, shared_sites, shared_pages, par):
 		sites.clear()
 
 		for page in viewlist:
-			request = requests.get(urllib.unquote(page['url']))
-			soup = BeautifulSoup(request.text)
+			# response = requests.get(urllib.unquote(page['url']))
+			# soup = BeautifulSoup(response.text)
 			contents = ""
-			# print (par[0] + ', ' + par[4] + ', ' + page['url'])
-			# print ('----' + soup.select(par[4])[0].text)
-			try:
-				# print ('----' + soup.select(par[4])[0].text)
-				ctitle = soup.select(par[4])[0].text + '<br>'
-			except:
-				ctitle = '<br>'
-			for content in soup.select(par[5]) :
-				contents += content.text.encode('utf-8').join('<br>')
-			# print ('>>>>' + par[1] + '<<<<' + '>>>>' + par[2] + '<<<<' + par[4])
-			# print (ctitle)
-			# print (par[0] + "--------------" + ctitle)
+# print (par[0] + ', ' + par[4] + ', ' + page['url'])
+# print ('----' + soup.select(par[4])[0].text)
+			# try:
+			# 	# print ('----' + soup.select(par[4])[0].text)
+			# 	ctitle = soup.select(par[4])[0].text + '<br>'
+			# except:
+			# 	ctitle = '<br>'
 
-			# pages[page['url']] = ctitle.encode('utf-8') + contents.encode('utf-8')
+			# for content in soup.select(par[5]) :
+			# 	contents += content.text.encode('utf-8').join('<br>')
+# print ('>>>>' + par[1] + '<<<<' + '>>>>' + par[2] + '<<<<' + par[4])
+# print (ctitle)
+# print (par[0] + "--------------" + ctitle)
+
+# pages[page['url']] = ctitle.encode('utf-8') + contents.encode('utf-8')
+
+# contents = ''.join(soup.findAll(text=True))
+# tree = lxml.html.fromstring(response.text)
+# contents = tree.text_content().strip()
+			
+			article = Article(urllib.unquote(page['url']))
+			article.download()
+			article.parse()
+
+			ctitle = article.title
+			contents = article.text.encode('utf-8')
+
+			# pages[page['url']] = ctitle
 			pages[page['url']] = ctitle.encode('utf-8') + contents
 			# log (page['ctitle'] + '====' + page['url'])
 
@@ -166,4 +181,3 @@ if __name__ == '__main__':
         # }
 		})
 	cherrypy.quickstart(Init(), "/")
-

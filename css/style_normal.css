@@ -189,3 +189,21 @@ circle {
   border-radius: 8px;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
 }
+
+.pulse{
+  font-family:Courier; text-align:center;font-size:6pt; border-radius:8px;  box-shadow: 2px 2px 4px #A0A0A0; border:1px solid #404040; 
+  animation-name: pulse_change;
+  animation-duration: 1s; 
+  animation-timing-function: ease-out; 
+  animation-delay: 0;
+  animation-direction: alternate;
+  animation-iteration-count: infinite;
+  animation-fill-mode: none;
+  animation-play-state: running;
+}
+
+@keyframes pulse_change {
+  0% { background-color: #000; }
+  50% { background-color: #444; }
+  100% { background-color: #000; }
+}

@@ -25,7 +25,7 @@
     <content><![CDATA[div[class="article_view"]]]></content>
   </item>
   <item cat="portal">
-    <name>Daum news</name>
+    <name>Daum IT</name>
     <page><![CDATA[http://media.daum.net/digital]]></page>
     <anchor><![CDATA[strong > a]]></anchor>
     <filter><![CDATA[daum]]></filter>

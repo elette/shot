@@ -55,17 +55,20 @@ function initXHttp() {
 
 var runc;
 function wheel(c, div) {
-    var w='|';
-//     (c==0)?w='｜':(c==1)?w='／':(c==2)?w='--':(c==3)?w='＼':c=0;
-    (c==0)?w='|':(c==1)?w='/':(c==2)?w='-':(c==3)?w='\\':c=0;
-    $E(div).innerHTML=w;
-    runc = setTimeout(function(){wheel(c+1, div);}, 250);
+//     var w='|';
+// //     (c==0)?w='｜':(c==1)?w='／':(c==2)?w='--':(c==3)?w='＼':c=0;
+//     (c==0)?w='|':(c==1)?w='/':(c==2)?w='-':(c==3)?w='\\':c=0;
+//     $E(div).innerHTML=w;
+//     runc = setTimeout(function(){wheel(c+1, div);}, 250);
+  $E(div).className = "pulse";
 }
 
 function XHR(url,target) {
   // native XMLHttpRequest object
 //   if (target != null) $E(target).innerHTML = '<img src="/shot/images/loading.gif"/>';
-  if (target != null && target != 'board') wheel(0, target);
+  // if (target != null && target != 'board' && target != 'msgdetail' && target != 'DBInfo') wheel(0, target);
+  if ($E(target).className == 'buttoncircle') wheel(0, target);
+
   if (window.XMLHttpRequest) {
     var req = new XMLHttpRequest();
     req.onreadystatechange = function() {XHRDone(req, target);};
@@ -86,7 +89,8 @@ function XHR(url,target) {
 function XHRDone(req, target) {
   // only if req is "loaded"
   if (req.readyState == 4) {
-    clearTimeout(runc);
+    // clearTimeout(runc);
+    if ($E(target).className == 'pulse') $E(target).className = "buttoncircle";
     // only if "OK"
     if (req.status == 200 || req.status == 304) {
       results = req.responseText;
@@ -111,7 +115,7 @@ function XHRDone(req, target) {
     		$E(target).appendChild(board);
     		// console.log(board);
   	  }
-      if (target == 'ConnStatus') {$(target).innerHTML = '&nbsp;&nbsp;'; setTimeout(function(){checkConn();}, 200);}
+      if (target == 'ConnStatus') {$E(target).className = "buttoncircle"; setTimeout(function(){checkConn();}, 200);}
   	  else if (target == 'DBInfo') $E('DBInfo').style.display = ($E('DBInfo').innerHTML!="")?"block":"none";
       else if (target == 'pane') resizeTables();
       else if (target == 'paneDOM') callXML('true');
@@ -371,8 +375,9 @@ function updateDOMPane() {
 	list += "</ul>";
     $E('paneDOM').innerHTML = list;
 	// console.log(list);
-    clearTimeout(runc);
-    $E('DomStatus').innerHTML = '&nbsp;&nbsp;';
+    // clearTimeout(runc);
+    // $E('DomStatus').innerHTML = '&nbsp;&nbsp;';
+    $E('DomStatus').className = "buttoncircle";
   }
 }
 
@@ -423,8 +428,9 @@ function updateCardPane() {
     eleTr.appendChild(eleTd); eleTab.appendChild(eleTr);
 
     $E('paneCard').appendChild(eleTab);
-    clearTimeout(runc);
-    $E('DomStatus').innerHTML = '&nbsp;&nbsp;';
+    // clearTimeout(runc);
+    // $E('DomStatus').innerHTML = '&nbsp;&nbsp;';
+    $E('DomStatus').className = "buttoncircle";
 
     toggle('DomBox', 'L');
     $E('paneCard').style.display = "block";
@@ -643,8 +649,9 @@ function updateNewsPane() {
     eleTr.appendChild(eleTd); eleTab.appendChild(eleTr);
 
     $E('paneCard').appendChild(eleTab);
-    clearTimeout(runc);
-    $E('DomStatus').innerHTML = '&nbsp;&nbsp;';
+    // clearTimeout(runc);
+    // $E('DomStatus').innerHTML = '&nbsp;&nbsp;';
+    $E('DomStatus').className = "buttoncircle";
 
     toggle('DomBox', 'L');
     $E('paneCard').style.display = "block";
@@ -701,8 +708,9 @@ function updateNewsSubPane() {
       eleUl.appendChild(eleLi);
 
     }
-    clearTimeout(runc);
-    $E('DomStatus').innerHTML = '&nbsp;&nbsp;';
+    // clearTimeout(runc);
+    // $E('DomStatus').innerHTML = '&nbsp;&nbsp;';
+    $E('DomStatus').className = "buttoncircle";
 
     var rotate, rotate_back;
 
@@ -755,8 +763,9 @@ function updateClientPane() {
         item = x.iterateNext();
     }
     $E('paneClient').innerHTML = list;
-    clearTimeout(runc);
-    $E('ConnStatus').innerHTML = '&nbsp;&nbsp;';
+    // clearTimeout(runc);
+    // $E('ConnStatus').innerHTML = '&nbsp;&nbsp;';
+    $E('ConnStatus').className = "buttoncircle";
   }
 }
 
@@ -781,8 +790,9 @@ function updateWebPane() {
     var results=xmlHttp.responseText;
     var list = "<table width=100%><tr><td align=right><button onclick='javascript:$E(\"paneCard\").style.display=\"none\";'>X</button></td></tr></table>";
     $E('paneCard').innerHTML = list + "<br>" + results;  //dyn
-    clearTimeout(runc);
-    $E('DomStatus').innerHTML = '&nbsp;&nbsp;';
+    // clearTimeout(runc);
+    // $E('DomStatus').innerHTML = '&nbsp;&nbsp;';
+    $E('DomStatus').className = "buttoncircle";
 
     toggle('DomBox', 'L');
     $E('paneCard').style.display = "block";
@@ -931,7 +941,8 @@ function releaseConn() {
 	$E('board').style.display = 'none';
 
     XHR(url, 'ConnStatus');
-	$E('ConnStatus').innerHTML = '&nbsp;&nbsp;';
+	// $E('ConnStatus').innerHTML = '&nbsp;&nbsp;';
+  $E('ConnStatus').className = "buttoncircle"
     setTimeout(function(){checkConn();}, 500);
 }
 function checkConn() {
@@ -1514,42 +1525,58 @@ function shortKey(evt) {
 	var key = evt.keyCode;
 	if(evt.ctrlKey) return;
 // console.log("keypress: " + key);
-	if(key == 83) {
+  switch (key) {
+	case 83:
 		// $('keyS').fireEvent('onclick');
 		// $('keyS').dispatchEvent(event);
 		toggle('SQLBox', 'R');
 		// if (arrBtnR['SQLBox']) $E('SQL').focus();
-	}else if(key == 67) {
+    break;
+	case 67:
 		toggle('CHARTBox', 'R');
-	}else if(key == 76) {
+    break;
+	case 76:
 		toggle('LOGBox', 'R');
-	}else if(key == 80) {
+    break;
+	case 80:
 		toggle('Property', 'L');
-	}else if(key == 68) {
+    break;
+	case 68:
 		toggle('StatusBox', 'L');
-	}else if(key == 77) {
+    break;
+	case 77:
 		toggle('DomBox', 'L');
-  }else if(key == 81) {
+    break;
+  case 81:
     toggle('HistBox', 'L');
-	}else if(key == 71) {
+    break;
+	case 71:
 		callXML('true');
-	}else if(key == 84) {
+    break;
+	case 84:
 		$E('divInfo').style.display = 'none';
 		$E('gridTable').style.visibility = ($E('gridTable').style.visibility == "hidden")? "visible" :"hidden";
-	}else if(key == 72) {
+    break;
+	case 72:
 		$E('gridTable').style.visibility = "hidden";
  		$E('divInfo').style.display = ($E('divInfo').style.display == 'block')? "none" : "block";
-  }else if(key == 78) {
+    break;
+  case 78:
     $('#btnNews').click();
-  }else if(key == 27 && $E('mbox').style.display == 'block') {
+    break;
+  case 27:
+    if ($E('mbox').style.display == 'block')
       hm('msgbox');
-  }else if(key >= 49 && key <= 58) {
-    // $('.news_td:nth-child('+(key-48)+')').click();
-    $('.news_td')[key-49].click();
+    break;
+  default:
+    if(key >= 49 && key <= 58) {
+      $('.news_td')[key-49].click();
+    }
   }
 }
 
 function toggleTheme(input) {
   var link  = document.getElementById("maincss");
   link.href = (input == 1)? './css/style_deepblue.css': './css/style_normal.css';
+  console.info("Theme is changed.");
 }
