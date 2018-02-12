@@ -8,7 +8,7 @@ input = open("db2diag.log", 'r')
 data = input.read()
 env = Environment(loader=FileSystemLoader('template'))
 
-def LogParse(shared_level, shared_logs):
+def LogParse(lock, shared_level, shared_logs):
     #------------------------------------------------------------------------
     # Define Grammars
     #------------------------------------------------------------------------
@@ -67,14 +67,14 @@ def LogParse(shared_level, shared_logs):
     logitems={}
     levels={}
     for tokens in logEntry.searchString(data):
-        item={
+        item=[{
                 "LEVEL":tokens.level,
                 "PID":tokens.pid,
                 "TID":tokens.tid,
                 "PROC":tokens.proc,
                 "FUNCTION":tokens.function,
                 "CONDITIONS":tokens.condition
-             }
+             }]
         # logitems.setdefault(tokens.timestamp,[]).append(item)
         logitems[str(tokens.timestamp)] = item
 
@@ -82,16 +82,64 @@ def LogParse(shared_level, shared_logs):
 
     print (len(logitems))
 
-    shared_level.update(levels)
-    shared_logs.update(logitems)
+    with lock:
+        shared_level.update(levels)
+        shared_logs.update(logitems)
 
     for it in levels:
         print it + ": ", len(levels[it])
 
-    print (len(shared_logs))
-    print (shared_logs.get('2017-09-14-11.14.19.489345'))
+    # print (len(shared_logs))
 
-shared_level = {}
-shared_logs = {}
-LogParse(shared_level, shared_logs)
+class Init(object):
+    def __init__(self):
+        self.log_lock = multiprocessing.Lock()
+        self.manager = multiprocessing.Manager()
 
+        self.shared_level = self.manager.dict()
+        self.shared_logs = self.manager.dict()
+
+        self.parse_process = []
+
+        arg_list = (self.log_lock, self.shared_level, self.shared_logs)
+        self.parse_process.append(multiprocessing.Process(name='LogParse', target=LogParse, args=arg_list))
+        self.parse_process[0].daemon = True
+        self.parse_process[0].start()
+
+    @expose
+    def status(self):
+        cherrypy.response.headers['Access-Control-Allow-Origin'] = '*'
+        cherrypy.response.headers['Content-Type'] = 'text/xml'
+
+        templateVars = { "items" : self.shared_level }
+        tmpl = env.get_template('status.xml')
+        return tmpl.render(templateVars)
+
+    @expose
+    def listitem(self, level):
+        cherrypy.response.headers['Access-Control-Allow-Origin'] = '*'
+        cherrypy.response.headers['Content-Type'] = 'text/html'
+
+        templateVars = { "items" : self.shared_level.get(level) }
+        tmpl = env.get_template('listitem.xml')
+        return tmpl.render(templateVars)
+
+    @expose
+    def getitem(self, item):
+        cherrypy.response.headers['Access-Control-Allow-Origin'] = '*'
+        cherrypy.response.headers['Content-Type'] = 'text/html'
+
+        templateVars = { "items" : self.shared_logs.get(item) }
+        print (item, self.shared_logs.get(item))
+        tmpl = env.get_template('getitem.xml')
+        return tmpl.render(templateVars)
+
+if __name__ == '__main__':
+    cherrypy.config.update({
+        'server.socket_host': '127.0.0.1',
+      'server.socket_port': 9092,
+      # 'global': {
+      'engine.autoreload.on': False
+        # }
+        })
+    cherrypy.quickstart(Init(), "/daemon/log/")
