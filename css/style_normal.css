@@ -183,7 +183,9 @@ circle {
   font-family: 나눔고딕; 
    font-size: 9pt;
   line-height: 150%; padding: 5px;
-  /*color: #1A6184;*/
+  /*word-break: inherit;*/
+  /*word-wrap: pre-line; */
+   /*color: #1A6184;*/
   /*color: #004B5C;*/
   /*background: #002B35;*/
   border-radius: 8px;

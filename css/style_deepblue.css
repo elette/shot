@@ -165,7 +165,7 @@ circle { fill: #808080; stroke: #fff; }
   font-size: 9pt;
   line-height: 150%; padding: 5px;
   /*word-break: inherit;*/
-  word-wrap: normal; 
+  /*word-wrap: pre-line; */
   /*color: #1A6184;*/
   /*color: #004B5C;*/
   /*background: #002B35;*/
@@ -174,7 +174,7 @@ circle { fill: #808080; stroke: #fff; }
 }
 
 .pulse{
-  font-family:Courier; text-align:center;font-size:6pt; border-radius:8px;  box-shadow: 2px 2px 4px #A0A0A0; border:1px solid #404040; 
+  font-family:Courier; text-align:center;font-size:6pt; border-radius:8px; box-shadow: 2px 2px 4px #A0A0A0; border:1px solid #404040; 
   animation-name: pulse_change;
   animation-duration: 1s; 
   animation-timing-function: ease-out; 

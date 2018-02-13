@@ -837,7 +837,7 @@ function updateDiagSubPane() {
     var xmlDoc=xmlHttp.responseXML;
     // var xmlDoc = xmlHttp.responseText;
 // console.info("xml response: " + xmlHttp.responseText);
-    console.info(xmlDoc);
+    // console.info(xmlDoc);
 
     $E('wrapper').innerHTML = "";
     var eleUl = document.createElement("div"); 
