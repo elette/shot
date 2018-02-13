@@ -1,11 +1,12 @@
+# -*- encoding: utf-8 -*-
 from pyparsing import *
 import cherrypy
 from cherrypy import expose, tools
 from jinja2 import Environment, FileSystemLoader
 import multiprocessing
 
-input = open("db2diag.log", 'r')
-data = input.read()
+diagfile = open("db2diag.log", 'r')
+data = diagfile.read()
 env = Environment(loader=FileSystemLoader('template'))
 
 def LogParse(lock, shared_level, shared_logs):
@@ -52,7 +53,7 @@ def LogParse(lock, shared_level, shared_logs):
     # cond5 = Combine (White(max=0) + strnums + all)
     # cond6 = Combine (strnums + all)
     condition = cond1 | cond2 | cond3 | cond4
-    cond = ZeroOrMore(condition + restOfLine).setResultsName("condition")
+    cond = ZeroOrMore(condition).setResultsName("condition")
 
     # function = Combine (Literal("FUNCTION:") + all)
     funcref = "FUNCTION" + ZeroOrMore(White())+":" + Combine(strnums+all).setResultsName("function")
@@ -67,16 +68,18 @@ def LogParse(lock, shared_level, shared_logs):
     logitems={}
     levels={}
     for tokens in logEntry.searchString(data):
-        item=[{
+        item={
                 "LEVEL":tokens.level,
                 "PID":tokens.pid,
                 "TID":tokens.tid,
                 "PROC":tokens.proc,
-                "FUNCTION":tokens.function,
-                "CONDITIONS":tokens.condition
-             }]
+                "FUNCTION":tokens.function
+                # ,
+                # "CONDITIONS":tokens.condition
+             }
         # logitems.setdefault(tokens.timestamp,[]).append(item)
-        logitems[str(tokens.timestamp)] = item
+        logitems[tokens.timestamp] = item
+        # {"LEVEL":"W", "PID":"12345"}
 
         levels.setdefault(tokens.level,[]).append(tokens.timestamp)
 
@@ -99,12 +102,13 @@ class Init(object):
         self.shared_level = self.manager.dict()
         self.shared_logs = self.manager.dict()
 
-        self.parse_process = []
+        # self.parse_process = []
 
         arg_list = (self.log_lock, self.shared_level, self.shared_logs)
-        self.parse_process.append(multiprocessing.Process(name='LogParse', target=LogParse, args=arg_list))
-        self.parse_process[0].daemon = True
-        self.parse_process[0].start()
+        # self.parse_process.append(multiprocessing.Process(name='LogParse', target=LogParse, args=arg_list))
+        multiprocessing.Process(name='LogParse', target=LogParse, args=arg_list).start()
+        # self.parse_process[0].daemon = True
+        # self.parse_process[0].start()
 
     @expose
     def status(self):
@@ -118,7 +122,7 @@ class Init(object):
     @expose
     def listitem(self, level):
         cherrypy.response.headers['Access-Control-Allow-Origin'] = '*'
-        cherrypy.response.headers['Content-Type'] = 'text/html'
+        cherrypy.response.headers['Content-Type'] = 'text/xml'
 
         templateVars = { "items" : self.shared_level.get(level) }
         tmpl = env.get_template('listitem.xml')
@@ -130,7 +134,7 @@ class Init(object):
         cherrypy.response.headers['Content-Type'] = 'text/html'
 
         templateVars = { "items" : self.shared_logs.get(item) }
-        print (item, self.shared_logs.get(item))
+        # print (item, self.shared_logs.get(item))
         tmpl = env.get_template('getitem.xml')
         return tmpl.render(templateVars)
 

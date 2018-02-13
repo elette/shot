@@ -20,6 +20,7 @@ window.onload = function() {
     doToggle('StatusBox', 'L');
     doToggle('DomBox', 'L');
     doToggle('HistBox', 'L');
+    doToggle('DiagBox', 'L');
     doToggle('ClientBox', 'L');
     doToggle('SQLBox', 'R');
     doToggle('CHARTBox', 'R'); 
@@ -44,6 +45,7 @@ function OKSelected() {
 <td class="buttoncircle" id="ConnStatus" title="Database" onclick="javascript:toggle('StatusBox', 'L');">&nbsp;</td>
 <td class="buttoncircle" id="DomStatus" title="Monitoring" onclick="javascript:toggle('DomBox', 'L');">&nbsp</td>
 <td class="buttoncircle" id="History" title="History" onclick="javascript:toggle('HistBox', 'L');">&nbsp;</td>
+<td class="buttoncircle" id="DiagParse" title="Log Parser" onclick="javascript:toggle('DiagBox', 'L');">&nbsp;</td>
 </tr></table>
 <table class="buttonbox" style="left:84px;"><tr>
 <td id="DBInfo" style="display:none"></td>
@@ -110,6 +112,14 @@ function OKSelected() {
 <tr><td><div id="paneClient" class="scrollbar" style="width:150px;height:200px;" onMouseDown="javascript:selectClient(event);"></div></td></tr>
             <tr><td height="20" colspan="2" align="center">
             <input id="selectedClient" type="text" style="display:none;">
+            </td></tr>
+</table>
+
+<table id="DiagBox" class="dom">
+<tr><th colspan="2" style="text-align:left">Log Parsing</th></tr>
+<tr><td><div id="paneDIAG" class="scrollbar" style="width:150px;height:200px;" onMouseDown="javascript:selectEvent(event);"></div></td></tr>
+            <tr><td height="20" colspan="2" align="center">
+            <button onclick="javascript:callDiag();">List Event</button>
             </td></tr>
 </table>
 

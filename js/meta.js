@@ -317,6 +317,31 @@ function callServerNewsPage(element) {
   sm('msgbox', 400, 610);
 }
 
+function callDiag() {
+  var url = "http://localhost:9092/daemon/log/status";
+
+  xmlHttp.open("GET", url, true);
+  xmlHttp.onreadystatechange = updateParserPane;
+  wheel(0, 'DiagParse');
+  xmlHttp.send(null);
+}
+
+function callServerDiagList(element) {
+  var url = "http://localhost:9092/daemon/log/listitem?level=" + element.getAttribute("level");
+  // console.info("url: " + url);
+  xmlHttp.open("GET", url, true);
+  xmlHttp.onreadystatechange = updateDiagSubPane;
+  wheel(0, 'DiagParse');
+  xmlHttp.send(null);
+}
+
+function callServerDiagPage(element) {
+  var url = "http://localhost:9092/daemon/log/getitem?item=" + element.getAttribute("logitem") ;
+
+  XHR(url, 'msgdetail');
+  sm('msgbox', 400, 610);
+}
+
 function callServerUpdate(SQL) {
     var url = "CommandAction?CID=Mon&CMD=getUpdateResult&SQL=" + urlfmt(SQL);
 
@@ -595,6 +620,65 @@ function updateCardPane() {
   // End - vertical scroll
   // 
 }
+function updateParserPane() {
+  if (xmlHttp.readyState == 4) {
+    var xmlDoc=xmlHttp.responseXML;
+    var list = "<table width=100%><tr><td align=right><button onclick='javascript:$E(\"paneCard\").style.display=\"none\";'>X</button></td></tr></table>";
+    $E('paneCard').innerHTML = list;  //dyn
+
+    var cat = xmlDoc.evaluate("/logs/item", xmlDoc, null, XPathResult.UNORDERED_NODE_ITERATOR_TYPE , null);
+  // console.info("list : " + cat.type);
+    // var category = new Array();
+    var eleTab = document.createElement("table"); eleTab.style = "vertical-align:top;border:1px #808080"; 
+    var Tr = document.createElement("tr"); //Tr.className = "line_td"; 
+    var Td = document.createElement("td"); Td.className = ""; 
+    var Td2 = document.createElement("td"); Td2.rowSpan = 100;  
+    var Div = document.createElement("div"); Div.id = "wrapper"; Td2.appendChild(Div); 
+    Tr.appendChild(Td); Tr.appendChild(Td2); eleTab.appendChild(Tr);
+    var c = cat.iterateNext();
+    while(c) {
+  // console.log(c.value + ", " + category.length);
+    // if (category.length == 0 || category.indexOf(c.value) == -1) category.push(c.value);
+    //   c = cat.iterateNext();
+    // }
+
+    // for (i=0; i<category.length; i++) {
+      var eleTr = document.createElement("tr");
+      var eleTd = document.createElement("td"); eleTd.className = "news_td"; 
+      // var strCat = category[i];
+      var nodename = c.getElementsByTagName("level")[0].textContent;
+      var nodevalue = c.getElementsByTagName("count")[0].textContent;
+      eleTd.setAttribute("level", nodename);
+      eleTd.setAttribute("count", nodevalue);
+      // console.info("name: " + nodename);
+
+      eleTd.innerHTML = nodename + "(" + nodevalue + ")";
+      var clickHandler = function(clickedTD) { 
+        return function() {
+          callServerDiagList(clickedTD);
+          // updateNewsSubPane(xmlDoc, clickedTD.innerHTML); 
+        };
+      };
+      eleTd.onclick = clickHandler(eleTd);
+
+      eleTr.appendChild(eleTd); eleTab.appendChild(eleTr);
+      c = cat.iterateNext();
+    }
+    // add empty tr
+    var eleTr = document.createElement("tr"); eleTr.style= "height:100%";
+    var eleTd = document.createElement("td"); 
+    eleTr.appendChild(eleTd); eleTab.appendChild(eleTr);
+
+    $E('paneCard').appendChild(eleTab);
+    // clearTimeout(runc);
+    // $E('DomStatus').innerHTML = '&nbsp;&nbsp;';
+    $E('DiagParse').className = "buttoncircle";
+
+    toggle('DiagBox', 'L');
+    $E('paneCard').style.display = "block";
+
+  }
+}
 
 function updateNewsPane() {
   if (xmlHttp.readyState == 4) {
@@ -711,6 +795,96 @@ function updateNewsSubPane() {
     // clearTimeout(runc);
     // $E('DomStatus').innerHTML = '&nbsp;&nbsp;';
     $E('DomStatus').className = "buttoncircle";
+
+    var rotate, rotate_back;
+
+    rotate = function() {
+      return $('.card:first-child').fadeOut(100, 'swing', function() {
+        return $('.card:first-child').appendTo('.container').hide();
+      }).fadeIn(100, 'swing');
+    };
+
+    rotate_back = function() {
+      return $('.card:last-child').fadeOut(100, 'swing', function() {
+        return $('.card:last-child').prependTo('.container').hide();
+      }).fadeIn(100, 'swing');
+    };
+
+    // $('[id="wrapper"]').scroll(function(e) {
+    // $('[id="wrapper"]').click(function() {
+    $('[id="wrapper"]').unbind('mousewheel').bind('mousewheel', function(e) {
+      if (e.originalEvent.wheelDelta > 50) 
+        return rotate();
+      else if (e.originalEvent.wheelDelta < -50) 
+        return rotate_back();
+    });
+
+    $(document).unbind("keyup").on("keyup", function(e) {
+      if (e.ctrlKey || e.altKey) return;
+      if (e.which == 75) 
+        return rotate();
+      else if (e.which == 74)
+        return rotate_back();
+      else if (e.which == 79) {
+        $('.card:first-child').click(); return;
+      }
+    });
+  }
+}
+
+function updateDiagSubPane() {
+  if (xmlHttp.readyState == 4) {
+    var xmlDoc=xmlHttp.responseXML;
+    // var xmlDoc = xmlHttp.responseText;
+// console.info("xml response: " + xmlHttp.responseText);
+    console.info(xmlDoc);
+
+    $E('wrapper').innerHTML = "";
+    var eleUl = document.createElement("div"); 
+    eleUl.id = "cards"; eleUl.className = "container";
+    $E('wrapper').appendChild(eleUl); 
+// console.info("pane contains: " + $E('paneCard').innerHTML);
+
+    var intCnt = xmlDoc.evaluate("count(/logs/item)", xmlDoc, null, XPathResult.ANY_TYPE , null).numberValue;
+// console.info("count: " + intCnt);
+    
+    var x = xmlDoc.evaluate("/logs/item", xmlDoc, null, XPathResult.ORDERED_NODE_ITERATOR_TYPE , null);
+
+    if ($E('csscard')) $E('csscard').remove();
+    var style = document.createElement('style');
+    style.type = 'text/css';
+    style.id = 'csscard';
+    for (i=0; i<intCnt; i++) {
+      // style.innerHTML += '.card:nth-child(' + (i+1) + ') { z-index:' + (intCnt-i) + '; top:' + i*-24 + 'px; -webkit-transform-origin: top; transform-origin: top; -webkit-transform: scale(' + (1.0-i/40) + '); transform: scale(' + (1.0-i/40) + '); opacity:' + (1.0-i/20) + '; }\n';
+      style.innerHTML += '.card:nth-child(' + (i+1) + ') { z-index:' + (intCnt-i) + '; top:' + i*-24 + 'px; -webkit-transform-origin: top; transform-origin: top; }\n';
+    }
+    document.getElementsByTagName('head')[0].appendChild(style);
+
+    var item;
+    while (item = x.iterateNext()) {
+      var eleLi = document.createElement("div"); 
+      eleLi.className = "card"; 
+      eleLi.innerHTML = decodeURI(item.getElementsByTagName("logitem")[0].textContent);
+      eleLi.setAttribute("logitem", item.getElementsByTagName("logitem")[0].textContent);
+      var clickHandler = function(clickedLi) { 
+        return function() {
+        if ($(this).index() == 0) {
+          callServerDiagPage(clickedLi);
+        }
+        else {
+          for (var i = 0; i < $(this).index(); i++) {
+            rotate();     }
+        }
+        };
+      };
+      eleLi.onclick = clickHandler(eleLi);
+// console.info(item.getElementsByTagName("url")[0].textContent);
+      eleUl.appendChild(eleLi);
+
+    }
+    // clearTimeout(runc);
+    // $E('DomStatus').innerHTML = '&nbsp;&nbsp;';
+    $E('DiagParse').className = "buttoncircle";
 
     var rotate, rotate_back;
 

@@ -1,12 +1,12 @@
+# -*- encoding: utf-8 -*-
 from pyparsing import *
 import cherrypy
 from cherrypy import expose, tools
 from jinja2 import Environment, FileSystemLoader
 import multiprocessing
 
-input = open("db2diag.log", 'r')
-data = input.read()
-env = Environment(loader=FileSystemLoader('template'))
+diagfile = open("db2diag.log", 'r')
+data = diagfile.read()
 
 def LogParse(shared_level, shared_logs):
     #------------------------------------------------------------------------
@@ -80,7 +80,8 @@ def LogParse(shared_level, shared_logs):
 
         levels.setdefault(tokens.level,[]).append(tokens.timestamp)
 
-    print (len(logitems))
+    print ("All log items: ", len(logitems))
+    print 50*"-"
 
     shared_level.update(levels)
     shared_logs.update(logitems)
@@ -88,10 +89,24 @@ def LogParse(shared_level, shared_logs):
     for it in levels:
         print it + ": ", len(levels[it])
 
-    print (len(shared_logs))
-    print (shared_logs.get('2017-09-14-11.14.19.489345'))
-
 shared_level = {}
 shared_logs = {}
 LogParse(shared_level, shared_logs)
 
+while True:
+	IN = int(input('[1] for Level\n[2] for timestamp.\nEnter number: '))
+	if IN == 1 :
+		LEVEL = str(raw_input('?'))
+		for item in shared_level.get(LEVEL):
+			print item
+		print 50*"-"
+		# break
+	elif IN == 2 :
+		TS = str(raw_input('?'))
+		items = shared_logs.get(TS)
+		for key in items:
+			print key, items[key]
+		# break
+		print 50*"-"
+	else :
+		break
