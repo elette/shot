@@ -190,3 +190,8 @@ circle { fill: #808080; stroke: #fff; }
   50% { background-color: #444; }
   100% { background-color: #000; }
 }
+
+.article {
+  width:380px;
+  height:auto;
+}

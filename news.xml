@@ -56,5 +56,21 @@
     <title><![CDATA[h1[class="arl_view_title"]]]></title>
     <content><![CDATA[p]]></content>
   </item>
+  <item cat="paper">
+    <name>Google News</name>
+    <page><![CDATA[https://news.google.com/news/?ned=kr&gl=KR&hl=ko]]></page>
+    <anchor><![CDATA[div > a]]></anchor>
+    <filter><![CDATA[http]]></filter>
+    <title><![CDATA[h1[class="arl_view_title"]]]></title>
+    <content><![CDATA[p]]></content>
+  </item>
+  <item cat="paper">
+    <name>Huffingtonpost</name>
+    <page><![CDATA[http://www.huffingtonpost.kr/]]></page>
+    <anchor><![CDATA[h3 > a]]></anchor>
+    <filter><![CDATA[entry]]></filter>
+    <title><![CDATA[h1[class="arl_view_title"]]]></title>
+    <content><![CDATA[p]]></content>
+  </item>
 </menu>
 

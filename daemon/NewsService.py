@@ -103,7 +103,8 @@ def NewsList(cluster, interval, lock, shared_sites, shared_pages, par):
 			article.parse()
 
 			ctitle = article.title
-			contents = article.text.encode('utf-8')
+			topimage = "<img class='article' src='" + article.top_image + "'><br>"
+			contents = topimage + article.text.encode('utf-8')
 
 			# pages[page['url']] = ctitle
 			pages[page['url']] = ctitle.encode('utf-8') + contents

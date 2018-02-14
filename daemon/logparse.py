@@ -135,7 +135,7 @@ class Init(object):
 
         templateVars = { "items" : self.shared_logs.get(item) }
         # print (item, self.shared_logs.get(item))
-        tmpl = env.get_template('getitem.xml')
+        tmpl = env.get_template('getitem.html')
         return tmpl.render(templateVars)
 
 if __name__ == '__main__':

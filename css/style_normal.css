@@ -59,6 +59,8 @@ textarea { /*background-color:#E0E0E0; */ color:#404040; font-size:9pt; font-fam
 SELECT { color: #E7E3D9; }
 OPTION { color: #000000; }
 
+.scrollbar { overflow-x:hidden; overflow-y:auto; padding:10px; margin: 0px;}
+
 .scrollbar::-webkit-scrollbar { width: 4px; }
 .scrollbar::-webkit-scrollbar-track { -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3); -webkit-border-radius: 10px; border-radius: 10px; }
 .scrollbar::-webkit-scrollbar-thumb { -webkit-border-radius: 10px; border-radius: 10px;  }
@@ -208,4 +210,9 @@ circle {
   0% { background-color: #000; }
   50% { background-color: #444; }
   100% { background-color: #000; }
+}
+
+.article {
+  width:380px;
+  height:auto;
 }
