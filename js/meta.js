@@ -353,6 +353,20 @@ function callServerUpdate(SQL) {
     XHR(url, 'pane');
 }
 
+function callServerSearchItem(searchitem) {
+  // var url = "CommandAction?CID=News&CMD=writeItem&ITEM=" + encodeURIComponent(searchitem.value) + "&" + Math.random();
+  // xmlHttp.open("GET", url, true);
+  // xmlHttp.onreadystatechange = function(){};
+
+  // xmlHttp.send(null);
+
+  var url = "CommandAction?CID=News&CMD=launch";
+  xmlHttp.open("GET", url, true);
+  xmlHttp.onreadystatechange = function(){};
+
+  xmlHttp.send(null);
+}
+
 function updateXMLPane() {
   if (xmlHttp.readyState == 4) {
     var xmlDoc=xmlHttp.responseXML;
@@ -728,8 +742,22 @@ function updateNewsPane() {
       c = cat.iterateNext();
     }
     // add empty tr
-    var eleTr = document.createElement("tr"); eleTr.style= "height:100%";
-    var eleTd = document.createElement("td"); 
+    eleTr = document.createElement("tr"); eleTr.style= "height:100%";
+    eleTd = document.createElement("td"); 
+    // SearchItem
+    var eleInput = document.createElement("input");
+    eleInput.setAttribute('id', 'searchitem');
+    var eleButton = document.createElement("button");
+    eleButton.innerHTML = ">";
+    var clickHandler2 = function(searchitem) { 
+      return function() {
+        callServerSearchItem(searchitem);
+      };
+    };
+    eleButton.onclick = clickHandler2(eleInput);
+    eleTd.appendChild(eleInput);
+    eleTd.appendChild(eleButton);
+
     eleTr.appendChild(eleTd); eleTab.appendChild(eleTr);
 
     $E('paneCard').appendChild(eleTab);

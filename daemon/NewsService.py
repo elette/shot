@@ -1,4 +1,4 @@
-# -*- encoding: utf-8 -*-
+# -*- coding: utf-8 -*-
 # import pysize
 import cherrypy
 from cherrypy import expose, tools
@@ -11,18 +11,15 @@ import xml.etree.ElementTree as ET
 import multiprocessing
 import time, datetime
 from newspaper import Article
+import newspaper
 
 reload(sys)
 sys.setdefaultencoding('utf-8')
 
-# reload(sys)  # Reload does the trick!
-# sys.setdefaultencoding('utf-8')
-
 xmlFile = sys.argv[1]
-# xmlFile = 'C:\\apache-tomcat-8.5.9\\webapps\\shot\\news.xml'
-# _sites = {}
-# _pages = {}
 env = Environment(loader=FileSystemLoader('template'))
+
+searchfile = open("text.txt", 'r')
 
 def get_size(obj, seen=None):
     """Recursively finds size of objects"""
@@ -50,27 +47,36 @@ def NewsList(cluster, interval, lock, shared_sites, shared_pages, par):
 	pages = {}
 	while True:
 		viewlist = []
+		searchitem = searchfile.read()
 		end = par[1].find('/', 8) if par[1].find('/', 8) > -1 else len(par[1])
 		baseurl = par[1][:end]
-		response = requests.get(par[1], headers=headers)
+		reqUrl = par[1] + 'q=' + searchitem.decode('utf-8') + '&oq=' + searchitem.decode('utf-8') + '&sourceid=chrome&ie=UTF-8' if par[0] == 'Search' else par[1]
+		# log( par[0] + ' - ' + reqUrl)
+		response = requests.get(reqUrl, headers=headers)
 		soup = BeautifulSoup(response.text, 'html.parser')
+
+		# articlelist = newspaper.build(par[1])
+		# for article in articlelist.articles:
+		# 	print(article.title.encode('cp949'))
+		# 	print(article.title, article.url, '\n')
+
+		# print '='*50
 
 		for link in soup.select(par[2]) :
 			title = link.text.encode('utf-8')
 			# print (par[0] + ' - TITLE >' + title)
 			url = link.get('href')
 			url = (baseurl + url) if url.find('http') < 0 else url
-			# print (url) 
 			title = urllib.quote(title).replace('\+','%20').replace('%2C',',').replace('%3A',':').replace('%3F','?').replace('%3D','=').replace('%26','&').replace('%24','$').replace('%2B','+')
 			# title = urllib.quote(title)
-			url = urllib.quote_plus(url.encode('utf-8'))
 			if url.find(par[3])>0 :
+				url = url.split("?q=")[1].split("&sa=U")[0] if par[0] == 'Search' else url
+				url = urllib.quote_plus(url.encode('utf-8'))
 				viewlist.append({"title":title, "url":url})
 		sites[par[0]] = viewlist
 		# print (par[0])
 		# print (sites.values())
 		with lock:
-			# shared_sites[par[0]] = viewlist
 			shared_sites.update(sites)
 		sites.clear()
 
@@ -125,8 +131,6 @@ def log(message):
 
 class Init(object):
 	def __init__(self):
-		# self._sites = {}
-		# self._pages = {}
 
 		self.news_lock = multiprocessing.Lock()
 		self.manager = multiprocessing.Manager()
@@ -140,20 +144,11 @@ class Init(object):
 		i = 0
 		for news in root.iter("item"):
 			par = [news.findtext("name"), news.findtext("page"), news.findtext("anchor"), news.findtext("filter"), news.findtext("title"), news.findtext("content")]
-			arg_list = ("news", 600.0, self.news_lock, self.shared_sites, self.shared_pages, par)
-			self.news_process.append(multiprocessing.Process(target=NewsList, args=arg_list))
+			arg_list = ("news", 300.0, self.news_lock, self.shared_sites, self.shared_pages, par)
+			self.news_process.append(multiprocessing.Process(target=NewsList, name=news.findtext("name"), args=arg_list))
 			self.news_process[i].daemon = True
 			self.news_process[i].start()
 			i = i + 1
-
-	# doc = ET.parse(xmlFile)
-	# root = doc.getroot()
-	# for news in root.iter("item"):
-	# 	# print (NewsList([news.findtext("name"), news.findtext("page"), news.findtext("anchor"), news.findtext("filter"), news.findtext("title"), news.findtext("content")]).getNewsList(news.findtext("name")))
-
-	# 	print (news.findtext("name") + '\n' + news.findtext("page") + '\n' + news.findtext("anchor") + '\n' + news.findtext("filter") + '\n' + news.findtext("title") + '\n' + news.findtext("content"))
-
-	# 	NewsList([news.findtext("name"), news.findtext("page"), news.findtext("anchor"), news.findtext("filter"), news.findtext("title"), news.findtext("content")])
 
 	@expose
 	def list(self, site):

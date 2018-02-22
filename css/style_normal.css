@@ -185,6 +185,7 @@ circle {
   font-family: 나눔고딕; 
    font-size: 9pt;
   line-height: 150%; padding: 5px;
+  font-weight: bold;
   /*word-break: inherit;*/
   /*word-wrap: pre-line; */
    /*color: #1A6184;*/
