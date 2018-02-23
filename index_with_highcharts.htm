@@ -1,0 +1,144 @@
+<html>
+<meta http-equiv="Content-Type" content="text/html; charset=euc-kr">
+<head>
+    <title></title>
+<link rel="stylesheet" href="/shot/css/style.css" type="text/css"/>
+<link rel="stylesheet" href="/shot/css/modaldbox.css" type="text/css" />
+<script type="text/javascript" src="/shot/js/modaldbox.js"></script>
+<script type="text/javascript" src="/shot/js/jquery.min.js"></script>
+<script type="text/javascript" src="/shot/js/highcharts.src.js"></script>
+<script type="text/javascript" src="/shot/js/nlz.js"></script>
+<script type="text/javascript">
+window.onload = function() {
+    toggle('StatusBox', 'L');
+    toggle('DomBox', 'L');
+    toggle('SQLBox', 'R'); toggle('SQLBox', 'R');
+    toggle('CHARTBox', 'R');
+    $E('PropBox').style.top = window.innerHeight-26;
+    toggle('Property', 'L');
+    document.getElementById("SQL").focus();
+    initmb();
+}
+
+function OKSelected() {
+    initConn();
+}
+function toggle(strBox,LR) {
+    var SB = $E(strBox);
+    if (LR == 'L') {
+        if (SB.style.left == '22pt' || SB.style.left == '22px' || !SB.style.left) {
+            SB.style.left = '-' + (SB.clientWidth) + 'px';
+            SB.style.zIndex = 0; //parseInt(SB.style.zIndex) -10;
+        } else {
+            SB.style.left = 22;
+            SB.style.zIndex = 99; //parseInt(SB.style.zIndex) +10;
+        }
+        if (strBox=='Property') {
+            SB.style.top = window.innerHeight-318;
+            propYN = !propYN;
+            resizeTables();
+        }
+    } else {
+        if (SB.style.left == (document.body.clientWidth - SB.clientWidth -22) + 'px' || !SB.style.left) {
+            SB.style.left = '-' + (SB.clientWidth) + 'px';
+            SB.style.zIndex = 0;;
+        } else {
+            SB.style.left = document.body.clientWidth - SB.clientWidth -22;
+            SB.style.zIndex = 99;
+        }
+    }
+
+}
+
+</script>
+</head>
+
+<body>
+    <!--DB2 Monitoring-->
+<table class="database" style="position:absolute;left:0px;"><tr><td id="ConnStatus" onclick="toggle('StatusBox', 'L');" style="width:16px;text-align:center;font-size:12pt;color:#B0B0B0;">▒▒</td></tr></table>
+<table class="dom" style="position:absolute;left:0px;"><tr><td id="DomStatus" onclick="toggle('DomBox', 'L');" style="width:16px;text-align:center;font-size:12pt; color:#B0B0B0;">▒▒</td></tr></table>
+<table id="SqlBox" class="sqlbox" style="position:absolute;right:0px;z-Index:91;"><tr><td onclick="toggle('SQLBox', 'R');" style="width:16px;text-align:center;font-size:12pt; color:#B0B0B0;">▒Q</td></tr></table>
+<table id="ChartBox" class="chartbox" style="position:absolute;right:0px;z-Index:92;"><tr><td onclick="toggle('CHARTBox', 'R');" style="width:16px;text-align:center;font-size:12pt; color:#B0B0B0;">▒C</td></tr></table>
+<table id="PropBox" class="prop" style="position:absolute;left:0px;"><tr><td onclick="toggle('Property', 'L');" style="width:16px;text-align:center;font-size:12pt; color:#B0B0B0;">▒▒</td></tr></table>
+
+<table id="StatusBox" class="database" style="border:0px;z-Index:28;">
+<tr><th colspan="2" style="text-align:left">Database</th></tr>
+<tr><td>HOST</td><td><input name='HOST' id="HOST" size="16"></td></tr>
+<tr><td>PORT</td><td><input name='PORT' id="PORT" size="16"></td></tr>
+<tr><td>DB</td><td><input name='DB' id="DB" size="16"></td></tr>
+<tr><td>USER</td><td><input name='USER' id="USER" size="16"></td></tr>
+<tr><td>PASS</td><td><input id="PASS" type="password" size="16"></td></tr>
+</tr>
+            <tr><td height="20" colspan="2">
+            <button onclick="javascript:OKSelected();">Con</button>
+            <button onclick="javascript:checkConn();">Check</button>
+            <button onclick="javascript:releaseConn();">Rel</button></td>
+            </tr>
+</table>
+
+<table id="DomBox" class="dom" style="z-Index:28;">
+<tr><th colspan="2" style="text-align:left">Monitoring</th></tr>
+<tr><td><div id="paneDOM" class="scrollbar" style="width:150px;height:200px;" onMouseDown="javascript:selectRow(event);"></div></td></tr>
+            <tr><td height="20" colspan="2" align="center">
+            <button onclick="javascript:callXML('true');">Get</button>
+            <button onclick="javascript:sm('ItemBox', 180, 160);">+</button>
+            <button onclick="javascript:removeItem();">×</button>
+            </td></tr>
+</table>
+
+<table id="ItemBox" cellpadding="0" style="display:none;">
+<tr><td>Name</td><td><input id="ItemName" size="16"></td></tr>
+<tr><td>Schema</td><td><input id="Schema" size="16"></td></tr>
+<tr><td>SQL</td></tr>
+<tr><td colspan="2"><textarea id="Statement" cols="25"></textarea></td></tr>
+<tr><td>Description</td></tr>
+<tr><td colspan="2"><textarea id="Desc" cols="25"></textarea></td></tr>
+            <tr><th height="20" colspan="2" align="center">
+            <button onclick="javascript:hm();insertItem();">Submit</button>
+            <button onclick="javascript:hm();">Cancel</button>
+            </th></tr>
+</table>
+
+<table id="SQLBox" class="sqlbox" align="right" width="309" style="z-Index:38;">
+    <tr>
+        <td width="63"><div align="left">SQL</div></td>
+        <td><input type="text" id="sqllist"><input id="selectedRow" type="text" style="display:none;"><br>
+        <textarea id="SQL" cols="40" rows="10" style="font-size:10pt;"></textarea></td>
+    </tr><tr>
+        <td align="right" colspan="2">
+        <button onclick="javascript:addShot($E('sqllist').value);">+</button>
+        <button onclick="javascript:callServer($E('SQL').value);">Go</button>
+        </td>
+    </tr>
+</table>
+
+<table id="CHARTBox" class="dom" style="z-Index:39;">
+<tr><th colspan="2" style="text-align:left">Chart list</th></tr>
+<tr><td><div id="chartList" class="scrollbar" style="width:150px;height:200px;"></div></td></tr>
+</table>
+
+<table id="Property" class="prop" style="background-color:#C0C0C0;z-Index:30;" border="0" cellspacing="1" cellpadding="0">
+                <tr><th align="left">Property</th></tr>
+    <tr>
+        <td><div class="scrollbar" style="width:300px;height:292px;">
+            <table>
+                <tr>
+                    <td id="paneProp"><table><tr><td></td></tr></table></td>
+                </tr>
+            </table></div>
+        </td>
+    </tr>
+</table>
+<span id="graph" class="graphCanvas"></span>
+<table id="gridTable" class="grid" border="0" cellspacing="0" cellpadding="0">
+    <tr>
+        <td align="left">
+            <div id="pane" style=""></div>
+        </td>
+    </tr>
+</table>
+
+</body>
+
+</html>
+

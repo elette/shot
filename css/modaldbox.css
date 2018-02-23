@@ -1,0 +1,12 @@
+#mbox{font-size:9pt; padding:1px;
+    border-radius:3px;
+    color: #808080;
+    text-decoration: none;
+    border:none;
+    box-shadow: 0px 0px 2px #555;
+}
+#mbm{font-family:sans-serif;font-weight:bold;float:right;padding-bottom:5px;}
+.dialog {display:none}
+
+
+* html #ol{background-image:none; filter:progid:DXImageTransform.Microsoft.AlphaImageLoader(src="/shot/images/overlay.png", sizingMethod="scale");}

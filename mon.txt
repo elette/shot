@@ -1,0 +1,1184 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-stylesheet type="text/xsl" href="mon.xsl"?>
+<menu>
+  <item cat="Diag">
+    <schema>sysibmadm</schema>
+    <name>help_short</name>
+    <sql><![CDATA[VALUES (SYSPROC.SQLERRM (?))]]></sql>
+    <desc><![CDATA['sqlxxxx']]></desc>
+  </item>
+  <item cat="Diag">
+    <schema>sysibmadm</schema>
+    <name>help</name>
+    <sql><![CDATA[VALUES (SYSPROC.SQLERRM (?, '', '', 'en_US', 0))]]></sql>
+    <desc><![CDATA['sqlxxxx']]></desc>
+  </item>
+  <item cat="Diag">
+    <schema>sysibmadm</schema>
+    <name>WL상태 집계</name>
+    <sql><![CDATA[-- WORKLOAD별 상태 집계 (통계)
+SELECT SC_NAME
+      ,SC_SUB_NAME
+      ,WL_NAME
+      ,APPL_NAME
+      ,WL_STATUS
+      ,SMALLINT(COUNT(1)) COUNT
+  FROM (
+        SELECT DISTINCT SUBSTR(SERVICE_SUPERCLASS_NAME, 1, 15) AS SC_NAME
+              ,SUBSTR(SERVICE_SUBCLASS_NAME, 1, 15)            AS SC_SUB_NAME
+              ,SUBSTR(WORKLOAD_NAME, 1, 15)                    AS WL_NAME
+              ,INTEGER(APPLICATION_HANDLE)                     AS APPL_HNDL
+              ,SUBSTR(APPLICATION_NAME, 1, 20)                 AS APPL_NAME
+              ,SUBSTR(WORKLOAD_OCCURRENCE_STATE, 1, 15)        AS WL_STATUS
+          FROM TABLE(WLM_GET_SERVICE_CLASS_WORKLOAD_OCCURRENCES(NULL,NULL,-2))
+--         WHERE SERVICE_SUBCLASS_NAME NOT IN ('SYSDEFAULTSYSTEMCLASS', 'SYSDEFAULTMAINTENANCECLASS', 'SYSDEFAULTUSERCLASS', 'SYSDEFAULTSUBCLASS')
+       )
+ GROUP BY SC_NAME
+         ,SC_SUB_NAME
+         ,WL_NAME
+         ,APPL_NAME
+         ,WL_STATUS
+ ORDER BY 1, 2, 3, 4]]></sql>
+    <desc />
+  </item>
+  <item cat="Diag">
+    <schema>sysibmadm</schema>
+    <name>MON_GET_BUFFERPOOL</name>
+    <sql><![CDATA[WITH BPMETRICS AS (
+    SELECT bp_name,
+           pool_data_l_reads + pool_temp_data_l_reads +
+           pool_index_l_reads + pool_temp_index_l_reads +
+           pool_xda_l_reads + pool_temp_xda_l_reads +
+           pool_col_l_reads + pool_temp_col_l_reads as logical_reads,
+           pool_data_p_reads + pool_temp_data_p_reads +
+           pool_index_p_reads + pool_temp_index_p_reads +
+           pool_xda_p_reads + pool_temp_xda_p_reads +
+           pool_col_p_reads + pool_temp_col_p_reads as physical_reads,
+           member
+    FROM TABLE(MON_GET_BUFFERPOOL('',-2)) AS METRICS)
+   SELECT
+    VARCHAR(bp_name,20) AS bp_name,
+    logical_reads,
+    physical_reads,
+    CASE WHEN logical_reads > 0
+     THEN round((1 - (FLOAT(physical_reads) / FLOAT(logical_reads))) * 100,2)
+     ELSE NULL
+    END AS HIT_RATIO,
+    member
+   FROM BPMETRICS
+order by 1,4]]></sql>
+    <desc />
+  </item>
+  <item cat="Diag">
+    <schema>sysibmadm</schema>
+    <name>DIAG1</name>
+    <sql><![CDATA[SELECT TIMESTAMP, APPL_ID, DBPARTITIONNUM, VARCHAR(MSG) AS MSG
+  FROM TABLE ( PD_GET_LOG_MSGS( CURRENT TIMESTAMP - 7 DAYS)) AS T
+ -- WHERE INSTANCENAME = 'ymsinst1' AND DBNAME = 'QDW'
+ ORDER BY TIMESTAMP DESC]]></sql>
+    <desc />
+  </item>
+  <item cat="Diag">
+    <schema>sysibmadm</schema>
+    <name>TABLESPACE</name>
+    <sql><![CDATA[SELECT * FROM TABLE(MON_GET_TABLESPACE('',-1)) AS t
+ORDER BY TBSP_ID, MEMBER]]></sql>
+    <desc />
+  </item>
+  <item cat="Diag">
+    <schema>sysibmadm</schema>
+    <name>Container Usage</name>
+    <sql><![CDATA[SELECT varchar(container_name, 65) as container_name, 
+       fs_id, 
+       fs_used_size, 
+       fs_total_size, 
+       CASE WHEN fs_total_size > 0 
+            THEN DEC(100*(FLOAT(fs_used_size)/FLOAT(fs_total_size)),5,2) 
+            ELSE DEC(-1,5,2) 
+       END as utilization 
+FROM TABLE(MON_GET_CONTAINER('',-1)) AS t 
+ORDER BY utilization DESC]]></sql>
+    <desc />
+  </item>
+  <item cat="Diag">
+    <schema>sysibmadm</schema>
+    <name>Container Usage(pre97)</name>
+    <sql><![CDATA[SELECT TBSP_ID,
+       TBSP_NAME,
+       CONTAINER_ID,
+       CONTAINER_NAME,
+       CASE WHEN FS_TOTAL_SIZE_KB> 0 THEN
+       DEC(100*FLOAT(FS_USED_SIZE_KB)/FLOAT(FS_TOTAL_SIZE_KB),5,2)
+       ELSE NULL END AS PCT,
+       TOTAL_PAGES
+  FROM SYSIBMADM.CONTAINER_UTILIZATION
+ ORDER BY TBSP_ID, CONTAINER_ID]]></sql>
+    <desc />
+  </item>
+  <item cat="Diag">
+    <schema>sysibmadm</schema>
+    <name>ENV_SYS_RESOURCE</name>
+    <sql><![CDATA[SELECT * FROM SYSIBMADM.ENV_SYS_RESOURCES
+order by 1,5]]></sql>
+    <desc><![CDATA[CPU_LOAD_SHORT (< 1'), CPU_LOAD_MEDIUM (< 5'), CPU_LOAD_LONG (< 10'), CPU_USAGE_TOTAL]]></desc>
+  </item>
+  <item cat="Diag">
+    <schema>sysibmadm</schema>
+    <name>db2nodes.cfg</name>
+    <sql><![CDATA[SELECT * FROM TABLE(DB_PARTITIONS()) AS T
+ORDER BY 2, 3]]></sql>
+    <desc />
+  </item>
+  <item cat="Diag">
+    <schema>sysibmadm</schema>
+    <name>EXPLAIN_FROM_SECTION</name>
+    <sql><![CDATA[CALL EXPLAIN_FROM_SECTION
+     ( x'01000000000000001200000000000000000000000200200811261904103698', 
+      'M', NULL, 0, 'MYSCHEMA', ?, ?, ?, ?, ? )]]></sql>
+    <desc />
+  </item>
+  <item cat="Diag">
+    <schema>sysibmadm</schema>
+    <name>MON_GET_PKG_CACHE_STMT</name>
+    <sql><![CDATA[SELECT executable_id,
+       SECTION_TYPE,
+       STMT_PKG_CACHE_ID,
+       PACKAGE_SCHEMA,
+       PACKAGE_NAME,
+       SECTION_NUMBER,
+       NUM_EXECUTIONS,
+       Total_cpu_time,
+       POOL_DATA_L_READS,
+       POOL_DATA_P_READS,
+       POOL_INDEX_L_READS,
+       POOL_INDEX_P_READS,
+       ROWS_READ,
+       ROWS_RETURNED,
+       Varchar(stmt_text) as stmt_text
+FROM TABLE(MON_GET_PKG_CACHE_STMT (NULL, NULL,NULL, -1)) AS T]]></sql>
+    <desc />
+  </item>
+  <item cat="Diag">
+    <schema>sysibmadm</schema>
+    <name>Sort Consumer</name>
+    <sql><![CDATA[WITH SC_SORT_CONSUMERS(
+SERVICE_SUPERCLASS,
+SERVICE_SUBCLASS, 
+TOTAL_STMTS, 
+TOTAL_SORT_CONSUMERS) 
+AS (SELECT 
+SERVICE_SUPERCLASS_NAME, 
+SERVICE_SUBCLASS_NAME,  
+SUM(APP_ACT_COMPLETED_TOTAL) AS TOTAL_STMTS,
+SUM(TOTAL_SORTS + TOTAL_PEDS + TOTAL_PEAS +
+TOTAL_HASH_JOINS + TOTAL_HASH_GRPBYS +
+TOTAL_OLAP_FUNCS) AS TOTAL_SORT_CONSUMERS
+FROM TABLE(MON_GET_SERVICE_SUBCLASS(NULL,NULL,-1))AS T
+GROUP BY SERVICE_SUPERCLASS_NAME,
+SERVICE_SUBCLASS_NAME) 
+SELECT 
+SUBSTR(SERVICE_SUPERCLASS, 1, 30) SUPERCLASS,
+SUBSTR(SERVICE_SUBCLASS, 1, 20) SUBCLASS,
+TOTAL_STMTS, 
+TOTAL_SORT_CONSUMERS, 
+ROUND(TOTAL_SORT_CONSUMERS / NULLIF(TOTAL_STMTS, 0), 0) AS AVG_SORT_CONSUMERS_PER_STMT 
+FROM SC_SORT_CONSUMERS]]></sql>
+    <desc />
+  </item>
+  <item cat="Diag">
+    <schema>sysibmadm</schema>
+    <name>Sort Consumer(percent)</name>
+    <sql><![CDATA[WITH SORT_CONSUMERS(TOTAL_SORT_CONSUMERS,
+					TOTAL_POST_THRESHOLD_SORT_CONSUMERS) 
+AS (SELECT (TOTAL_SORTS + TOTAL_PEDS + TOTAL_PEAS +
+			TOTAL_HASH_JOINS + TOTAL_HASH_GRPBYS +  
+			TOTAL_OLAP_FUNCS) AS TOTAL_SORT_CONSUMERS,
+		   (POST_THRESHOLD_SORTS + POST_THRESHOLD_PEDS + 
+			POST_THRESHOLD_PEAS +
+			POST_SHRTHRESHOLD_HASH_JOINS +  
+			POST_THRESHOLD_HASH_GRPBYS + 
+			POST_THRESHOLD_OLAP_FUNCS) AS 
+			TOTAL_POST_THRESHOLD_SORT_CONSUMERS 
+	FROM TABLE(MON_GET_DATABASE(-1)) AS T) 
+SELECT current time as time,
+TOTAL_SORT_CONSUMERS,  
+	   TOTAL_POST_THRESHOLD_SORT_CONSUMERS, 
+	   CASE WHEN TOTAL_SORT_CONSUMERS > 0 THEN
+		 DEC((FLOAT(TOTAL_POST_THRESHOLD_SORT_CONSUMERS)/ FLOAT(TOTAL_SORT_CONSUMERS)) * 100, 5, 2) 
+	   ELSE 
+		  NULL
+	   END AS PERCENT_POST_THRESHOLD_SORT_CONSUMERS 
+FROM SORT_CONSUMERS]]></sql>
+    <desc />
+  </item>
+  <item cat="Diag">
+    <schema>sysibmadm</schema>
+    <name>Connections</name>
+    <sql><![CDATA[select MEMBER, CLIENT_WRKSTNNAME, CLIENT_APPLNAME, CLIENT_PLATFORM, APPLICATION_HANDLE, APPLICATION_NAME,
+       SYSTEM_AUTH_ID, SESSION_AUTH_ID, CLIENT_HOSTNAME, CLIENT_PORT_NUMBER, CONNECTION_START_TIME, 
+	   ROWS_READ, ROWS_RETURNED, 
+	   CAST(CASE WHEN ROWS_RETURNED > 0 THEN 
+	   DECIMAL(ROWS_READ)/DECIMAL(ROWS_RETURNED) 
+	   ELSE NULL END AS DECIMAL(21, 2)) AS RRRS, 
+	   TOTAL_CPU_TIME, TOTAL_WAIT_TIME, TOTAL_SECTION_TIME, UOW_START_TIME, UOW_STOP_TIME, PREV_UOW_STOP_TIME, 
+	   NUM_ASSOC_AGENTS, WORKLOAD_OCCURRENCE_STATE
+  from table(MON_GET_CONNECTION(null, -2)) as t]]></sql>
+    <desc><![CDATA[Read vs. Returned]]></desc>
+  </item>
+  <item cat="설치">
+    <schema>운영</schema>
+    <name>V10.5 FP5 인스턴스</name>
+    <sql><![CDATA[./db2icrt: symbol lookup error: ./db2icrt: undefined symbol: szTextSearchPortNumber]]></sql>
+    <desc><![CDATA[nm db2icrt | grep -i portnum
+ ldd db2icrt]]></desc>
+  </item>
+  <item cat="Diag">
+    <schema>DBA</schema>
+    <name>Compress ratio</name>
+    <sql><![CDATA[select substr(tabschema,1,8) as tab_schema, substr(tabname,1,20) as tab_name, 
+          compression, npages*16384/1024/1024 as MB, pctpagessaved from syscat.tables 
+where tabschema not like 'SYS%' with ur]]></sql>
+    <desc />
+  </item>
+  <item cat="Diag">
+    <schema>DBA</schema>
+    <name>Index list</name>
+    <sql><![CDATA[with comontab ( level, tabschema, tabname, colname, partkeyseq )                               
+                    as ( select 1, tabschema, tabname, colname, partkeyseq                              
+                           from syscat.columns where partkeyseq <> 0 and partkeyseq is not null         
+                          union all                                                                     
+                         select old.level + 1, new.tabschema, new.tabname,                              
+                                old.colname||'+'||new.colname, new.partkeyseq                           
+                           from syscat.columns new, comontab old                                        
+                          where new.tabschema = old.tabschema and new.tabname =  old.tabname            
+                            and new.partkeyseq = old.partkeyseq + 1 and old.level < 17)                 
+         select tab.tabschema, tab.tabname, 'Partitioning Key' as indname, '  ' as unique,              
+                tab.colname, tab.colcount                                                               
+           from ( select substr(tabschema,1,9) as tabschema, substr(tabname,1,30) as tabname,           
+                         substr(colname,1,120) as colname, partkeyseq as colcount,                       
+                         rank() over ( partition by tabschema, tabname order by level desc ) rank#      
+                    from comontab) tab                                                                  
+          where rank# = 1                                                                               
+          union all                                                                                     
+          select substr(tabschema,1,9) as tabschema, substr(tabname,1,30) as tabname,                   
+                 substr(indname,1,18 ) as indname, uniquerule as unique,                                
+                 substr(colnames,1,120) as colname, colcount                                             
+            from syscat.indexes                                                                         
+           where tabschema not like 'SYS%'                                                              
+           order by 1,2,3 with ur]]></sql>
+    <desc />
+  </item>
+  <item cat="Diag">
+    <schema>DBA</schema>
+    <name>Size of objects</name>
+    <sql><![CDATA[SELECT SUBSTR(TABSCHEMA,1,15)   TABSCHEMA,
+       SUBSTR(TABNAME,1,30)     TABNAME,
+       SUM(DATA_OBJECT_P_SIZE)  DATA_OBJECT_P_SIZE,
+       SUM(COL_OBJECT_P_SIZE)   COL_OBJECT_P_SIZE,
+       SUM(INDEX_OBJECT_P_SIZE) INDEX_OBJECT_P_SIZE
+  FROM SYSIBMADM.ADMINTABINFO
+ WHERE TABSCHEMA NOT LIKE 'SYS%'
+   AND TABTYPE in ('T','S') 
+GROUP BY TABSCHEMA, TABNAME]]></sql>
+    <desc />
+  </item>
+  <item cat="Admin">
+    <schema>DBA</schema>
+    <name>ADMIN_GET_INDEX_COMPRESS_INFO</name>
+    <sql><![CDATA[SELECT tabschema, tabname, indname, compress_attr, iid, index_compressed,
+      pct_pages_saved, num_leaf_pages_saved 
+    FROM TABLE(sysproc.admin_get_index_compress_info('T', null, null, null, null)) 
+    AS t
+WHERE tabschema NOT LIKE 'SYS%']]></sql>
+    <desc />
+  </item>
+  <item cat="Admin">
+    <schema>DBA</schema>
+    <name>ADMIN_GET_INDEX_INFO</name>
+    <sql><![CDATA[SELECT tabschema, tabname, indname, iid, compress_attr, index_compressed, index_object_l_size, index_object_p_size, index_requires_rebuild 
+FROM TABLE(sysproc.admin_get_index_info('T', 'DB2I105', 'LINEITEM')) AS t]]></sql>
+    <desc />
+  </item>
+  <item cat="Admin">
+    <schema>DBA</schema>
+    <name>ADMIN_GET_MEM_USAGE</name>
+    <sql><![CDATA[SELECT MEMBER, MAX_MEMBER_MEM, CURRENT_MEMBER_MEM, PEAK_MEMBER_MEM
+   FROM TABLE(SYSPROC.ADMIN_GET_MEM_USAGE()) AS T]]></sql>
+    <desc />
+  </item>
+  <item cat="Admin">
+    <schema>DBA</schema>
+    <name>ADMIN_GET_STORAGE_PATHS</name>
+    <sql><![CDATA[SELECT VARCHAR(STORAGE_GROUP_NAME, 30) AS STOGROUP, VARCHAR(DB_STORAGE_PATH, 40) AS STORAGE_PATH, DB_STORAGE_PATH_STATE, FS_TOTAL_SIZE, FS_USED_SIZE, STO_PATH_FREE_SIZE
+FROM TABLE(ADMIN_GET_STORAGE_PATHS('',-1)) AS T]]></sql>
+    <desc />
+  </item>
+  <item cat="Admin">
+    <schema>DBA</schema>
+    <name>ADMIN_GET_TAB_COMPRESS_INFO</name>
+    <sql><![CDATA[SELECT TABSCHEMA, TABNAME, 
+       ROWCOMPMODE, 
+       AVG(PCTPAGESSAVED_CURRENT) AS PCTPAGESSAVED_CURRENT, 
+       AVG(AVGROWSIZE_CURRENT) AS AVGROWSIZE_CURRENT, 
+       AVG(PCTPAGESSAVED_STATIC) AS PCTPAGESSAVED_STATIC, 
+       AVG(AVGROWSIZE_STATIC) AS AVGROWSIZE_STATIC, 
+       AVG(PCTPAGESSAVED_ADAPTIVE) AS PCTPAGESSAVED_ADAPTIVE, 
+       AVG(AVGROWSIZE_ADAPTIVE) AS AVGROWSIZE_ADAPTIVE
+FROM TABLE(SYSPROC.ADMIN_GET_TAB_COMPRESS_INFO('DB2I105', 'LINEITEM')) AS T
+WHERE TABSCHEMA NOT LIKE 'SYS%'
+GROUP BY TABSCHEMA, TABNAME, ROWCOMPMODE]]></sql>
+    <desc />
+  </item>
+  <item cat="Admin">
+    <schema>DBA</schema>
+    <name>ADMIN_GET_TAB_INFO</name>
+    <sql><![CDATA[SELECT * FROM TABLE (SYSPROC.ADMIN_GET_TAB_INFO('', '')) AS T
+WHERE TABSCHEMA NOT LIKE 'SYS%']]></sql>
+    <desc />
+  </item>
+  <item cat="Admin">
+    <schema>DBA</schema>
+    <name>ADMIN_GET_TEMP_COLUMNS</name>
+    <sql><![CDATA[SELECT * 
+   FROM TABLE (
+      SYSPROC.ADMIN_GET_TEMP_COLUMNS(
+         null, null, null)) 
+   AS T]]></sql>
+    <desc />
+  </item>
+  <item cat="Admin">
+    <schema>DBA</schema>
+    <name>ADMIN_GET_TEMP_TABLES</name>
+    <sql><![CDATA[SELECT *
+   FROM TABLE (SYSPROC.ADMIN_GET_TEMP_TABLES(null, '', ''))
+   AS T]]></sql>
+    <desc />
+  </item>
+  <item cat="Admin">
+    <schema>DBA</schema>
+    <name>DB_GET_CFG</name>
+    <sql><![CDATA[SELECT *
+FROM TABLE(SYSPROC.DB_GET_CFG(-2))
+ORDER BY NAME, MEMBER]]></sql>
+    <desc />
+  </item>
+  <item cat="Admin">
+    <schema>DBA</schema>
+    <name>DBMCFG</name>
+    <sql><![CDATA[SELECT * FROM SYSIBMADM.DBMCFG
+ORDER BY NAME]]></sql>
+    <desc />
+  </item>
+  <item cat="Admin">
+    <schema>DBA</schema>
+    <name>ENV_GET_DB2_SYSTEM_RESOURCES</name>
+    <sql><![CDATA[SELECT *
+  FROM TABLE(ENV_GET_DB2_SYSTEM_RESOURCES(-2))]]></sql>
+    <desc />
+  </item>
+  <item cat="Admin">
+    <schema>DBA</schema>
+    <name>ENV_GET_NETWORK_RESOURCES</name>
+    <sql><![CDATA[SELECT *
+FROM TABLE(ENV_GET_NETWORK_RESOURCES())]]></sql>
+    <desc />
+  </item>
+  <item cat="Admin">
+    <schema>DBA</schema>
+    <name>ENV_GET_REG_VARIABLES</name>
+    <sql><![CDATA[select *
+   from table(ENV_GET_REG_VARIABLES(-2, 0))]]></sql>
+    <desc />
+  </item>
+  <item cat="Admin">
+    <schema>DBA</schema>
+    <name>ENV_GET_SYSTEM_RESOURCES</name>
+    <sql><![CDATA[select *
+from table(SYSPROC.ENV_GET_SYSTEM_RESOURCES())]]></sql>
+    <desc><![CDATA[CPU_LOAD_SHORT (< 1'), CPU_LOAD_MEDIUM (< 5'), CPU_LOAD_LONG (< 10'), CPU_USAGE_TOTAL]]></desc>
+  </item>
+  <item cat="Admin">
+    <schema>DBA</schema>
+    <name>ENV_INST_INFO</name>
+    <sql><![CDATA[SELECT * FROM SYSIBMADM.ENV_INST_INFO]]></sql>
+    <desc />
+  </item>
+  <item cat="Admin">
+    <schema>DBA</schema>
+    <name>ENV_PROD_INFO</name>
+    <sql><![CDATA[SELECT * FROM SYSIBMADM.ENV_PROD_INFO]]></sql>
+    <desc />
+  </item>
+  <item cat="Admin">
+    <schema>DBA</schema>
+    <name>ENV_SYS_INFO</name>
+    <sql><![CDATA[SELECT * from SYSIBMADM.ENV_SYS_INFO]]></sql>
+    <desc />
+  </item>
+  <item cat="Monitor">
+    <schema>DBA</schema>
+    <name>MON_GET_AUTO_RUNSTATS_QUEUE</name>
+    <sql><![CDATA[SELECT QUEUE_POSITION,
+       OBJECT_TYPE,
+       OBJECT_STATUS,
+       VARCHAR(OBJECT_SCHEMA, 10) AS OBJECT_SCHEMA,
+       VARCHAR(OBJECT_NAME, 10) AS OBJECT_NAME
+FROM TABLE(MON_GET_AUTO_RUNSTATS_QUEUE()) AS T
+ORDER BY QUEUE_POSITION ASC]]></sql>
+    <desc />
+  </item>
+  <item cat="Monitor">
+    <schema>DBA</schema>
+    <name>MON_FORMAT_LOCK_NAME</name>
+    <sql><![CDATA[SELECT *
+       FROM
+       TABLE( MON_FORMAT_LOCK_NAME('00000500000000000000000054')) as LOCK]]></sql>
+    <desc />
+  </item>
+  <item cat="Monitor">
+    <schema>DBA</schema>
+    <name>MON_GET_LOCKS</name>
+    <sql><![CDATA[select *
+from table(MON_GET_LOCKS(null,null))]]></sql>
+    <desc />
+  </item>
+  <item cat="Monitor">
+    <schema>DBA</schema>
+    <name>Application Lock</name>
+    <sql><![CDATA[SELECT C.APPLICATION_HANDLE, C.APPLICATION_NAME, L.LOCK_NAME
+  FROM TABLE(MON_GET_CONNECTION(NULL,-2)) C,
+       TABLE(MON_GET_AGENT('','','',-2)) A,
+       TABLE (MON_GET_APPL_LOCKWAIT(null, -2)) L
+ WHERE C.APPLICATION_HANDLE = A.APPLICATION_HANDLE
+   AND C.APPLICATION_HANDLE = L.HLD_APPLICATION_HANDLE]]></sql>
+    <desc />
+  </item>
+  <item cat="Monitor">
+    <schema>DBA</schema>
+    <name>MON_GET_AGENT</name>
+    <sql><![CDATA[SELECT *
+  FROM TABLE(MON_GET_AGENT('','',CAST(NULL AS BIGINT),-2))]]></sql>
+    <desc />
+  </item>
+  <item cat="Monitor">
+    <schema>DBA</schema>
+    <name>MON_GET_ACTIVITY</name>
+    <sql><![CDATA[SELECT member, uow_id, activity_id, activity_type, application_handle, STMT_EXEC_TIME, varchar(stmt_text, 256) as stmt_text
+  FROM table(MON_GET_ACTIVITY(NULL, -1)) as T
+ ORDER BY member, uow_id, activity_id]]></sql>
+    <desc><![CDATA[WITH A1 AS 
+   (SELECT * FROM TABLE(wlm_get_workload_occurrence_activities_v97(null, -1)) 
+    WHERE activity_id > 0 ) 
+SELECT A1.application_handle, 
+  A1.activity_id, A1.uow_id, total_act_time, total_act_wait_time, varchar(actmetrics.stmt_text, 50) AS stmt_text FROM A1, 
+TABLE(MON_GET_ACTIVITY_DETAILS(A1.application_handle, A1.uow_id,A1.activity_id, -1)) 
+    AS ACTDETAILS, 
+XMLTABLE (XMLNAMESPACES( DEFAULT 'http://www.ibm.com/xmlns/prod/db2/mon'), 
+ '$actmetrics/db2_activity_details' 
+ PASSING XMLPARSE(DOCUMENT ACTDETAILS.DETAILS) AS "actmetrics" 
+ COLUMNS "STMT_TEXT" VARCHAR(1024) PATH 'stmt_text', 
+ "TOTAL_ACT_TIME" INTEGER PATH 'activity_metrics/total_act_time', 
+ "TOTAL_ACT_WAIT_TIME" INTEGER PATH 'activity_metrics/total_act_wait_time' ) 
+ AS ACTMETRICS]]></desc>
+  </item>
+  <item cat="Monitor">
+    <schema>DBA</schema>
+    <name>MON_GET_MEMORY_SET</name>
+    <sql><![CDATA[SELECT *
+    FROM TABLE( 
+       MON_GET_MEMORY_SET(NULL, CURRENT_SERVER, -2))]]></sql>
+    <desc />
+  </item>
+  <item cat="Monitor">
+    <schema>DBA</schema>
+    <name>MON_GET_ROUTINE</name>
+    <sql><![CDATA[SELECT ROUTINE_TYPE, ROUTINE_SCHEMA, ROUTINE_NAME, SPECIFIC_NAME, TOTAL_CPU_TIME 
+   FROM TABLE(MON_GET_ROUTINE(NULL, NULL, NULL, NULL, NULL)) 
+   AS T ORDER BY TOTAL_CPU_TIME DESC]]></sql>
+    <desc><![CDATA[get aggregated routine execution metrics]]></desc>
+  </item>
+  <item cat="Monitor">
+    <schema>DBA</schema>
+    <name>MON_GET_ROUTINE_EXEC_LIST</name>
+    <sql><![CDATA[SELECT SUBSTR(P.STMT_TEXT,1,45) AS TEXT 
+   FROM TABLE(MON_GET_ROUTINE_EXEC_LIST(NULL, NULL, NULL, NULL, -1)) 
+   AS T, TABLE(MON_GET_PKG_CACHE_STMT(NULL,NULL,NULL,-1)) AS P 
+   WHERE T.EXECUTABLE_ID = P.EXECUTABLE_ID]]></sql>
+    <desc />
+  </item>
+  <item cat="Monitor">
+    <schema>DBA</schema>
+    <name>MON_GET_SECTION</name>
+    <sql><![CDATA[SELECT STMT_TEXT, STMTID, PLANID, SEMANTIC_ENV_ID,
+      ( SELECT B.SECTION_ENV
+        FROM TABLE(MON_GET_SECTION(A.EXECUTABLE_ID)) AS B)
+         SECTION_DATA
+      FROM TABLE(MON_GET_PKG_CACHE_STMT(NULL,NULL,NULL,-2)) AS A]]></sql>
+    <desc />
+  </item>
+  <item cat="Monitor">
+    <schema>DBA</schema>
+    <name>MON_GET_TABLESPACE_RANGE</name>
+    <sql><![CDATA[SELECT TBSP_ID, TBSP_NAME, RANGE_NUMBER, RANGE_CONTAINER_ID, RANGE_STRIPE_SET_NUMBER, RANGE_OFFSET, RANGE_MAX_PAGE, 
+   RANGE_MAX_EXTENT, RANGE_START_STRIPE, RANGE_END_STRIPE, 
+   RANGE_ADJUSTMENT, RANGE_NUM_CONTAINER, DBPARTITIONNUM FROM TABLE(MON_GET_TABLESPACE_RANGE(-2))
+   ORDER BY DBPARTITIONNUM]]></sql>
+    <desc />
+  </item>
+  <item cat="Monitor">
+    <schema>DBA</schema>
+    <name>MON_GET_TABLE_USAGE_LIST</name>
+    <sql><![CDATA[SELECT * FROM TABLE(
+   MON_GET_TABLE_USAGE_LIST(NULL, NULL, -2))]]></sql>
+    <desc />
+  </item>
+  <item cat="Monitor">
+    <schema>DBA</schema>
+    <name>MON_GET_MEMORY_POOL</name>
+    <sql><![CDATA[SELECT *
+FROM TABLE( 
+       MON_GET_MEMORY_POOL(NULL, CURRENT_SERVER, -2))]]></sql>
+    <desc />
+  </item>
+  <item cat="Monitor">
+    <schema>DBA</schema>
+    <name>Memory Pool</name>
+    <sql><![CDATA[with x (Application, SharedSort, Locklist, Packagecache, Private) AS 
+( 
+SELECT 
+       sum(CASE WHEN MEMORY_POOL_TYPE='APPLICATION' THEN MEMORY_POOL_USED END) as Application, 
+       sum(CASE WHEN MEMORY_POOL_TYPE='SHARED_SORT' THEN MEMORY_POOL_USED END) as SharedSort, 
+       sum(CASE WHEN MEMORY_POOL_TYPE='LOCK_MGR' THEN MEMORY_POOL_USED END) as Locklist, 
+       sum(CASE WHEN MEMORY_POOL_TYPE='PACKAGE_CACHE' THEN MEMORY_POOL_USED END) as Packagecache, 
+       sum(CASE WHEN MEMORY_POOL_TYPE='PRIVATE' THEN MEMORY_POOL_USED END) as Private
+  FROM TABLE( MON_GET_MEMORY_POOL(NULL, CURRENT_SERVER, -2))
+ GROUP BY MEMORY_POOL_TYPE 
+) 
+SELECT CURRENT TIME AS TIME, 
+       max(Application) as Application, 
+       max(SharedSort) as SharedSort, 
+       max(Locklist) as Locklist, 
+       max(Packagecache) as Packagecache, 
+       max(Private) as Private 
+  FROM X]]></sql>
+    <desc />
+  </item>
+  <item cat="Monitor">
+    <schema>DBA</schema>
+    <name>MON_GET_TABLE</name>
+    <sql><![CDATA[SELECT 
+        TABSCHEMA
+        ,TABNAME
+        ,MEMBER
+        ,TAB_TYPE
+        ,TAB_FILE_ID
+        ,DATA_PARTITION_ID
+        ,TBSP_ID
+        ,INDEX_TBSP_ID
+        ,LONG_TBSP_ID
+        ,TABLE_SCANS
+        ,ROWS_READ
+        ,ROWS_INSERTED
+        ,ROWS_UPDATED
+        ,ROWS_DELETED
+        ,OVERFLOW_ACCESSES
+        ,OVERFLOW_CREATES
+        ,PAGE_REORGS
+  FROM TABLE(MON_GET_TABLE('','',-2)) AS T
+ WHERE TABSCHEMA NOT LIKE 'SYS%'
+   AND TAB_TYPE != 'TEMP_TABLE']]></sql>
+    <desc />
+  </item>
+  <item cat="Monitor">
+    <schema>DBA</schema>
+    <name>MON_CURRENT_UOW</name>
+    <sql><![CDATA[SELECT APPLICATION_HANDLE, APPLICATION_NAME, CLIENT_APPLNAME, ELAPSED_TIME_SEC
+  FROM SYSIBMADM.MON_CURRENT_UOW
+ ORDER BY ELAPSED_TIME_SEC DESC]]></sql>
+    <desc />
+  </item>
+  <item cat="Monitor">
+    <schema>DBA</schema>
+    <name>MON_CONNECTION_SUMMARY</name>
+    <sql><![CDATA[SELECT APPLICATION_HANDLE, APPLICATION_NAME, APPLICATION_ID, SESSION_AUTH_ID,
+AVG_LOCK_WAITS_PER_ACT, ROWS_READ_PER_ROWS_RETURNED
+  FROM SYSIBMADM.MON_CONNECTION_SUMMARY]]></sql>
+    <desc />
+  </item>
+  <item cat="Diag">
+    <schema>DBA</schema>
+    <name>PD_GET_DIAG_HIST</name>
+    <sql><![CDATA[SELECT DBPARTITIONNUM, TIMESTAMP, RECTYPE, LEVEL, IMPACT, MSGNUM, MSGTYPE, OBJTYPE, CAST(MSG AS VARCHAR(500)) AS MSG, APPLNAME, APPLHANDLE, AUTH_ID, PRODUCT, COMPONENT, FUNCTION, PROCESS_NAME, EDUNAME, PROBE, OSERR, RETCODE, OBJNAME, EVENTTYPE, EVENTDESC, EVENTSTATE, CAST(EVENTSTACK AS VARCHAR(500)) AS EVENTSTACK, VARCHAR(FULLREC) AS FULLREC
+  FROM TABLE (PD_GET_DIAG_HIST('MAIN', 'ALL', '', CURRENT DATE - 7 DAYS, CURRENT DATE, NULL ) ) AS T
+ ORDER BY TIMESTAMP DESC]]></sql>
+    <desc />
+  </item>
+  <item cat="Monitor">
+    <schema>DBA</schema>
+    <name>Latency</name>
+    <sql><![CDATA[SELECT CASE
+       WHEN LATENCY <= REFRESH_AGE THEN 1
+       ELSE 0
+       END AS LATENCY_CHECK, 
+	   V2.*
+  FROM TABLE (
+       SELECT CURRENT REFRESH AGE AS REFRESH_AGE,
+              CUR_TS - REFRESH_TS AS LATENCY, 
+			  V1.*
+         FROM TABLE (
+              SELECT CURRENT TIMESTAMP AS CUR_TS, 
+                     (TIMESTAMP('1970-01-01') + (COMMIT_POINT-DELAY_OFFSET) SECONDS) + CURRENT TIMEZONE AS REFRESH_TS,
+                     COMMIT_POINT, DELAY_OFFSET FROM SYSTOOLS.REPL_MQT_LATENCY
+              ) AS V1
+       ) AS V2]]></sql>
+    <desc />
+  </item>
+  <item cat="Monitor">
+    <schema>DBA</schema>
+    <name>UOW-exec</name>
+    <sql><![CDATA[WITH X(UOWEXEC, UOWWAIT, OTHER) AS (
+SELECT CASE WHEN WORKLOAD_OCCURRENCE_STATE = 'UOWEXEC' THEN COUNT(*) END AS UOWEXEC,
+       CASE WHEN WORKLOAD_OCCURRENCE_STATE = 'UOWWAIT' THEN COUNT(*) END AS UOWWAIT,
+       CASE WHEN WORKLOAD_OCCURRENCE_STATE NOT IN ('UOWEXEC', 'UOWWAIT') THEN COUNT(*) END AS OTHER
+  FROM SYSIBMADM.MON_CURRENT_UOW
+ GROUP BY WORKLOAD_OCCURRENCE_STATE
+)
+SELECT CURRENT TIME AS TIME,
+       MAX(UOWEXEC) AS UOWEXEC,
+       MAX(UOWWAIT) AS UOWWAIT,
+       MAX(OTHER) AS OTHER
+  FROM X]]></sql>
+    <desc />
+  </item>
+  <item cat="Monitor">
+    <schema>DBA</schema>
+    <name>Snapshot Switch</name>
+    <sql><![CDATA[SELECT UOW_SW_STATE, STATEMENT_SW_STATE, TABLE_SW_STATE, BUFFPOOL_SW_STATE, LOCK_SW_STATE, SORT_SW_STATE, TIMESTAMP_SW_STATE, DBPARTITIONNUM FROM SYSIBMADM.SNAPSWITCHES]]></sql>
+    <desc />
+  </item>
+  <item cat="Monitor">
+    <schema>DBA</schema>
+    <name>Monitor Set</name>
+    <sql><![CDATA[select CURRENT TIME AS TIME,
+	CASE WHEN POOL_DATA_L_READS = 0 THEN NULL ELSE 
+	100 * (POOL_DATA_L_READS-POOL_DATA_P_READS)/POOL_DATA_L_READS END AS DATA_BPRATIO,
+	CASE WHEN POOL_INDEX_L_READS = 0 THEN NULL ELSE 
+	100 * (POOL_INDEX_L_READS-POOL_INDEX_P_READS)/POOL_INDEX_L_READS END AS INDEX_BPRATIO,
+	CASE WHEN POOL_TEMP_DATA_L_READS = 0 THEN NULL ELSE 
+	100 * (POOL_TEMP_DATA_L_READS-POOL_TEMP_DATA_P_READS)/POOL_TEMP_DATA_L_READS END AS TEMPDATA_BPRATIO,
+	CASE WHEN POOL_TEMP_INDEX_L_READS = 0 THEN NULL ELSE 
+	100 * (POOL_TEMP_INDEX_L_READS-POOL_TEMP_INDEX_P_READS)/POOL_TEMP_INDEX_L_READS END AS TEMPINDEX_BPRATIO,
+	CASE WHEN TOTAL_APP_COMMITS = 0 THEN NULL ELSE 
+	(POOL_DATA_P_READS+POOL_INDEX_P_READS+POOL_TEMP_DATA_P_READS+POOL_TEMP_INDEX_P_READS)/TOTAL_APP_COMMITS END AS BPREAD_PER_TRAN,
+	CASE WHEN TOTAL_APP_COMMITS = 0 THEN NULL ELSE 
+	(POOL_DATA_WRITES+POOL_INDEX_WRITES)/TOTAL_APP_COMMITS END AS BPWRITE_PER_TRAN,
+	CASE WHEN TOTAL_APP_COMMITS = 0 THEN NULL 
+	ELSE (TOTAL_SECTION_SORT_TIME-TOTAL_SECTION_SORT_PROC_TIME)/TOTAL_APP_COMMITS END AS SORT_WAIT_PER_TRAN,
+	CASE WHEN TOTAL_APP_COMMITS = 0 THEN NULL 
+	ELSE 1000 * LOCK_WAIT_TIME/TOTAL_APP_COMMITS END AS LOCK_WAIT_PER_TRAN,
+	CASE WHEN TOTAL_APP_COMMITS = 0 THEN NULL 
+	ELSE 1000 * (DEADLOCKS+LOCK_TIMEOUTS)/TOTAL_APP_COMMITS END AS DEADLOCK_AND_TIMEOUT_PER_TRAN,
+	CASE WHEN TOTAL_APP_COMMITS = 0 THEN NULL 
+	ELSE POOL_DRTY_PG_STEAL_CLNS/TOTAL_APP_COMMITS END AS DIRTY_STEAL,
+	CASE WHEN TOTAL_APP_COMMITS = 0 THEN NULL 
+	ELSE 1000*PKG_CACHE_INSERTS/TOTAL_APP_COMMITS END PKGCACHE_INSERTS
+  from table(MON_GET_DATABASE(-1)) as t]]></sql>
+    <desc />
+  </item>
+  <item cat="Monitor">
+    <schema>DBA</schema>
+    <name>Connection Set</name>
+    <sql><![CDATA[select 
+	APPLICATION_HANDLE, APPLICATION_NAME,
+	CASE WHEN POOL_DATA_L_READS = 0 THEN NULL ELSE 
+	100 * (POOL_DATA_L_READS-POOL_DATA_P_READS)/POOL_DATA_L_READS END AS DATA_BPRATIO,
+	CASE WHEN POOL_INDEX_L_READS = 0 THEN NULL ELSE 
+	100 * (POOL_INDEX_L_READS-POOL_INDEX_P_READS)/POOL_INDEX_L_READS END AS INDEX_BPRATIO,
+	CASE WHEN POOL_TEMP_DATA_L_READS = 0 THEN NULL ELSE 
+	100 * (POOL_TEMP_DATA_L_READS-POOL_TEMP_DATA_P_READS)/POOL_TEMP_DATA_L_READS END AS TEMPDATA_BPRATIO,
+	CASE WHEN POOL_TEMP_INDEX_L_READS = 0 THEN NULL ELSE 
+	100 * (POOL_TEMP_INDEX_L_READS-POOL_TEMP_INDEX_P_READS)/POOL_TEMP_INDEX_L_READS END AS TEMPINDEX_BPRATIO,
+	CASE WHEN TOTAL_APP_COMMITS = 0 THEN NULL ELSE 
+	(POOL_DATA_P_READS+POOL_INDEX_P_READS+POOL_TEMP_DATA_P_READS+POOL_TEMP_INDEX_P_READS)/TOTAL_APP_COMMITS END AS BPREAD_PER_TRAN,
+	CASE WHEN TOTAL_APP_COMMITS = 0 THEN NULL ELSE 
+	(POOL_DATA_WRITES+POOL_INDEX_WRITES)/TOTAL_APP_COMMITS END AS BPWRITE_PER_TRAN,
+	CASE WHEN ROWS_RETURNED = 0 THEN NULL ELSE ROWS_READ/ROWS_RETURNED END AS RS_RATIO,
+	CASE WHEN TOTAL_APP_COMMITS = 0 THEN NULL 
+	ELSE (TOTAL_SECTION_SORT_TIME-TOTAL_SECTION_SORT_PROC_TIME)/TOTAL_APP_COMMITS END AS SORT_WAIT_PER_TRAN,
+	CASE WHEN TOTAL_APP_COMMITS = 0 THEN NULL 
+	ELSE 1000 * LOCK_WAIT_TIME/TOTAL_APP_COMMITS END AS LOCK_WAIT_PER_TRAN,
+	CASE WHEN TOTAL_APP_COMMITS = 0 THEN NULL 
+	ELSE 1000 * (DEADLOCKS+LOCK_TIMEOUTS)/TOTAL_APP_COMMITS END AS DEADLOCK_AND_TIMEOUT_PER_TRAN,
+	CASE WHEN TOTAL_APP_COMMITS = 0 THEN NULL 
+	ELSE 1000*PKG_CACHE_INSERTS/TOTAL_APP_COMMITS END PKGCACHE_INSERTS
+  from table(MON_GET_CONNECTION(NULL, -1)) as t]]></sql>
+    <desc />
+  </item>
+  <item cat="Diag">
+    <schema>DBA</schema>
+    <name>Tablespace Bufferpool</name>
+    <sql><![CDATA[WITH BPMETRICS AS (
+    SELECT TBSP_NAME,
+           pool_data_l_reads + pool_temp_data_l_reads +
+           pool_index_l_reads + pool_temp_index_l_reads +
+           pool_xda_l_reads + pool_temp_xda_l_reads +
+           pool_col_l_reads + pool_temp_col_l_reads as logical_reads,
+           pool_data_p_reads + pool_temp_data_p_reads +
+           pool_index_p_reads + pool_temp_index_p_reads +
+           pool_xda_p_reads + pool_temp_xda_p_reads +
+           pool_col_p_reads + pool_temp_col_p_reads as physical_reads,
+           member
+    FROM TABLE(MON_GET_TABLESPACE('',-1)) AS METRICS)
+   SELECT
+    TBSP_NAME,
+    logical_reads,
+    physical_reads,
+    CASE WHEN logical_reads > 0
+     THEN DECIMAL((1 - (FLOAT(physical_reads) / FLOAT(logical_reads))) * 100,5,2)
+     ELSE NULL
+    END AS HIT_RATIO,
+    member
+   FROM BPMETRICS
+order by 1,4]]></sql>
+    <desc />
+  </item>
+  <item cat="Diag">
+    <schema>DBA</schema>
+    <name>MON_BP_UTILIZATION</name>
+    <sql><![CDATA[SELECT BP_NAME, 
+       DATA_PHYSICAL_READS, DATA_HIT_RATIO_PERCENT,
+       INDEX_PHYSICAL_READS, INDEX_HIT_RATIO_PERCENT,
+       COL_PHYSICAL_READS, COL_HIT_RATIO_PERCENT,
+       AVG_PHYSICAL_READ_TIME, PREFETCH_RATIO_PERCENT
+   FROM SYSIBMADM.MON_BP_UTILIZATION 
+-- where BP_NAME NOT LIKE 'IBMSYS%'
+ where BP_NAME = 'BP_INDEX_32K']]></sql>
+    <desc />
+  </item>
+  <item cat="Monitor">
+    <schema>DBA</schema>
+    <name>WLM CPU</name>
+    <sql><![CDATA[WITH WLM (SYSDEFAULTUSERWORKLOAD) AS (
+SELECT SUM(CASE WHEN WORKLOAD_NAME = 'SYSDEFAULTUSERWORKLOAD' THEN CPU_UTILIZATION END) AS SYSDEFAULTUSERWORKLOAD
+  FROM TABLE(MON_SAMPLE_WORKLOAD_METRICS
+      (null, current server, '',10 ,-2)) AS t 
+ GROUP BY WORKLOAD_NAME
+)
+SELECT CURRENT TIME AS TIME,
+       DECIMAL(MAX(SYSDEFAULTUSERWORKLOAD),5,2) AS SYSDEFAULTUSERWORKLOAD
+  FROM WLM]]></sql>
+    <desc><![CDATA[period should be more than sample time]]></desc>
+  </item>
+  <item cat="SNAPDB">
+    <schema>SYSIBMADM</schema>
+    <name>CONN_PER_MINUTE</name>
+    <sql><![CDATA[select snap0.SNAPSHOT_TIMESTAMP,
+(
+decimal(decimal(( TOTAL_CONS  -
+         ( select TOTAL_CONS
+          from sysibmadm.snapdb as SNAP1
+          where snap1.SNAPSHOT_TIMESTAMP = ( select max(snap2.SNAPSHOT_TIMESTAMP)
+                                             from sysibmadm.snapdb as SNAP2
+                                             where snap2.SNAPSHOT_TIMESTAMP < snap0.SNAPSHOT_TIMESTAMP
+                                           )
+
+         )
+), 21, 2)
+/
+decimal(timestampdiff(4, char( snap0.SNAPSHOT_TIMESTAMP -
+  ( select max(snap2.SNAPSHOT_TIMESTAMP)
+  from sysibmadm.snapdb as SNAP2
+  where snap2.SNAPSHOT_TIMESTAMP < snap0.SNAPSHOT_TIMESTAMP
+  ))
+), 21, 2), 21, 2)
+) as CONN_PER_MINUTE
+from sysibmadm.snapdb as SNAP0]]></sql>
+    <desc />
+  </item>
+  <item cat="SNAPDB">
+    <schema>sysibmadm</schema>
+    <name>PHYS_READ_IO_PER_MINUTE</name>
+    <sql><![CDATA[with POOL_DATA_L_READS_DELTA_TB as
+(select snap0.SNAPSHOT_TIMESTAMP,
+( POOL_DATA_L_READS  -
+         ( select POOL_DATA_L_READS
+          from sysibmadm.snapdb as SNAP1
+          where snap1.SNAPSHOT_TIMESTAMP = ( select max(snap2.SNAPSHOT_TIMESTAMP)
+                                             from sysibmadm.snapdb as SNAP2
+                                             where snap2.SNAPSHOT_TIMESTAMP < snap0.SNAPSHOT_TIMESTAMP
+                                           )
+
+         )
+) as POOL_DATA_L_READS_DELTA
+from sysibmadm.snapdb as SNAP0 ),
+
+POOL_DATA_P_READS_DELTA_TB as
+(select snap0.SNAPSHOT_TIMESTAMP,
+( POOL_DATA_P_READS  -
+         ( select POOL_DATA_P_READS
+          from sysibmadm.snapdb as SNAP1
+          where snap1.SNAPSHOT_TIMESTAMP = ( select max(snap2.SNAPSHOT_TIMESTAMP)
+                                             from sysibmadm.snapdb as SNAP2
+                                             where snap2.SNAPSHOT_TIMESTAMP < snap0.SNAPSHOT_TIMESTAMP
+                                           )
+
+         )
+) as POOL_DATA_P_READS_DELTA
+from sysibmadm.snapdb as SNAP0 )
+
+select snap0.SNAPSHOT_TIMESTAMP,
+decimal(( decimal( POOL_DATA_L_READS_DELTA + POOL_DATA_P_READS_DELTA , 21, 2) /
+decimal(timestampdiff(4, char( snap0.SNAPSHOT_TIMESTAMP -
+  ( select max(snap2.SNAPSHOT_TIMESTAMP)
+  from sysibmadm.snapdb as SNAP2
+  where snap2.SNAPSHOT_TIMESTAMP < snap0.SNAPSHOT_TIMESTAMP
+  )) ), 21, 2) ), 12,1) as PHYS_READ_IO_PER_MINUTE
+from sysibmadm.snapdb as SNAP0, POOL_DATA_L_READS_DELTA_TB B,
+POOL_DATA_P_READS_DELTA_TB C
+where SNAP0.SNAPSHOT_TIMESTAMP = B.SNAPSHOT_TIMESTAMP
+and SNAP0.SNAPSHOT_TIMESTAMP =   C.SNAPSHOT_TIMESTAMP]]></sql>
+    <desc />
+  </item>
+  <item cat="Monitor">
+    <schema>DBA</schema>
+    <name>Memory Pool 2</name>
+    <sql><![CDATA[WITH MEM (MEM_POOL, GRP, POOL_USED) AS (
+SELECT COALESCE(MEMORY_SET_TYPE||'-'||MEMORY_POOL_TYPE,'TOTAL') AS MEM_POOL,
+       GROUPING(MEMORY_SET_TYPE||'-'||MEMORY_POOL_TYPE) AS GRP,
+	   SUM(MEMORY_POOL_USED) AS POOL_USED
+  FROM TABLE(MON_GET_MEMORY_POOL(NULL, CURRENT_SERVER, -2)) AS T
+ GROUP BY ROLLUP(MEMORY_SET_TYPE||'-'||MEMORY_POOL_TYPE)
+)
+SELECT MEM_POOL,
+       DEC(POOL_USED/1024.0,5,1) AS POOL_USED,
+       DEC(100.0*POOL_USED/(SELECT POOL_USED FROM MEM WHERE GRP=1),5,2) AS PCT
+  FROM MEM
+ ORDER BY PCT DESC
+ FETCH FIRST 10 ROWS ONLY]]></sql>
+    <desc />
+  </item>
+  <item cat="NETEZZA">
+    <schema>DBA</schema>
+    <name>Resource</name>
+    <sql><![CDATA[select current_time as time, 
+       avg(HOST_CPU) * 100.0 as host_cpu, avg(SPU_CPU) * 100.0 as spu_cpu,
+       avg(HOST_DISK) * 100.0 as host_disk, avg(SPU_DISK) * 100.0 as spu_disk,
+	   avg(HOST_MEMORY) * 100.0 as host_memory, avg(SPU_MEMORY) * 100.0 as spu_memory
+  from _vt_system_util
+ where entry_ts / 1000000 > ((select max(entry_ts) from _vt_system_util) / 1000000 - 180)]]></sql>
+    <desc />
+  </item>
+  <item cat="DashBoard">
+    <schema>Resource</schema>
+    <name>Dash-Resource</name>
+    <sql><![CDATA[select OS_FULL_VERSION, OS_KERNEL_VERSION, CPU_TOTAL, CPU_HMT_DEGREE, CPU_CORES_PER_SOCKET, MEMORY_TOTAL, MEMORY_FREE, MEMORY_SWAP_TOTAL, MEMORY_SWAP_FREE
+  from table(SYSPROC.ENV_GET_SYSTEM_RESOURCES())]]></sql>
+    <desc><![CDATA[MEM : MB]]></desc>
+  </item>
+  <item cat="DashBoard">
+    <schema>Resource</schema>
+    <name>Dash-Resource(pre97)</name>
+    <sql><![CDATA[SELECT HOST_NAME, OS_FULL_VERSION, OS_KERNEL_VERSION, TOTAL_CPUS, TOTAL_MEMORY
+ FROM SYSIBMADM.ENV_SYS_INFO]]></sql>
+    <desc><![CDATA[MEM : MB]]></desc>
+  </item>
+  <item cat="DashBoard">
+    <schema>TBSP</schema>
+    <name>Dash-TableSpaces</name>
+    <sql><![CDATA[WITH BPMETRICS AS (
+SELECT TBSP_ID, TBSP_NAME, TBSP_CUR_POOL_ID, TBSP_USED_PAGES, TBSP_TOTAL_PAGES, TBSP_AUTO_RESIZE_ENABLED,
+	   pool_data_l_reads + pool_temp_data_l_reads +
+	   pool_index_l_reads + pool_temp_index_l_reads +
+	   pool_xda_l_reads + pool_temp_xda_l_reads +
+	   pool_col_l_reads + pool_temp_col_l_reads as logical_reads,
+	   pool_data_p_reads + pool_temp_data_p_reads +
+	   pool_index_p_reads + pool_temp_index_p_reads +
+	   pool_xda_p_reads + pool_temp_xda_p_reads +
+	   pool_col_p_reads + pool_temp_col_p_reads as physical_reads,
+	   member
+  FROM TABLE(MON_GET_TABLESPACE('',-1)) AS METRICS)
+SELECT
+		TBSP_NAME,
+		CASE WHEN logical_reads > 0
+		THEN DECIMAL((1 - (FLOAT(physical_reads) / FLOAT(logical_reads))) * 100,5,2)
+		ELSE NULL
+		END AS HIT_RATIO,
+		B.PAGESIZE,
+		A.TBSP_USED_PAGES*B.PAGESIZE/1024/1024 AS SIZE_M,
+		100*A.TBSP_USED_PAGES/A.TBSP_TOTAL_PAGES AS PCT,
+		A.TBSP_AUTO_RESIZE_ENABLED AS AUTO_RESIZE,
+		C.BPNAME
+   FROM BPMETRICS A,
+		SYSCAT.TABLESPACES B,
+		SYSCAT.BUFFERPOOLS C
+  WHERE A.TBSP_ID = B.TBSPACEID
+    AND A.TBSP_CUR_POOL_ID = C.BUFFERPOOLID]]></sql>
+    <desc><![CDATA[hitratio | pagesize | pct]]></desc>
+  </item>
+  <item cat="DashBoard">
+    <schema>TBSP</schema>
+    <name>Dash-TableSpaces(pre97)</name>
+    <sql><![CDATA[SELECT TBSP_NAME,
+       TBSP_PAGE_SIZE AS PAGESIZE,
+       TBSP_EXTENT_SIZE,
+       TBSP_USED_SIZE_KB,
+       TBSP_USED_SIZE_KB/1024 AS SIZE_M,
+       TBSP_TOTAL_SIZE_KB,
+       CASE WHEN TBSP_TOTAL_SIZE_KB > 0 THEN
+       100*TBSP_USED_SIZE_KB/TBSP_TOTAL_SIZE_KB
+       ELSE NULL END AS PCT,
+       TBSP_TOTAL_PAGES,
+       TBSP_NUM_CONTAINERS,
+       TBSP_AUTO_RESIZE_ENABLED AS AUTO_RESIZE,
+       C.BPNAME
+  FROM SYSIBMADM.TBSP_UTILIZATION A,
+       SYSCAT.TABLESPACES B,
+       SYSCAT.BUFFERPOOLS C
+ WHERE A.TBSP_ID = B.TBSPACEID
+   AND B.BUFFERPOOLID = C.BUFFERPOOLID]]></sql>
+    <desc><![CDATA[pagesize | pct]]></desc>
+  </item>
+  <item cat="DashBoard">
+    <schema>CPU</schema>
+    <name>Dash-CPU</name>
+    <sql><![CDATA[SELECT CPU_LOAD_SHORT, CPU_LOAD_LONG
+  FROM TABLE(SYSPROC.ENV_GET_SYSTEM_RESOURCES())]]></sql>
+    <desc><![CDATA[CPU_LOAD_SHORT : ~1', CPU_LOAD_LONG : ~10']]></desc>
+  </item>
+  <item cat="DashBoard">
+    <schema>MEM</schema>
+    <name>Dash-MEM</name>
+    <sql><![CDATA[WITH MEM (MEM_POOL, GRP, POOL_USED) AS (
+SELECT COALESCE(MEMORY_SET_TYPE||'-'||MEMORY_POOL_TYPE,'TOTAL') AS MEM_POOL,
+       GROUPING(MEMORY_SET_TYPE||'-'||MEMORY_POOL_TYPE) AS GRP,
+	   SUM(MEMORY_POOL_USED) AS POOL_USED
+  FROM TABLE(MON_GET_MEMORY_POOL(NULL, CURRENT_SERVER, -2)) AS T
+ GROUP BY ROLLUP(MEMORY_SET_TYPE||'-'||MEMORY_POOL_TYPE)
+)
+SELECT MEM_POOL,
+       DEC(POOL_USED/1024.0,5,1) AS POOL_USED,
+       DEC(100.0*POOL_USED/(SELECT POOL_USED FROM MEM WHERE GRP=1),5,2) AS PCT
+  FROM MEM
+ ORDER BY PCT DESC
+ FETCH FIRST 10 ROWS ONLY]]></sql>
+    <desc><![CDATA[MEM : MB]]></desc>
+  </item>
+  <item cat="DashBoard">
+    <schema>MEM</schema>
+    <name>Dash-MEM(pre97)</name>
+    <sql><![CDATA[WITH MEM (MEM_POOL, GRP, POOL_USED) AS (
+SELECT COALESCE(POOL_ID,'TOTAL') AS MEM_POOL,
+       GROUPING(POOL_ID) AS GRP,
+       SUM(POOL_CUR_SIZE) AS POOL_USED
+  FROM TABLE(SYSPROC.SNAP_GET_DB_MEMORY_POOL(CAST(NULL AS VARCHAR(128)), -1)) AS T
+ GROUP BY ROLLUP(POOL_ID)
+)
+SELECT MEM_POOL,
+       DEC(POOL_USED/1024.0/1024.0,5,1) AS POOL_USED,
+       DEC(100.0*POOL_USED/(SELECT POOL_USED FROM MEM WHERE GRP=1),5,2) AS PCT
+  FROM MEM
+ ORDER BY PCT DESC]]></sql>
+    <desc><![CDATA[MEM : MB]]></desc>
+  </item>
+  <item cat="Diag">
+    <schema>DBA</schema>
+    <name>STMM Change</name>
+    <sql><![CDATA[SELECT substr(varchar(FULLREC), locate(chr(34), FULLREC)+1, locate(chr(34), FULLREC, locate(chr(34), FULLREC)+1) - locate(chr(34), FULLREC)-1) as STMM,
+       varchar_format(TIMESTAMP, 'YYYY-MM-DD HH24:MI:SS') as TIMESTAMP,
+       replace(replace(replace(replace(substr(varchar(FULLREC), locate('To: '||chr(34), FULLREC)+4), chr(34),''), '<automatic>', ''), chr(10), ''), ' ', '') as value
+  FROM TABLE (PD_GET_DIAG_HIST('MAIN', 'ALL', '', CURRENT DATE - 90 DAYS, CURRENT DATE + 1 day, NULL ) ) AS T
+ where function = 'sqlfLogUpdateCfgParam'
+ ORDER BY STMM, TIMESTAMP]]></sql>
+    <desc />
+  </item>
+  <item cat="Diag">
+    <schema>DBA</schema>
+    <name>STMM Change Total</name>
+    <sql><![CDATA[with STMM as (
+SELECT 
+       substr(varchar(FULLREC), locate(chr(34), FULLREC)+1, locate(chr(34), FULLREC, locate(chr(34), FULLREC)+1) - locate(chr(34), FULLREC)-1) as STMM,
+       varchar_format(TIMESTAMP, 'YYYY-MM-DD HH24:MI:SS') as TIMESTAMP,
+       replace(replace(replace(replace(substr(varchar(FULLREC), locate('To: '||chr(34), FULLREC)+4), chr(34),''), '<automatic>', ''), chr(10), ''), ' ', '') as value
+  FROM TABLE (PD_GET_DIAG_HIST('MAIN', 'ALL', '', CURRENT DATE - 90 DAYS, CURRENT DATE + 1 day, NULL ) ) AS T
+ where function = 'sqlfLogUpdateCfgParam'
+),
+STMM2 as (
+select TIMESTAMP,
+--       sum(CASE WHEN STMM='Auto_switches' THEN value END) as Auto_switches,
+--       sum(CASE WHEN STMM='Catalogcache_sz' THEN value END) as Catalogcache_sz,
+--       sum(CASE WHEN STMM='Chngpgs_thresh' THEN value END) as Chngpgs_thresh,
+       sum(CASE WHEN STMM='Database_memory' THEN value END) as Database_memory,
+       sum(CASE WHEN STMM='Dbheap' THEN value END) as Dbheap,
+--       sum(CASE WHEN STMM='Dft_degree' THEN value END) as Dft_degree,
+--       sum(CASE WHEN STMM='Dft_table_org' THEN value END) as Dft_table_org,
+       sum(CASE WHEN STMM='Instance_memory' THEN value END) as Instance_memory,
+       sum(CASE WHEN STMM='Locklist' THEN value END) as Locklist,
+--       sum(CASE WHEN STMM='Locktimeout' THEN value END) as Locktimeout,
+--       sum(CASE WHEN STMM='Logbufsz' THEN value END) as Logbufsz,
+--       sum(CASE WHEN STMM='Logfilsiz' THEN value END) as Logfilsiz,
+--       sum(CASE WHEN STMM='Logprimary' THEN value END) as Logprimary,
+--       sum(CASE WHEN STMM='Logsecond' THEN value END) as Logsecond,
+--       sum(CASE WHEN STMM='Maxlocks' THEN value END) as Maxlocks,
+--       sum(CASE WHEN STMM='Num_initagents' THEN value END) as Num_initagents,
+--       sum(CASE WHEN STMM='Num_iocleaners' THEN value END) as Num_iocleaners,
+--       sum(CASE WHEN STMM='Num_ioservers' THEN value END) as Num_ioservers,
+       sum(CASE WHEN STMM='Pckcachesz' THEN value END) as Pckcachesz,
+--       sum(CASE WHEN STMM='Self_tuning_mem' THEN value END) as Self_tuning_mem,
+       sum(CASE WHEN STMM='Sheapthres_shr' THEN value END) as Sheapthres_shr,
+       sum(CASE WHEN STMM='Sortheap' THEN value END) as Sortheap,
+       sum(CASE WHEN STMM='Stat_heap_sz' THEN value END) as Stat_heap_sz,
+       sum(CASE WHEN STMM='Stmtheap' THEN value END) as Stmtheap,
+       sum(CASE WHEN STMM='Util_heap_sz' THEN value END) as Util_heap_sz
+  from STMM
+ group by TIMESTAMP, STMM
+)
+select TIMESTAMP as TIME,
+--       cast(max(Auto_switches) as bigint) as Auto_switches,
+--       cast(max(Catalogcache_sz) as bigint) as Catalogcache_sz,
+--       cast(max(Chngpgs_thresh) as bigint) as Chngpgs_thresh,
+       cast(max(Database_memory) as bigint) as Database_memory,
+       cast(max(Dbheap) as bigint) as Dbheap,
+--       cast(max(Dft_degree) as bigint) as Dft_degree,
+--       cast(max(Dft_table_org) as bigint) as Dft_table_org,
+       cast(max(Instance_memory) as bigint) as Instance_memory,
+       cast(max(Locklist) as bigint) as Locklist,
+--       cast(max(Locktimeout) as bigint) as Locktimeout,
+--       cast(max(Logbufsz) as bigint) as Logbufsz,
+--       cast(max(Logfilsiz) as bigint) as Logfilsiz,
+--       cast(max(Logprimary) as bigint) as Logprimary,
+--       cast(max(Logsecond) as bigint) as Logsecond,
+--       cast(max(Maxlocks) as bigint) as Maxlocks,
+--       cast(max(Num_initagents) as bigint) as Num_initagents,
+--       cast(max(Num_iocleaners) as bigint) as Num_iocleaners,
+--       cast(max(Num_ioservers) as bigint) as Num_ioservers,
+       cast(max(Pckcachesz) as bigint) as Pckcachesz,
+--       cast(max(Self_tuning_mem) as bigint) as Self_tuning_mem,
+       cast(max(Sheapthres_shr) as bigint) as Sheapthres_shr,
+       cast(max(Sortheap) as bigint) as Sortheap,
+       cast(max(Stat_heap_sz) as bigint) as Stat_heap_sz,
+       cast(max(Stmtheap) as bigint) as Stmtheap,
+       cast(max(Util_heap_sz) as bigint) as Util_heap_sz
+  from STMM2
+ group by TIMESTAMP]]></sql>
+    <desc />
+  </item>
+  <item cat="VERTICA">
+    <schema>DBA</schema>
+    <name>Projection</name>
+    <sql><![CDATA[select anchor_table_name, projection_name,
+		to_char(is_prejoin) is_prejoin,
+		create_type,
+		to_char(is_up_to_date) is_up_to_date,
+		to_char(has_statistics) has_statistics,
+		to_char(is_segmented) is_segmented,
+		segment_expression,
+		to_char(is_super_projection) is_super_projection,
+		to_char(is_aggregate_projection) is_aggregate_projection
+  from projections
+ order by 1, 2]]></sql>
+    <desc />
+  </item>
+  <item cat="VERTICA">
+    <schema>DBA</schema>
+    <name>Projection size</name>
+    <sql><![CDATA[with x as ( 
+select projection_schema, anchor_table_name, projection_id, projection_name, row_count, used_bytes 
+  from projection_storage
+ where projection_schema = 'public'
+)
+select anchor_table_name, TO_CHAR(sum(used_bytes)/1024/1024, '999,999.99') as size_MB, count(1) 
+  from x
+ group by anchor_table_name]]></sql>
+    <desc />
+  </item>
+  <item cat="VERTICA">
+    <schema>DBA</schema>
+    <name>Projection Containers</name>
+    <sql><![CDATA[select projection_name, node_name, count(1) as count
+  from STORAGE_CONTAINERS
+ where schema_name = 'public'
+ group by projection_name, node_name
+ order by projection_name, node_name]]></sql>
+    <desc />
+  </item>
+  <item cat="VERTICA">
+    <schema>DBA</schema>
+    <name>CPU Usage</name>
+    <sql><![CDATA[with x as (
+select to_char(start_time, 'YYYY-MM-DD HH:MI:SS') as time, 
+       case when node_name = 'v_testdb_node0001' then average_cpu_usage_percent end NODE1,
+       case when node_name = 'v_testdb_node0002' then average_cpu_usage_percent end NODE2,
+       case when node_name = 'v_testdb_node0003' then average_cpu_usage_percent end NODE3
+  from cpu_usage
+ where start_time between current_timestamp -interval '3.6 hour' and current_timestamp -interval '3.4 hour'
+)
+select TIME,
+       max(NODE1) as NODE1,
+       max(NODE2) as NODE2,
+       max(NODE3) as NODE3
+  from x
+ group by time
+ order by time]]></sql>
+    <desc />
+  </item>
+  <item cat="VERTICA">
+    <schema>DBA</schema>
+    <name>Query Num (H)</name>
+    <sql><![CDATA[SELECT ts       AS TIME,
+       COUNT(1) AS QURIES_NUM
+  FROM ( SELECT ts
+           FROM (SELECT to_char(current_timestamp - interval '1 minute', 'YYYY-MM-DD HH:MI:SS')::TIMESTAMP AS tm           
+                 UNION ALL
+                 SELECT to_char(current_timestamp, 'YYYY-MM-DD HH:MI:SS')::TIMESTAMP AS tm)   AS t   
+     TIMESERIES ts AS '1 second' OVER (ORDER BY tm))  AS frame
+  LEFT OUTER JOIN  query_requests
+    ON (ts, INTERVAL '1 second') OVERLAPS (start_timestamp, end_timestamp)
+ GROUP BY TIME
+ ORDER BY TIME]]></sql>
+    <desc />
+  </item>
+  <item cat="VERTICA">
+    <schema>DBA</schema>
+    <name>Exec-Queue</name>
+    <sql><![CDATA[select current_time as TIME,
+(
+select running_query_count
+  from resource_pool_status
+ where pool_name = 'tpch'
+   and node_name = 'v_testdb_node0001'
+) as EXECUTING,
+(
+select count(*) from (
+select count(1)
+  from resource_queues
+ group by transaction_id
+) as x
+) as QUEUED]]></sql>
+    <desc />
+  </item>
+  <item cat="NETEZZA">
+    <schema>DBA</schema>
+    <name>Lock</name>
+    <sql><![CDATA[select *
+ from _t_pg_locks a
+where relid in (
+        select relid from _t_pg_locks where lockstate='WAIT'
+       )
+and lockstate <> 'WAIT']]></sql>
+    <desc />
+  </item>
+  <item cat="VERTICA">
+    <schema>DBA</schema>
+    <name>ROS</name>
+    <sql><![CDATA[/*
+
+select * from projection_storage
+ order by projection_name
+
+select do_tm_task('mergeout')
+
+*/]]></sql>
+    <desc />
+  </item>
+</menu>
+

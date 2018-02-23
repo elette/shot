@@ -1,0 +1,152 @@
+﻿<html>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<head>
+    <title></title>
+<link rel="stylesheet" href="/shot/css/style.css" type="text/css" />
+<link rel="stylesheet" href="/shot/css/modaldbox.css" type="text/css" />
+<link rel="stylesheet" href="/shot/css/dhtmlxchart.css" type="text/css" />
+<script type="text/javascript" src="/shot/js/modaldbox.js"></script>
+<script type="text/javascript" charset="UTF-8" src="/shot/js/html5chart.js"></script>
+<script type="text/javascript" charset="UTF-8" src="/shot/js/jquery.min.js"></script>
+<script type="text/javascript" charset="UTF-8" src="/shot/js/d3.js"></script>
+<script type="text/javascript" charset="UTF-8" src="/shot/js/d3.legend.js"></script>
+<!--
+<script type="text/javascript" src="/shot/js/highcharts.js"></script>
+<script type="text/javascript" src="/shot/js/dhtmlxchart.js"></script>
+<script type="text/javascript" src="/shot/js/datastore.js"></script>
+-->
+<script type="text/javascript" src="/shot/js/meta.js"></script>
+<script type="text/javascript" src="/shot/js/chart.js"></script>
+<script type="text/javascript">
+window.onload = function() {
+    doToggle('StatusBox', 'L');
+    doToggle('DomBox', 'L');
+    doToggle('ClientBox', 'L');
+    doToggle('SQLBox', 'R');
+    doToggle('CHARTBox', 'R'); 
+	doToggle('LOGBox', 'R');
+    $E('PropBox').style.top = window.innerHeight-26;
+    doToggle('Property', 'L');
+    document.getElementById("SQL").focus();
+    initmb();
+
+}
+
+function OKSelected() {
+    initConn();
+}
+</script>
+</head>
+
+<body>
+    <!--DB2 Monitoring-->
+<table class="database" style="position:absolute;left:0px;"><tr><td id="ConnStatus" onclick="toggle('StatusBox', 'L');" style="width:16px;text-align:center;font-size:12pt;color:#B0B0B0;">▒▒</td></tr></table>
+<table class="dom" style="position:absolute;left:0px;"><tr><td id="DomStatus" onclick="toggle('DomBox', 'L');" style="width:16px;text-align:center;font-size:12pt; color:#B0B0B0;">▒▒</td></tr></table>
+<!--table class="client" style="position:absolute;left:0px;"><tr><td id="ClientStatus" onclick="toggle('ClientBox', 'L');" style="width:16px;text-align:center;font-size:12pt; color:#B0B0B0;">▒▒</td></tr></table-->
+<table id="SqlBox" class="sqlbox" style="position:absolute;right:0px;z-Index:91;"><tr><td onclick="toggle('SQLBox', 'R');" style="width:16px;text-align:center;font-size:12pt; color:#B0B0B0;">▒S</td></tr></table>
+<table id="ChartBox" class="chartbox" style="position:absolute;right:0px;z-Index:92;"><tr><td onclick="toggle('CHARTBox', 'R');" style="width:16px;text-align:center;font-size:12pt; color:#B0B0B0;">▒C</td></tr></table>
+<table id="LogBox" class="logbox" style="position:absolute;right:0px;z-Index:93;"><tr><td onclick="toggle('LOGBox', 'R');" style="width:16px;text-align:center;font-size:12pt; color:#B0B0B0;">▒L</td></tr></table>
+<table id="PropBox" class="prop" style="position:absolute;left:0px;"><tr><td onclick="toggle('Property', 'L');" style="width:16px;text-align:center;font-size:12pt; color:#B0B0B0;">▒▒</td></tr></table>
+
+<table id="StatusBox" class="database" style="border:0px;z-Index:28;">
+<tr><th colspan="2" style="text-align:left">Database</th></tr>
+<tr style="display:none"><td>CSEQ</td><td><input name='CSEQ' id="CSEQ" size="16"></td></tr>
+<tr><td>Name</td><td><input name='NAME' id="NAME" size="16"></td></tr>
+<tr><td>System</td><td><input name='SYSTEM' id="SYSTEM" size="16"></td></tr>
+<tr><td>HOST</td><td><input name='HOST' id="HOST" size="16"></td></tr>
+<tr><td>PORT</td><td><input name='PORT' id="PORT" size="16"></td></tr>
+<tr><td>DB</td><td><input name='DB' id="DB" size="16"></td></tr>
+<tr><td>USER</td><td><input name='USER' id="USER" size="16"></td></tr>
+<tr><td>PASS</td><td><input id="PASS" type="password" size="16"></td></tr>
+</tr>
+            <tr><td height="20" colspan="2">
+            <button onclick="javascript:doToggle('ClientBox', 'L'); callXMLClient('true');">Get</button>
+            <button onclick="javascript:insertClient();">Save</button>
+            <button onclick="javascript:removeClient();">x</button><br>
+            <button onclick="javascript:OKSelected();">Con</button>
+            <button onclick="javascript:checkConn();">Check</button>
+            <button onclick="javascript:releaseConn();">Rel</button></td>
+            </tr>
+</table>
+
+<table id="DomBox" class="dom" style="z-Index:28;">
+<tr><th colspan="2" style="text-align:left">Monitoring</th></tr>
+<tr><td><div id="paneDOM" class="scrollbar" style="width:150px;height:200px;" onMouseDown="javascript:selectRow(event);"></div></td></tr>
+            <tr><td height="20" colspan="2" align="center">
+            <button onclick="javascript:callXML('true');">Get</button>
+            <button onclick="javascript:sm('ItemBox', 180, 160);">+</button>
+            <button onclick="javascript:removeItem();">×</button>
+            </td></tr>
+</table>
+
+<table id="ClientBox" class="client" style="z-Index:28;">
+<tr><th colspan="2" style="text-align:left">Client</th></tr>
+<tr><td><div id="paneClient" class="scrollbar" style="width:150px;height:200px;" onMouseDown="javascript:selectClient(event);"></div></td></tr>
+            <tr><td height="20" colspan="2" align="center">
+            <input id="selectedClient" type="text" style="display:none;">
+            </td></tr>
+</table>
+
+<table id="ItemBox" cellpadding="0" style="display:none;">
+<tr><td>Name</td><td><input id="ItemName" size="16"></td></tr>
+<tr><td>Schema</td><td><input id="Schema" size="16"></td></tr>
+<tr><td>SQL</td></tr>
+<tr><td colspan="2"><textarea id="Statement" cols="25"></textarea></td></tr>
+<tr><td>Description</td></tr>
+<tr><td colspan="2"><textarea id="Desc" cols="25"></textarea></td></tr>
+            <tr><th height="20" colspan="2" align="center">
+            <button onclick="javascript:hm();insertItem();">Submit</button>
+            <button onclick="javascript:hm();">Cancel</button>
+            </th></tr>
+</table>
+
+<table id="SQLBox" class="sqlbox" align="right" width="309" style="z-Index:38;">
+    <tr>
+        <td width="63"><div align="left">SQL</div></td>
+        <td><input type="text" id="sqllist"><input id="selectedRow" type="text" style="display:none;"><br>
+        <textarea id="SQL" cols="80" rows="10" style="font-size:10pt;"></textarea></td>
+    </tr><tr>
+        <td align="right" colspan="2">
+        <button onclick="javascript:addShot($E('sqllist').value);">+</button>
+		&nbsp;/<input type="text" id="period" size="3" maxlength="3" align="right" style="text-align:right;border:0px;" value="2">(sec)
+        <button onclick="javascript:callServer($E('SQL').value);">Go</button>
+        </td>
+    </tr>
+</table>
+
+<table id="CHARTBox" class="dom" style="z-Index:39;">
+<tr><th colspan="2" style="text-align:left">Chart list</th></tr>
+<tr><td><div id="chartList" class="scrollbar" style="width:150px;height:200px;"></div></td></tr>
+</table>
+
+<table id="LOGBox" class="logbox" style="z-Index:40;">
+<tr><th style="text-align:left">Logs</th>
+<th style="text-align:right" onclick="javascript:callXMLLog();">Refresh</th></tr>
+<tr><td colspan="2"><div id="paneLog" class="scrollbar" style="width:150px;height:200px;" onMouseDown="javascript:selectLog(event);"></div></td></tr>
+</table>
+
+<table id="Property" class="prop" style="background-color:#C0C0C0;z-Index:30;" border="0" cellspacing="1" cellpadding="0">
+                <tr><th align="left">Property</th></tr>
+    <tr>
+        <td><div class="scrollbar" style="width:300px;height:292px;">
+            <table>
+                <tr>
+                    <td id="paneProp"><table><tr><td></td></tr></table></td>
+                </tr>
+            </table></div>
+        </td>
+    </tr>
+</table>
+<span id="graph" class="graphCanvas"></span>
+<table id="gridTable" class="grid" border="0" cellspacing="0" cellpadding="0">
+    <tr>
+        <td align="left">
+            <div id="pane" style=""></div>
+        </td>
+    </tr>
+</table>
+
+</body>
+
+</html>
+

@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<logs>
+{% for key in items.keys() %}
+	<item>
+		<level>{{ key }}</level>
+		<count>{{ items[key]|length }}</count>
+	</item>
+{% endfor %}
+</logs>
