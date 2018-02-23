@@ -1,8 +1,0 @@
-<table style="width:100%;">
-{% for key in items %}
-	<tr>
-		<td>{{ key }}</td>
-		<td style="word-break: break-all;word-wrap:break-word;white-space: nowrap;">{{ items[key] }}</td>
-	</tr>
-{% endfor %}
-</table>
