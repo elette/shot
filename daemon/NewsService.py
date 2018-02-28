@@ -144,7 +144,7 @@ class Init(object):
 		i = 0
 		for news in root.iter("item"):
 			par = [news.findtext("name"), news.findtext("page"), news.findtext("anchor"), news.findtext("filter"), news.findtext("title"), news.findtext("content")]
-			arg_list = ("news", 300.0, self.news_lock, self.shared_sites, self.shared_pages, par)
+			arg_list = ("news", 600.0, self.news_lock, self.shared_sites, self.shared_pages, par)
 			self.news_process.append(multiprocessing.Process(target=NewsList, name=news.findtext("name"), args=arg_list))
 			self.news_process[i].daemon = True
 			self.news_process[i].start()

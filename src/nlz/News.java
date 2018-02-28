@@ -50,16 +50,21 @@ public class News {
     private static String file  = "";
     private static File xmlFile = null;
     private Document doc        = null;
-    private Process p           = null;
-    private ProcOutThread po1   = null;
-    private ProcOutThread po2   = null;
+
+    Process p           = null;
+    ProcOutThread po1   = null;
+    ProcOutThread po2   = null;
 
     public News () {
     }
+
     public News (String config_path) {
         file = config_path;
         builder = new SAXBuilder();
         xmlFile = new File(file);
+        p = null;
+        po1   = null;
+        po2   = null;
     }
 
     public int launch(InoutParameter ioParam) {
@@ -69,17 +74,28 @@ public class News {
             ioParam.setResultURL("/" + xmlFile.getName());
             // String[] cmd = {"C:/Python27/python.exe", "C:/apache-tomcat-8.5.9/webapps/shot/daemon/NewsService.py", "C:/apache-tomcat-8.5.9/webapps/shot/news.xml"} ;
             String[] cmd = "cmd /c cd C:\\apache-tomcat-8.5.9\\webapps\\shot\\daemon && python NewsService.py ..\\news.xml".split(" ");
-            p = Runtime.getRuntime().exec(cmd);
-            po1 = new ProcOutThread(p.getInputStream());
-            po1.start();
-            po2 = new ProcOutThread(p.getErrorStream());
-            po2.start();
-            p.getOutputStream().close();
 
-            p.waitFor();
+            if (p == null) {
+                p = Runtime.getRuntime().exec(cmd);
+                po1 = new ProcOutThread(p.getInputStream());
+                po1.start();
+                po2 = new ProcOutThread(p.getErrorStream());
+                po2.start();
+                p.getOutputStream().close();
+
+                // p.waitFor();
+            }
         } catch (Exception e) {
             resultInt = EventDefine.E_DOEXECUTE_ERROR;
             e.printStackTrace();
+        // } finally {
+        //     // try {
+        //         if (p != null)
+        //             p.destroy();
+        //     // } catch (Exception e) {
+        //     //     resultInt = EventDefine.E_DOEXECUTE_ERROR;
+        //     //     e.printStackTrace();
+        //     // }
         }
         return resultInt;
     }
@@ -87,6 +103,7 @@ public class News {
     public int stop(InoutParameter ioParam) {
 
         int resultInt = EventDefine.E_DOEXECUTE_INIT;
+        Process p2           = null;
         try {
             ioParam.setResultURL("/" + xmlFile.getName());
             if (p != null) {
@@ -98,6 +115,13 @@ public class News {
                 p.destroyForcibly();
                 p.waitFor();
             }
+            String[] cmd = "taskkill /im python* /f".split(" ");
+            p2 = Runtime.getRuntime().exec(cmd);
+            p2.getErrorStream().close(); 
+            p2.getInputStream().close(); 
+            p2.getOutputStream().close();
+            p2.waitFor();
+
         } catch (Exception e) {
             resultInt = EventDefine.E_DOEXECUTE_ERROR;
             e.printStackTrace();

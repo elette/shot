@@ -354,13 +354,23 @@ function callServerUpdate(SQL) {
 }
 
 function callServerSearchItem(searchitem) {
-  // var url = "CommandAction?CID=News&CMD=writeItem&ITEM=" + encodeURIComponent(searchitem.value) + "&" + Math.random();
-  // xmlHttp.open("GET", url, true);
-  // xmlHttp.onreadystatechange = function(){};
+  var url = "CommandAction?CID=News&CMD=writeItem&ITEM=" + encodeURIComponent(searchitem.value) + "&" + Math.random();
+  xmlHttp.open("GET", url, true);
+  xmlHttp.onreadystatechange = function(){};
 
-  // xmlHttp.send(null);
+  xmlHttp.send(null);
+}
 
+function callServerNewsLaunch() {
   var url = "CommandAction?CID=News&CMD=launch";
+  xmlHttp.open("GET", url, true);
+  xmlHttp.onreadystatechange = function(){};
+
+  xmlHttp.send(null);
+}
+
+function callServerNewsStop() {
+  var url = "CommandAction?CID=News&CMD=stop";
   xmlHttp.open("GET", url, true);
   xmlHttp.onreadystatechange = function(){};
 
@@ -757,6 +767,28 @@ function updateNewsPane() {
     eleButton.onclick = clickHandler2(eleInput);
     eleTd.appendChild(eleInput);
     eleTd.appendChild(eleButton);
+
+    // NewsLaunch
+    var eleButton3 = document.createElement("button");
+    eleButton3.innerHTML = "↑";
+    var clickHandler3 = function() { 
+      return function() {
+        callServerNewsLaunch();
+      };
+    };
+    eleButton3.onclick = clickHandler3();
+    eleTd.appendChild(eleButton3);
+
+    // NewsStop
+    var eleButton4 = document.createElement("button");
+    eleButton4.innerHTML = "↓";
+    var clickHandler4 = function() { 
+      return function() {
+        callServerNewsStop();
+      };
+    };
+    eleButton4.onclick = clickHandler4();
+    eleTd.appendChild(eleButton4);
 
     eleTr.appendChild(eleTd); eleTab.appendChild(eleTr);
 
