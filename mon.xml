@@ -1925,5 +1925,12 @@ ORDER BY snapshot_timestamp) b
 WHERE a.rownum = b.rownum) x]]></sql>
     <desc><![CDATA[cache overflows]]></desc>
   </item>
+  <item cat="Infra">
+    <schema />
+    <name>vCenter</name>
+    <sql><![CDATA[vSphere Center]]></sql>
+    <desc><![CDATA[https://192.168.0.172:9443/vsphere-client/
+vc_admin // Welcome1!]]></desc>
+  </item>
 </menu>
 

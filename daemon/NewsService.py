@@ -4,6 +4,7 @@ import cherrypy
 from cherrypy import expose, tools
 from cherrypy.lib.static import serve_file
 import os, sys, requests, urllib
+os.environ['PYTHON_EGG_CACHE'] = r'C:\\tmp'
 from sys import getsizeof
 from jinja2 import Environment, FileSystemLoader
 from bs4 import BeautifulSoup
@@ -42,7 +43,15 @@ def get_size(obj, seen=None):
     return size
 
 def NewsList(cluster, interval, lock, shared_sites, shared_pages, par):
-	headers = {'Accept-Encoding': 'none'}
+	headers = {
+		'Accept-Encoding':'none', 
+		'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/62.0.3202.94 Safari/537.36',
+		'Upgrade-Insecure-Requests': '1',
+        'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8',
+		'Cache-Control': 'max-age=0',
+	    'Connection': 'keep-alive',
+		'allow_redirects': 'False'
+	}
 	sites = {}
 	pages = {}
 	while True:
@@ -50,15 +59,26 @@ def NewsList(cluster, interval, lock, shared_sites, shared_pages, par):
 		searchitem = searchfile.read()
 		end = par[1].find('/', 8) if par[1].find('/', 8) > -1 else len(par[1])
 		baseurl = par[1][:end]
-		reqUrl = par[1] + 'q=' + searchitem.decode('utf-8') + '&oq=' + searchitem.decode('utf-8') + '&sourceid=chrome&ie=UTF-8' if par[0] == 'Search' else par[1]
+		reqUrl = par[1] + 'q=' + searchitem.decode('utf-8') + '&oq=' + searchitem.decode('utf-8') + '&sourceid=chrome&ie=UTF-8' if par[0] == 'Search' else baseurl #par[1]
 		# log( par[0] + ' - ' + reqUrl)
 		response = requests.get(reqUrl, headers=headers)
+		# response = requests.get(reqUrl, headers=headers, allow_redirects=False)
+		# print (response.text.encode('utf-8'))
 		soup = BeautifulSoup(response.text, 'html.parser')
 
 		# articlelist = newspaper.build(par[1])
 		# for article in articlelist.articles:
-		# 	print(article.title.encode('cp949'))
-		# 	print(article.title, article.url, '\n')
+		# 	# print(article.title.strip().encode('cp949'))
+		# 	# print(article.title, article.url, '\n')
+		# 	title = article.title.strip().encode('utf-8')
+		# 	if len(title) == 0:
+		# 		continue
+		# 	url = article.url
+		# 	url = (baseurl + url) if url.find('http') < 0 else url
+		# 	if url.find(par[3])>0 :
+		# 		url = url.split("?q=")[1].split("&sa=U")[0] if par[0] == 'Search' else url
+		# 		url = urllib.quote_plus(url.encode('utf-8'))
+		# 	viewlist.append({"title":title, "url":url})
 
 		# print '='*50
 
@@ -73,6 +93,8 @@ def NewsList(cluster, interval, lock, shared_sites, shared_pages, par):
 				url = url.split("?q=")[1].split("&sa=U")[0] if par[0] == 'Search' else url
 				url = urllib.quote_plus(url.encode('utf-8'))
 				viewlist.append({"title":title, "url":url})
+
+			# print (' - URL >' + url)
 		sites[par[0]] = viewlist
 		# print (par[0])
 		# print (sites.values())
@@ -108,7 +130,12 @@ def NewsList(cluster, interval, lock, shared_sites, shared_pages, par):
 			article.download()
 			article.parse()
 
-			ctitle = article.title
+			if article.publish_date is None:
+				pd = ""
+			else:
+				pd = "<br>(" + article.publish_date.strftime('%Y/%m/%d %H:%M:%S') + ")<br>"
+			
+			ctitle = article.title + pd
 			topimage = "<img class='article' src='" + article.top_image + "'><br>"
 			contents = topimage + article.text.encode('utf-8')
 

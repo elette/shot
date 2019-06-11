@@ -314,7 +314,7 @@ function callServerNewsPage(element) {
   // xmlHttp.send(null);
   XHR(url, 'msgdetail');
   // sm('msgbox', 312, 476);
-  sm('msgbox', 400, 610);
+  sm('msgbox', 512, 640);
 }
 
 function callDiag() {
@@ -807,7 +807,7 @@ function updateNewsSubPane() {
   if (xmlHttp.readyState == 4) {
     var xmlDoc=xmlHttp.responseXML;
     // var xmlDoc = xmlHttp.responseText;
-// console.info("xml response: " + xmlHttp.responseText);
+console.info("xml response: " + xmlHttp.responseText);
 
     $E('wrapper').innerHTML = "";
     var eleUl = document.createElement("div"); 
