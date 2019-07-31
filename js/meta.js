@@ -314,7 +314,7 @@ function callServerNewsPage(element) {
   // xmlHttp.send(null);
   XHR(url, 'msgdetail');
   // sm('msgbox', 312, 476);
-  sm('msgbox', 512, 640);
+  sm('msgbox', 620, 640);
 }
 
 function callDiag() {

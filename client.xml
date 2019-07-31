@@ -177,5 +177,27 @@
     <version />
     <desc />
   </item>
+  <item name="icp-db2" cseq="20190709194949">
+    <dbms>db2</dbms>
+    <system>linux</system>
+    <server>115.71.42.29</server>
+    <port>50000</port>
+    <database>bludb</database>
+    <instance>db2</instance>
+    <pass>1dlsvmfk</pass>
+    <version />
+    <desc />
+  </item>
+  <item name="icp-db2" cseq="20190709195044">
+    <dbms>DB2</dbms>
+    <system>linux</system>
+    <server>115.71.42.29</server>
+    <port>50000</port>
+    <database>bludb</database>
+    <instance>db2</instance>
+    <pass>1dlsvmfk</pass>
+    <version />
+    <desc />
+  </item>
 </customer>
 
