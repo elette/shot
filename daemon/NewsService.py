@@ -3,7 +3,7 @@
 import cherrypy
 from cherrypy import expose, tools
 from cherrypy.lib.static import serve_file
-import os, sys, requests, urllib
+import os, sys, requests, urllib.parse
 os.environ['PYTHON_EGG_CACHE'] = r'C:\\tmp'
 from sys import getsizeof
 from jinja2 import Environment, FileSystemLoader
@@ -13,9 +13,10 @@ import multiprocessing
 import time, datetime
 from newspaper import Article
 import newspaper
+#from importlib import reload
 
-reload(sys)
-sys.setdefaultencoding('utf-8')
+# reload(sys)
+# sys.setdefaultencoding('utf-8')
 
 xmlFile = sys.argv[1]
 env = Environment(loader=FileSystemLoader('template'))
@@ -55,11 +56,15 @@ def NewsList(cluster, interval, lock, shared_sites, shared_pages, par):
 	sites = {}
 	pages = {}
 	while True:
+		# with lock:
+		# 	shared_sites.clear()
+		# 	shared_pages.clear()
 		viewlist = []
 		searchitem = searchfile.read()
 		end = par[1].find('/', 8) if par[1].find('/', 8) > -1 else len(par[1])
 		baseurl = par[1][:end]
-		reqUrl = par[1] + 'q=' + searchitem.decode('utf-8') + '&oq=' + searchitem.decode('utf-8') + '&sourceid=chrome&ie=UTF-8' if par[0] == 'Search' else baseurl #par[1]
+		# reqUrl = par[1] + 'q=' + searchitem.decode('utf-8') + '&oq=' + searchitem.decode('utf-8') + '&sourceid=chrome&ie=UTF-8' if par[0] == 'Search' else baseurl #par[1]
+		reqUrl = par[1] + 'q=' + searchitem + '&oq=' + searchitem + '&sourceid=chrome&ie=UTF-8' if par[0] == 'Search' else baseurl #par[1]
 		# log( par[0] + ' - ' + reqUrl)
 		response = requests.get(reqUrl, headers=headers)
 		# response = requests.get(reqUrl, headers=headers, allow_redirects=False)
@@ -83,15 +88,17 @@ def NewsList(cluster, interval, lock, shared_sites, shared_pages, par):
 		# print '='*50
 
 		for link in soup.select(par[2]) :
-			title = link.text.encode('utf-8')
+			# title = link.text.encode('utf-8')
+			title = link.text
 			# print (par[0] + ' - TITLE >' + title)
 			url = link.get('href')
 			url = (baseurl + url) if url.find('http') < 0 else url
-			title = urllib.quote(title).replace('\+','%20').replace('%2C',',').replace('%3A',':').replace('%3F','?').replace('%3D','=').replace('%26','&').replace('%24','$').replace('%2B','+')
+			title = urllib.parse.quote(title).replace('\+','%20').replace('%2C',',').replace('%3A',':').replace('%3F','?').replace('%3D','=').replace('%26','&').replace('%24','$').replace('%2B','+')
 			# title = urllib.quote(title)
 			if url.find(par[3])>0 :
 				url = url.split("?q=")[1].split("&sa=U")[0] if par[0] == 'Search' else url
-				url = urllib.quote_plus(url.encode('utf-8'))
+				# url = urllib.parse.quote_plus(url.encode('utf-8'))
+				url = urllib.parse.quote_plus(url)
 				viewlist.append({"title":title, "url":url})
 
 			# print (' - URL >' + url)
@@ -126,7 +133,7 @@ def NewsList(cluster, interval, lock, shared_sites, shared_pages, par):
 # tree = lxml.html.fromstring(response.text)
 # contents = tree.text_content().strip()
 			
-			article = Article(urllib.unquote(page['url']))
+			article = Article(urllib.parse.unquote(page['url']))
 			article.download()
 			article.parse()
 
@@ -137,10 +144,12 @@ def NewsList(cluster, interval, lock, shared_sites, shared_pages, par):
 			
 			ctitle = article.title + pd
 			topimage = "<img class='article' src='" + article.top_image + "'><br>"
-			contents = topimage + article.text.encode('utf-8')
+			# contents = topimage + article.text.encode('utf-8')
+			contents = topimage + article.text
 
 			# pages[page['url']] = ctitle
-			pages[page['url']] = ctitle.encode('utf-8') + contents
+			# pages[page['url']] = ctitle.encode('utf-8') + contents
+			pages[page['url']] = ctitle + contents
 			# log (page['ctitle'] + '====' + page['url'])
 
 		with lock:
@@ -192,7 +201,7 @@ class Init(object):
 		cherrypy.response.headers['Access-Control-Allow-Origin'] = '*'
 		cherrypy.response.headers['Content-Type'] = 'text/html'
 		tmpl = env.get_template('newspage.html')
-		return tmpl.render(content=self.shared_pages.get(urllib.quote_plus(page)))
+		return tmpl.render(content=self.shared_pages.get(urllib.parse.quote_plus(page)))
 
 
 if __name__ == '__main__':

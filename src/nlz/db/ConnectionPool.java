@@ -13,10 +13,11 @@ import javax.sql.ConnectionPoolDataSource;
 import org.apache.tomcat.jdbc.pool.DataSource;
 import org.apache.tomcat.jdbc.pool.PoolProperties;
 import java.util.*;
-import com.ibm.db2.jcc.*;
-import org.netezza.*;
-import com.vertica.jdbc.*;
-import oracle.jdbc.driver.*;
+// import com.ibm.db2.jcc.*;
+// import org.netezza.*;
+// import com.vertica.jdbc.*;
+// import oracle.jdbc.driver.*;
+import com.microsoft.sqlserver.jdbc.*;
 import nlz.com.EventDefine;
 
 public class ConnectionPool {
@@ -49,6 +50,7 @@ public class ConnectionPool {
     public ConnectionPool(String dbms, String host, int port, String db, String user, String pass) throws NamingException { //public
 		try{
 			props = new PoolProperties();
+
 			// for DB2 connection
 			if (dbms.equals("DB2")) {
 				props.setUrl("jdbc:db2://" + host + ":" + port + "/" + db);
@@ -67,13 +69,21 @@ public class ConnectionPool {
 				props.setDriverClassName("com.vertica.jdbc.Driver");
 				props.setValidationQuery("SELECT 1");
 				props.setConnectionProperties("[ConnectionLoadBalance=1;SessionLabel=diagmon;]");
+
+			// for Oracle connection
 			}else if (dbms.equals("ORACLE")) {
 				props.setUrl("jdbc:oracle:thin:@//" + host + ":" + port + "/" + db);
 				props.setDriverClassName("oracle.jdbc.driver.OracleDriver");
 				props.setValidationQuery("SELECT 1 FROM DUAL");
 				props.setConnectionProperties("[ConnectionLoadBalance=1;SessionLabel=diagmon;]");
+			
+			// for MSSQL connection
+			}else if (dbms.equals("MSSQL")) {
+				props.setUrl("jdbc:sqlserver://" + host + ":" + port + "databaseName=" + db + ";");
+				props.setDriverClassName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
+				props.setValidationQuery("SELECT 1");
+				props.setConnectionProperties("[ConnectionLoadBalance=1;SessionLabel=diagmon;]");
 			}
-
 			props.setUsername(user);
 			props.setPassword(pass);
 			// props.setJmxEnabled(true);

@@ -315,6 +315,10 @@ function callServerNewsPage(element) {
   XHR(url, 'msgdetail');
   // sm('msgbox', 312, 476);
   sm('msgbox', 620, 640);
+  $E('msgdetail').focus();
+  // $E('msgdetail').contentEditable = true;
+  // $E('msgdetail').contentEditable = false;
+  // window.location.hash = '#msgdetail';
 }
 
 function callDiag() {
@@ -807,7 +811,7 @@ function updateNewsSubPane() {
   if (xmlHttp.readyState == 4) {
     var xmlDoc=xmlHttp.responseXML;
     // var xmlDoc = xmlHttp.responseText;
-console.info("xml response: " + xmlHttp.responseText);
+//console.info("xml response: " + xmlHttp.responseText);
 
     $E('wrapper').innerHTML = "";
     var eleUl = document.createElement("div"); 

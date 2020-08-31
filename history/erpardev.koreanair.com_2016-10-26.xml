@@ -1,0 +1,3656 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<QUERY>
+  <item>
+    <time>2016-10-26 09:17:46</time>
+    <sql><![CDATA[SELECT
+    a.ARCHIVE_SEQ,
+    a.BIZ_CATEGORY,
+    b.AD_NAME,
+    a2.ARCH_ID,
+    a2.ARCH_ACTION,
+    a2.REQ_NAME,
+	'' 차수,
+    a2.START_TIME,
+    a2.ELLAPSED_TIME,
+    a2.ROWS_ARCHIVED,
+    a2.TABLE_NAME,
+    a2.ARCHIVED_ROWS,
+	a2.BIZ_NAME,
+	a2.START_DATE,
+	a2.END_DATE,
+	a2.PRE_ARCH_ID,
+	a2.BIZ_CODE,
+	a2.CUTOFF_DATE,
+	a2.LEDGERID,
+	a2.PERIODFROM,
+	a2.PERIODTO,
+	a2.BUDVER,
+	a2.APP_SH_NAME,
+	a2.APP_ID,
+	a2.LEDGER_ID,
+	a2.START_BP,
+	a2.END_BP,
+	a2.START_MON,
+	a2.END_MON
+
+--    a2.*
+FROM
+    OPTIM.ARCH_POLICY_INFO a,
+    OPTIM.ARCH_SEQ_INFO b,
+    (
+        SELECT
+            c.ARCH_ID, c.ad_name, c.ARCH_ACTION, c.req_name, c.start_time, c.ellapsed_time, c.rows_archived,
+            c.TABLE_NAME,
+            c.ARCHIVED_ROWS,
+            d.archive_seq,
+--			d.AD_NAME as p_ad_name,
+			d.BIZ_NAME,
+			d.START_DATE,
+			d.END_DATE,
+--			d.ARCH_ID as p_arch_id,
+			d.PRE_ARCH_ID,
+			d.BIZ_CODE,
+			d.CUTOFF_DATE,
+			d.LEDGERID,
+			d.PERIODFROM,
+			d.PERIODTO,
+			d.BUDVER,
+			d.APP_SH_NAME,
+			d.APP_ID,
+			d.LEDGER_ID,
+			d.START_BP,
+			d.END_BP,
+			d.START_MON,
+			d.END_MON
+        FROM
+            (
+                SELECT
+                    first_value(aa.ARCH_ID) over(
+                        partition BY aa.AD_NAME
+                    ORDER BY
+                        aa.ARCH_ID DESC
+                    ) latest,
+                    aa.ARCH_ID,
+                    aa.AD_NAME,
+                    aa.ARCH_ACTION,
+                    aa.REQ_NAME,
+                    aa.ARCHIVE_SEQ,
+                    bb.START_TIME,
+                    bb.ELLAPSED_TIME,
+                    bb.ROWS_ARCHIVED,
+                    bb.ROWS_INSERTED,
+                    bb.ROWS_EXTRACTED,
+                    cc.TABLE_NAME,
+                    cc.ARCHIVED_ROWS
+                FROM
+                    OPTIM.ARCH_JOB_INFO aa,
+                    OPTIM.ARCH_JOB_RESULT bb,
+                    OPTIM.ARCH_JOB_RESULT_DTL cc
+                WHERE
+                    aa.ARCH_ID = bb.ARCH_ID
+                    AND aa.ARCH_ACTION = 'A'
+                    AND aa.STATUS = 'C'
+                    AND aa.ARCH_ID = cc.ARCH_ID
+            ) c,
+            (
+                SELECT
+                    *
+                FROM
+                    (
+                        SELECT
+                            arch_id,
+                            archive_seq,
+                            param_name,
+                            param_value
+                        FROM
+                            OPTIM.ARCH_JOB_PARAM_INFO
+                    ) PIVOT(
+                        MAX(PARAM_VALUE) FOR PARAM_NAME IN(
+--						'AD_NAME' as AD_NAME,
+						'BIZ_NAME' as BIZ_NAME,
+						'START_DATE' as START_DATE,
+						'END_DATE' as END_DATE,
+--						'ARCH_ID' as ARCH_ID,
+						'PRE_ARCH_ID' as PRE_ARCH_ID,
+						'BIZ_CODE' as BIZ_CODE,
+						'CUTOFF_DATE' as CUTOFF_DATE,
+						'LEDGERID' as LEDGERID,
+						'PERIODFROM' as PERIODFROM,
+						'PERIODTO' as PERIODTO,
+						'BUDVER' as BUDVER,
+						'APP_SH_NAME' as APP_SH_NAME,
+						'APP_ID' as APP_ID,
+						'LEDGER_ID' as LEDGER_ID,
+						'START_BP' as START_BP,
+						'END_BP' as END_BP,
+						'START_MON' as START_MON,
+						'END_MON' as END_MON
+                        )
+                    )
+            ) d
+        WHERE
+            c.ARCH_ID = c.latest
+            AND c.ARCH_ID = d.ARCH_ID(+)
+            AND c.ARCHIVE_SEQ = d.ARCHIVE_SEQ(+)
+    ) a2
+WHERE
+    a.ARCHIVE_SEQ = b.ARCHIVE_SEQ
+    and b.ARCHIVE_SEQ = a2.ARCHIVE_SEQ(+)
+    AND b.AD_NAME = a2.AD_NAME(+)
+    AND b.AD_NAME not like '%_AP'
+--    and a2.start_time > to_date('2016-10-18', 'YYYY-MM-DD')
+and a.archive_seq = 'WIP006'
+--and b.ad_name = 'WIP.AD_WIP_PA'
+ORDER BY
+    1,
+    3]]></sql>
+  </item>
+  <item>
+    <time>2016-10-26 09:57:28</time>
+    <sql><![CDATA[SELECT
+    a.ARCHIVE_SEQ,
+    a.BIZ_CATEGORY,
+    b.AD_NAME,
+    a2.ARCH_ID,
+    a2.ARCH_ACTION,
+    a2.REQ_NAME,
+	'' 차수,
+    a2.START_TIME,
+    a2.ELLAPSED_TIME,
+    a2.ROWS_ARCHIVED,
+    a2.TABLE_NAME,
+    a2.ARCHIVED_ROWS,
+	a2.BIZ_NAME,
+	a2.START_DATE,
+	a2.END_DATE,
+	a2.PRE_ARCH_ID,
+	a2.BIZ_CODE,
+	a2.CUTOFF_DATE,
+	a2.LEDGERID,
+	a2.PERIODFROM,
+	a2.PERIODTO,
+	a2.BUDVER,
+	a2.APP_SH_NAME,
+	a2.APP_ID,
+	a2.LEDGER_ID,
+	a2.START_BP,
+	a2.END_BP,
+	a2.START_MON,
+	a2.END_MON
+
+--    a2.*
+FROM
+    OPTIM.ARCH_POLICY_INFO a,
+    OPTIM.ARCH_SEQ_INFO b,
+    (
+        SELECT
+            c.ARCH_ID, c.ad_name, c.ARCH_ACTION, c.req_name, c.start_time, c.ellapsed_time, c.rows_archived,
+            c.TABLE_NAME,
+            c.ARCHIVED_ROWS,
+            d.archive_seq,
+--			d.AD_NAME as p_ad_name,
+			d.BIZ_NAME,
+			d.START_DATE,
+			d.END_DATE,
+--			d.ARCH_ID as p_arch_id,
+			d.PRE_ARCH_ID,
+			d.BIZ_CODE,
+			d.CUTOFF_DATE,
+			d.LEDGERID,
+			d.PERIODFROM,
+			d.PERIODTO,
+			d.BUDVER,
+			d.APP_SH_NAME,
+			d.APP_ID,
+			d.LEDGER_ID,
+			d.START_BP,
+			d.END_BP,
+			d.START_MON,
+			d.END_MON
+        FROM
+            (
+                SELECT
+                    first_value(aa.ARCH_ID) over(
+                        partition BY aa.AD_NAME
+                    ORDER BY
+                        aa.ARCH_ID DESC
+                    ) latest,
+                    aa.ARCH_ID,
+                    aa.AD_NAME,
+                    aa.ARCH_ACTION,
+                    aa.REQ_NAME,
+                    aa.ARCHIVE_SEQ,
+                    bb.START_TIME,
+                    bb.ELLAPSED_TIME,
+                    bb.ROWS_ARCHIVED,
+                    bb.ROWS_INSERTED,
+                    bb.ROWS_EXTRACTED,
+                    cc.TABLE_NAME,
+                    cc.ARCHIVED_ROWS
+                FROM
+                    OPTIM.ARCH_JOB_INFO aa,
+                    OPTIM.ARCH_JOB_RESULT bb,
+                    OPTIM.ARCH_JOB_RESULT_DTL cc
+                WHERE
+                    aa.ARCH_ID = bb.ARCH_ID
+                    AND aa.ARCH_ACTION = 'A'
+                    AND aa.STATUS = 'C'
+                    AND aa.ARCH_ID = cc.ARCH_ID
+            ) c,
+            (
+                SELECT
+                    *
+                FROM
+                    (
+                        SELECT
+                            arch_id,
+                            archive_seq,
+                            param_name,
+                            param_value
+                        FROM
+                            OPTIM.ARCH_JOB_PARAM_INFO
+                    ) PIVOT(
+                        MAX(PARAM_VALUE) FOR PARAM_NAME IN(
+--						'AD_NAME' as AD_NAME,
+						'BIZ_NAME' as BIZ_NAME,
+						'START_DATE' as START_DATE,
+						'END_DATE' as END_DATE,
+						'ARCH_ID' as ARCH_ID,
+						'PRE_ARCH_ID' as PRE_ARCH_ID,
+						'BIZ_CODE' as BIZ_CODE,
+						'CUTOFF_DATE' as CUTOFF_DATE,
+						'LEDGERID' as LEDGERID,
+						'PERIODFROM' as PERIODFROM,
+						'PERIODTO' as PERIODTO,
+						'BUDVER' as BUDVER,
+						'APP_SH_NAME' as APP_SH_NAME,
+						'APP_ID' as APP_ID,
+						'LEDGER_ID' as LEDGER_ID,
+						'START_BP' as START_BP,
+						'END_BP' as END_BP,
+						'START_MON' as START_MON,
+						'END_MON' as END_MON
+                        )
+                    )
+            ) d
+        WHERE
+            c.ARCH_ID = c.latest
+            AND c.ARCH_ID = d.ARCH_ID(+)
+            AND c.ARCHIVE_SEQ = d.ARCHIVE_SEQ(+)
+    ) a2
+WHERE
+    a.ARCHIVE_SEQ = b.ARCHIVE_SEQ
+    and b.ARCHIVE_SEQ = a2.ARCHIVE_SEQ(+)
+    AND b.AD_NAME = a2.AD_NAME(+)
+    AND b.AD_NAME not like '%_AP'
+--    and a2.start_time > to_date('2016-10-18', 'YYYY-MM-DD')
+and a.archive_seq = 'WIP006'
+--and b.ad_name = 'WIP.AD_WIP_PA'
+ORDER BY
+    1,
+    3]]></sql>
+  </item>
+  <item>
+    <time>2016-10-26 09:57:39</time>
+    <sql><![CDATA[SELECT
+    a.ARCHIVE_SEQ,
+    a.BIZ_CATEGORY,
+    b.AD_NAME,
+    a2.ARCH_ID,
+    a2.ARCH_ACTION,
+    a2.REQ_NAME,
+	'' 차수,
+    a2.START_TIME,
+    a2.ELLAPSED_TIME,
+    a2.ROWS_ARCHIVED,
+    a2.TABLE_NAME,
+    a2.ARCHIVED_ROWS,
+	a2.BIZ_NAME,
+	a2.START_DATE,
+	a2.END_DATE,
+	a2.PRE_ARCH_ID,
+	a2.BIZ_CODE,
+	a2.CUTOFF_DATE,
+	a2.LEDGERID,
+	a2.PERIODFROM,
+	a2.PERIODTO,
+	a2.BUDVER,
+	a2.APP_SH_NAME,
+	a2.APP_ID,
+	a2.LEDGER_ID,
+	a2.START_BP,
+	a2.END_BP,
+	a2.START_MON,
+	a2.END_MON
+
+--    a2.*
+FROM
+    OPTIM.ARCH_POLICY_INFO a,
+    OPTIM.ARCH_SEQ_INFO b,
+    (
+        SELECT
+            c.ARCH_ID, c.ad_name, c.ARCH_ACTION, c.req_name, c.start_time, c.ellapsed_time, c.rows_archived,
+            c.TABLE_NAME,
+            c.ARCHIVED_ROWS,
+            d.archive_seq,
+--			d.AD_NAME as p_ad_name,
+			d.BIZ_NAME,
+			d.START_DATE,
+			d.END_DATE,
+--			d.ARCH_ID as p_arch_id,
+			d.PRE_ARCH_ID,
+			d.BIZ_CODE,
+			d.CUTOFF_DATE,
+			d.LEDGERID,
+			d.PERIODFROM,
+			d.PERIODTO,
+			d.BUDVER,
+			d.APP_SH_NAME,
+			d.APP_ID,
+			d.LEDGER_ID,
+			d.START_BP,
+			d.END_BP,
+			d.START_MON,
+			d.END_MON
+        FROM
+            (
+                SELECT
+                    first_value(aa.ARCH_ID) over(
+                        partition BY aa.AD_NAME
+                    ORDER BY
+                        aa.ARCH_ID DESC
+                    ) latest,
+                    aa.ARCH_ID,
+                    aa.AD_NAME,
+                    aa.ARCH_ACTION,
+                    aa.REQ_NAME,
+                    aa.ARCHIVE_SEQ,
+                    bb.START_TIME,
+                    bb.ELLAPSED_TIME,
+                    bb.ROWS_ARCHIVED,
+                    bb.ROWS_INSERTED,
+                    bb.ROWS_EXTRACTED,
+                    cc.TABLE_NAME,
+                    cc.ARCHIVED_ROWS
+                FROM
+                    OPTIM.ARCH_JOB_INFO aa,
+                    OPTIM.ARCH_JOB_RESULT bb,
+                    OPTIM.ARCH_JOB_RESULT_DTL cc
+                WHERE
+                    aa.ARCH_ID = bb.ARCH_ID
+                    AND aa.ARCH_ACTION = 'A'
+                    AND aa.STATUS = 'C'
+                    AND aa.ARCH_ID = cc.ARCH_ID
+            ) c,
+            (
+                SELECT
+                    *
+                FROM
+                    (
+                        SELECT
+                            arch_id,
+                            archive_seq,
+                            param_name,
+                            param_value
+                        FROM
+                            OPTIM.ARCH_JOB_PARAM_INFO
+                    ) PIVOT(
+                        MAX(PARAM_VALUE) FOR PARAM_NAME IN(
+--						'AD_NAME' as AD_NAME,
+						'BIZ_NAME' as BIZ_NAME,
+						'START_DATE' as START_DATE,
+						'END_DATE' as END_DATE,
+--						'ARCH_ID' as ARCH_ID,
+						'PRE_ARCH_ID' as PRE_ARCH_ID,
+						'BIZ_CODE' as BIZ_CODE,
+						'CUTOFF_DATE' as CUTOFF_DATE,
+						'LEDGERID' as LEDGERID,
+						'PERIODFROM' as PERIODFROM,
+						'PERIODTO' as PERIODTO,
+						'BUDVER' as BUDVER,
+						'APP_SH_NAME' as APP_SH_NAME,
+						'APP_ID' as APP_ID,
+						'LEDGER_ID' as LEDGER_ID,
+						'START_BP' as START_BP,
+						'END_BP' as END_BP,
+						'START_MON' as START_MON,
+						'END_MON' as END_MON
+                        )
+                    )
+            ) d
+        WHERE
+            c.ARCH_ID = c.latest
+            AND c.ARCH_ID = d.ARCH_ID(+)
+            AND c.ARCHIVE_SEQ = d.ARCHIVE_SEQ(+)
+    ) a2
+WHERE
+    a.ARCHIVE_SEQ = b.ARCHIVE_SEQ
+    and b.ARCHIVE_SEQ = a2.ARCHIVE_SEQ(+)
+    AND b.AD_NAME = a2.AD_NAME(+)
+    AND b.AD_NAME not like '%_AP'
+--    and a2.start_time > to_date('2016-10-18', 'YYYY-MM-DD')
+and a.archive_seq = 'WIP006'
+--and b.ad_name = 'WIP.AD_WIP_PA'
+ORDER BY
+    1,
+    3]]></sql>
+  </item>
+  <item>
+    <time>2016-10-26 10:00:24</time>
+    <sql><![CDATA[SELECT
+    a.ARCHIVE_SEQ,
+    a.BIZ_CATEGORY,
+    b.AD_NAME,
+    a2.ARCH_ID,
+    a2.ARCH_ACTION,
+    a2.REQ_NAME,
+	0 차수,
+    a2.START_TIME,
+    a2.ELLAPSED_TIME,
+    a2.ROWS_ARCHIVED,
+    a2.TABLE_NAME,
+    a2.ARCHIVED_ROWS,
+			a2.p_ad_name,
+	a2.BIZ_NAME,
+	a2.START_DATE,
+	a2.END_DATE,
+			a2.p_arch_id,
+	a2.PRE_ARCH_ID,
+	a2.BIZ_CODE,
+	a2.CUTOFF_DATE,
+	a2.LEDGERID,
+	a2.PERIODFROM,
+	a2.PERIODTO,
+	a2.BUDVER,
+	a2.APP_SH_NAME,
+	a2.APP_ID,
+	a2.LEDGER_ID,
+	a2.START_BP,
+	a2.END_BP,
+	a2.START_MON,
+	a2.END_MON
+--    a2.*
+FROM
+    OPTIM.ARCH_POLICY_INFO a,
+    OPTIM.ARCH_SEQ_INFO b,
+    (
+        SELECT
+            c.ARCH_ID, c.ad_name, c.ARCH_ACTION, c.req_name, c.start_time, c.ellapsed_time, c.rows_archived,
+            c.TABLE_NAME,
+            c.ARCHIVED_ROWS,
+            d.archive_seq,
+			d.P_AD_NAME,
+			d.BIZ_NAME,
+			d.START_DATE,
+			d.END_DATE,
+			d.P_ARCH_ID,
+			d.PRE_ARCH_ID,
+			d.BIZ_CODE,
+			d.CUTOFF_DATE,
+			d.LEDGERID,
+			d.PERIODFROM,
+			d.PERIODTO,
+			d.BUDVER,
+			d.APP_SH_NAME,
+			d.APP_ID,
+			d.LEDGER_ID,
+			d.START_BP,
+			d.END_BP,
+			d.START_MON,
+			d.END_MON
+        FROM
+            (
+                SELECT
+                    first_value(aa.ARCH_ID) over(
+                        partition BY aa.AD_NAME
+                    ORDER BY
+                        aa.ARCH_ID DESC
+                    ) latest,
+                    aa.ARCH_ID,
+                    aa.AD_NAME,
+                    aa.ARCH_ACTION,
+                    aa.REQ_NAME,
+                    aa.ARCHIVE_SEQ,
+                    bb.START_TIME,
+                    bb.ELLAPSED_TIME,
+                    bb.ROWS_ARCHIVED,
+                    bb.ROWS_INSERTED,
+                    bb.ROWS_EXTRACTED,
+                    cc.TABLE_NAME,
+                    cc.ARCHIVED_ROWS
+                FROM
+                    OPTIM.ARCH_JOB_INFO aa,
+                    OPTIM.ARCH_JOB_RESULT bb,
+                    OPTIM.ARCH_JOB_RESULT_DTL cc
+                WHERE
+                    aa.ARCH_ID = bb.ARCH_ID
+                    AND aa.ARCH_ACTION = 'A'
+                    AND aa.STATUS = 'C'
+                    AND aa.ARCH_ID = cc.ARCH_ID
+            ) c,
+            (
+                SELECT
+                    *
+                FROM
+                    (
+                        SELECT
+                            arch_id,
+                            archive_seq,
+                            param_name,
+                            param_value
+                        FROM
+                            OPTIM.ARCH_JOB_PARAM_INFO
+                    ) PIVOT(
+                        MAX(PARAM_VALUE) FOR PARAM_NAME IN(
+						'AD_NAME' as P_AD_NAME,
+						'BIZ_NAME' as BIZ_NAME,
+						'START_DATE' as START_DATE,
+						'END_DATE' as END_DATE,
+						'ARCH_ID' as P_ARCH_ID,
+						'PRE_ARCH_ID' as PRE_ARCH_ID,
+						'BIZ_CODE' as BIZ_CODE,
+						'CUTOFF_DATE' as CUTOFF_DATE,
+						'LEDGERID' as LEDGERID,
+						'PERIODFROM' as PERIODFROM,
+						'PERIODTO' as PERIODTO,
+						'BUDVER' as BUDVER,
+						'APP_SH_NAME' as APP_SH_NAME,
+						'APP_ID' as APP_ID,
+						'LEDGER_ID' as LEDGER_ID,
+						'START_BP' as START_BP,
+						'END_BP' as END_BP,
+						'START_MON' as START_MON,
+						'END_MON' as END_MON
+                        )
+                    )
+            ) d
+        WHERE
+            c.ARCH_ID = c.latest
+            AND c.ARCH_ID = d.ARCH_ID(+)
+            AND c.ARCHIVE_SEQ = d.ARCHIVE_SEQ(+)
+    ) a2
+WHERE
+    a.ARCHIVE_SEQ = b.ARCHIVE_SEQ
+    and b.ARCHIVE_SEQ = a2.ARCHIVE_SEQ(+)
+    AND b.AD_NAME = a2.AD_NAME(+)
+    AND b.AD_NAME not like '%_AP'
+--    and a2.start_time > to_date('2016-10-18', 'YYYY-MM-DD')
+and a.archive_seq = 'WIP006'
+--and b.ad_name = 'WIP.AD_WIP_PA'
+ORDER BY
+    1,
+    3]]></sql>
+  </item>
+  <item>
+    <time>2016-10-26 10:10:55</time>
+    <sql><![CDATA[SELECT
+	'' 모듈,
+    a.ARCHIVE_SEQ,
+    a.BIZ_CATEGORY,
+    b.AD_NAME,
+    a2.ARCH_ID,
+    a2.ARCH_ACTION,
+    a2.REQ_NAME,
+	1 차수,
+    a2.START_TIME,
+    a2.ELLAPSED_TIME,
+    a2.ROWS_ARCHIVED,
+    a2.TABLE_NAME,
+    a2.ARCHIVED_ROWS,
+	a2.P_AD_NAME,
+	a2.BIZ_NAME,
+	a2.START_DATE,
+	a2.END_DATE,
+	a2.P_ARCH_ID,
+	a2.PRE_ARCH_ID,
+	a2.BIZ_CODE,
+	a2.CUTOFF_DATE,
+	a2.LEDGERID,
+	a2.PERIODFROM,
+	a2.PERIODTO,
+	a2.BUDVER,
+	a2.APP_SH_NAME,
+	a2.APP_ID,
+	a2.LEDGER_ID,
+	a2.START_BP,
+	a2.END_BP,
+	a2.START_MON,
+	a2.END_MON
+--    a2.*
+FROM
+    OPTIM.ARCH_POLICY_INFO a,
+    OPTIM.ARCH_SEQ_INFO b,
+    (
+        SELECT
+            c.ARCH_ID, c.ad_name, c.ARCH_ACTION, c.req_name, c.start_time, c.ellapsed_time, c.rows_archived,
+            c.TABLE_NAME,
+            c.ARCHIVED_ROWS,
+            d.archive_seq,
+			d.P_AD_NAME,
+			d.BIZ_NAME,
+			d.START_DATE,
+			d.END_DATE,
+			d.P_ARCH_ID,
+			d.PRE_ARCH_ID,
+			d.BIZ_CODE,
+			d.CUTOFF_DATE,
+			d.LEDGERID,
+			d.PERIODFROM,
+			d.PERIODTO,
+			d.BUDVER,
+			d.APP_SH_NAME,
+			d.APP_ID,
+			d.LEDGER_ID,
+			d.START_BP,
+			d.END_BP,
+			d.START_MON,
+			d.END_MON
+        FROM
+            (
+                SELECT
+                    first_value(aa.ARCH_ID) over(
+                        partition BY aa.AD_NAME
+                    ORDER BY
+                        aa.ARCH_ID DESC
+                    ) latest,
+                    aa.ARCH_ID,
+                    aa.AD_NAME,
+                    aa.ARCH_ACTION,
+                    aa.REQ_NAME,
+                    aa.ARCHIVE_SEQ,
+                    bb.START_TIME,
+                    bb.ELLAPSED_TIME,
+                    bb.ROWS_ARCHIVED,
+                    bb.ROWS_INSERTED,
+                    bb.ROWS_EXTRACTED,
+                    cc.TABLE_NAME,
+                    cc.ARCHIVED_ROWS
+                FROM
+                    OPTIM.ARCH_JOB_INFO aa,
+                    OPTIM.ARCH_JOB_RESULT bb,
+                    OPTIM.ARCH_JOB_RESULT_DTL cc
+                WHERE
+                    aa.ARCH_ID = bb.ARCH_ID
+                    AND aa.ARCH_ACTION = 'A'
+                    AND aa.STATUS = 'C'
+                    AND aa.ARCH_ID = cc.ARCH_ID
+            ) c,
+            (
+                SELECT
+                    *
+                FROM
+                    (
+                        SELECT
+                            arch_id,
+                            archive_seq,
+                            param_name,
+                            param_value
+                        FROM
+                            OPTIM.ARCH_JOB_PARAM_INFO
+                    ) PIVOT(
+                        MAX(PARAM_VALUE) FOR PARAM_NAME IN(
+						'AD_NAME' as P_AD_NAME,
+						'BIZ_NAME' as BIZ_NAME,
+						'START_DATE' as START_DATE,
+						'END_DATE' as END_DATE,
+						'ARCH_ID' as P_ARCH_ID,
+						'PRE_ARCH_ID' as PRE_ARCH_ID,
+						'BIZ_CODE' as BIZ_CODE,
+						'CUTOFF_DATE' as CUTOFF_DATE,
+						'LEDGERID' as LEDGERID,
+						'PERIODFROM' as PERIODFROM,
+						'PERIODTO' as PERIODTO,
+						'BUDVER' as BUDVER,
+						'APP_SH_NAME' as APP_SH_NAME,
+						'APP_ID' as APP_ID,
+						'LEDGER_ID' as LEDGER_ID,
+						'START_BP' as START_BP,
+						'END_BP' as END_BP,
+						'START_MON' as START_MON,
+						'END_MON' as END_MON
+                        )
+                    )
+            ) d
+        WHERE
+            c.ARCH_ID = c.latest
+            AND c.ARCH_ID = d.ARCH_ID(+)
+            AND c.ARCHIVE_SEQ = d.ARCHIVE_SEQ(+)
+    ) a2
+WHERE
+    a.ARCHIVE_SEQ = b.ARCHIVE_SEQ
+    and b.ARCHIVE_SEQ = a2.ARCHIVE_SEQ(+)
+    AND b.AD_NAME = a2.AD_NAME(+)
+    AND b.AD_NAME not like '%_AP'
+--    and a2.start_time > to_date('2016-10-18', 'YYYY-MM-DD')
+and a.archive_seq = 'XLA007'
+--and b.ad_name = 'WIP.AD_WIP_PA'
+ORDER BY
+    2,
+    4]]></sql>
+  </item>
+  <item>
+    <time>2016-10-26 10:12:09</time>
+    <sql><![CDATA[SELECT
+    a.ARCHIVE_SEQ,
+    a.BIZ_CATEGORY,
+    b.AD_NAME,
+    a2.ARCH_ID,
+    a2.ARCH_ACTION,
+    a2.REQ_NAME,
+	1 차수,
+    a2.START_TIME,
+    a2.ELLAPSED_TIME,
+    a2.ROWS_ARCHIVED,
+    a2.TABLE_NAME,
+    a2.ARCHIVED_ROWS,
+	a2.P_AD_NAME,
+	a2.BIZ_NAME,
+	a2.START_DATE,
+	a2.END_DATE,
+	a2.P_ARCH_ID,
+	a2.PRE_ARCH_ID,
+	a2.BIZ_CODE,
+	a2.CUTOFF_DATE,
+	a2.LEDGERID,
+	a2.PERIODFROM,
+	a2.PERIODTO,
+	a2.BUDVER,
+	a2.APP_SH_NAME,
+	a2.APP_ID,
+	a2.LEDGER_ID,
+	a2.START_BP,
+	a2.END_BP,
+	a2.START_MON,
+	a2.END_MON
+--    a2.*
+FROM
+    OPTIM.ARCH_POLICY_INFO a,
+    OPTIM.ARCH_SEQ_INFO b,
+    (
+        SELECT
+            c.ARCH_ID, c.ad_name, c.ARCH_ACTION, c.req_name, c.start_time, c.ellapsed_time, c.rows_archived,
+            c.TABLE_NAME,
+            c.ARCHIVED_ROWS,
+            d.archive_seq,
+			d.P_AD_NAME,
+			d.BIZ_NAME,
+			d.START_DATE,
+			d.END_DATE,
+			d.P_ARCH_ID,
+			d.PRE_ARCH_ID,
+			d.BIZ_CODE,
+			d.CUTOFF_DATE,
+			d.LEDGERID,
+			d.PERIODFROM,
+			d.PERIODTO,
+			d.BUDVER,
+			d.APP_SH_NAME,
+			d.APP_ID,
+			d.LEDGER_ID,
+			d.START_BP,
+			d.END_BP,
+			d.START_MON,
+			d.END_MON
+        FROM
+            (
+                SELECT
+                    first_value(aa.ARCH_ID) over(
+                        partition BY aa.AD_NAME
+                    ORDER BY
+                        aa.ARCH_ID DESC
+                    ) latest,
+                    aa.ARCH_ID,
+                    aa.AD_NAME,
+                    aa.ARCH_ACTION,
+                    aa.REQ_NAME,
+                    aa.ARCHIVE_SEQ,
+                    bb.START_TIME,
+                    bb.ELLAPSED_TIME,
+                    bb.ROWS_ARCHIVED,
+                    bb.ROWS_INSERTED,
+                    bb.ROWS_EXTRACTED,
+                    cc.TABLE_NAME,
+                    cc.ARCHIVED_ROWS
+                FROM
+                    OPTIM.ARCH_JOB_INFO aa,
+                    OPTIM.ARCH_JOB_RESULT bb,
+                    OPTIM.ARCH_JOB_RESULT_DTL cc
+                WHERE
+                    aa.ARCH_ID = bb.ARCH_ID
+                    AND aa.ARCH_ACTION = 'A'
+                    AND aa.STATUS = 'C'
+                    AND aa.ARCH_ID = cc.ARCH_ID
+            ) c,
+            (
+                SELECT
+                    *
+                FROM
+                    (
+                        SELECT
+                            arch_id,
+                            archive_seq,
+                            param_name,
+                            param_value
+                        FROM
+                            OPTIM.ARCH_JOB_PARAM_INFO
+                    ) PIVOT(
+                        MAX(PARAM_VALUE) FOR PARAM_NAME IN(
+						'AD_NAME' as P_AD_NAME,
+						'BIZ_NAME' as BIZ_NAME,
+						'START_DATE' as START_DATE,
+						'END_DATE' as END_DATE,
+						'ARCH_ID' as P_ARCH_ID,
+						'PRE_ARCH_ID' as PRE_ARCH_ID,
+						'BIZ_CODE' as BIZ_CODE,
+						'CUTOFF_DATE' as CUTOFF_DATE,
+						'LEDGERID' as LEDGERID,
+						'PERIODFROM' as PERIODFROM,
+						'PERIODTO' as PERIODTO,
+						'BUDVER' as BUDVER,
+						'APP_SH_NAME' as APP_SH_NAME,
+						'APP_ID' as APP_ID,
+						'LEDGER_ID' as LEDGER_ID,
+						'START_BP' as START_BP,
+						'END_BP' as END_BP,
+						'START_MON' as START_MON,
+						'END_MON' as END_MON
+                        )
+                    )
+            ) d
+        WHERE
+            c.ARCH_ID = c.latest
+            AND c.ARCH_ID = d.ARCH_ID(+)
+            AND c.ARCHIVE_SEQ = d.ARCHIVE_SEQ(+)
+    ) a2
+WHERE
+    a.ARCHIVE_SEQ = b.ARCHIVE_SEQ
+    and b.ARCHIVE_SEQ = a2.ARCHIVE_SEQ(+)
+    AND b.AD_NAME = a2.AD_NAME(+)
+    AND b.AD_NAME not like '%_AP'
+--    and a2.start_time > to_date('2016-10-18', 'YYYY-MM-DD')
+and a.archive_seq = 'XLA007'
+--and b.ad_name = 'WIP.AD_WIP_PA'
+ORDER BY
+    2,
+    4]]></sql>
+  </item>
+  <item>
+    <time>2016-10-26 13:25:48</time>
+    <sql><![CDATA[SELECT
+    a.ARCHIVE_SEQ,
+    a.BIZ_CATEGORY,
+    b.AD_NAME,
+    a2.ARCH_ID,
+    a2.ARCH_ACTION,
+    a2.REQ_NAME,
+	1 차수,
+    a2.START_TIME,
+    a2.ELLAPSED_TIME,
+    a2.ROWS_ARCHIVED,
+    a2.TABLE_NAME,
+    a2.ARCHIVED_ROWS,
+	a2.P_AD_NAME,
+	a2.BIZ_NAME,
+	a2.START_DATE,
+	a2.END_DATE,
+	a2.P_ARCH_ID,
+	a2.PRE_ARCH_ID,
+	a2.BIZ_CODE,
+	a2.CUTOFF_DATE,
+	a2.LEDGERID,
+	a2.PERIODFROM,
+	a2.PERIODTO,
+	a2.BUDVER,
+	a2.APP_SH_NAME,
+	a2.APP_ID,
+	a2.LEDGER_ID,
+	a2.START_BP,
+	a2.END_BP,
+	a2.START_MON,
+	a2.END_MON
+--    a2.*
+FROM
+    OPTIM.ARCH_POLICY_INFO a,
+    OPTIM.ARCH_SEQ_INFO b,
+    (
+        SELECT
+            c.ARCH_ID, c.ad_name, c.ARCH_ACTION, c.req_name, c.start_time, c.ellapsed_time, c.rows_archived,
+            c.TABLE_NAME,
+            c.ARCHIVED_ROWS,
+            d.archive_seq,
+			d.P_AD_NAME,
+			d.BIZ_NAME,
+			d.START_DATE,
+			d.END_DATE,
+			d.P_ARCH_ID,
+			d.PRE_ARCH_ID,
+			d.BIZ_CODE,
+			d.CUTOFF_DATE,
+			d.LEDGERID,
+			d.PERIODFROM,
+			d.PERIODTO,
+			d.BUDVER,
+			d.APP_SH_NAME,
+			d.APP_ID,
+			d.LEDGER_ID,
+			d.START_BP,
+			d.END_BP,
+			d.START_MON,
+			d.END_MON
+        FROM
+            (
+                SELECT
+                    first_value(aa.ARCH_ID) over(
+                        partition BY aa.AD_NAME
+                    ORDER BY
+                        aa.ARCH_ID DESC
+                    ) latest,
+                    aa.ARCH_ID,
+                    aa.AD_NAME,
+                    aa.ARCH_ACTION,
+                    aa.REQ_NAME,
+                    aa.ARCHIVE_SEQ,
+                    bb.START_TIME,
+                    bb.ELLAPSED_TIME,
+                    bb.ROWS_ARCHIVED,
+                    bb.ROWS_INSERTED,
+                    bb.ROWS_EXTRACTED,
+                    cc.TABLE_NAME,
+                    cc.ARCHIVED_ROWS
+                FROM
+                    OPTIM.ARCH_JOB_INFO aa,
+                    OPTIM.ARCH_JOB_RESULT bb,
+                    OPTIM.ARCH_JOB_RESULT_DTL cc
+                WHERE
+                    aa.ARCH_ID = bb.ARCH_ID
+                    AND aa.ARCH_ACTION = 'A'
+                    AND aa.STATUS = 'C'
+                    AND aa.ARCH_ID = cc.ARCH_ID
+            ) c,
+            (
+                SELECT
+                    *
+                FROM
+                    (
+                        SELECT
+                            arch_id,
+                            archive_seq,
+                            param_name,
+                            param_value
+                        FROM
+                            OPTIM.ARCH_JOB_PARAM_INFO
+                    ) PIVOT(
+                        MAX(PARAM_VALUE) FOR PARAM_NAME IN(
+						'AD_NAME' as P_AD_NAME,
+						'BIZ_NAME' as BIZ_NAME,
+						'START_DATE' as START_DATE,
+						'END_DATE' as END_DATE,
+						'ARCH_ID' as P_ARCH_ID,
+						'PRE_ARCH_ID' as PRE_ARCH_ID,
+						'BIZ_CODE' as BIZ_CODE,
+						'CUTOFF_DATE' as CUTOFF_DATE,
+						'LEDGERID' as LEDGERID,
+						'PERIODFROM' as PERIODFROM,
+						'PERIODTO' as PERIODTO,
+						'BUDVER' as BUDVER,
+						'APP_SH_NAME' as APP_SH_NAME,
+						'APP_ID' as APP_ID,
+						'LEDGER_ID' as LEDGER_ID,
+						'START_BP' as START_BP,
+						'END_BP' as END_BP,
+						'START_MON' as START_MON,
+						'END_MON' as END_MON
+                        )
+                    )
+            ) d
+        WHERE
+            c.ARCH_ID = c.latest
+            AND c.ARCH_ID = d.ARCH_ID(+)
+            AND c.ARCHIVE_SEQ = d.ARCHIVE_SEQ(+)
+    ) a2
+WHERE
+    a.ARCHIVE_SEQ = b.ARCHIVE_SEQ
+    and b.ARCHIVE_SEQ = a2.ARCHIVE_SEQ(+)
+    AND b.AD_NAME = a2.AD_NAME(+)
+    AND b.AD_NAME not like '%_AP'
+--    and a2.start_time > to_date('2016-10-18', 'YYYY-MM-DD')
+and a.archive_seq = 'XXCST001'
+--and b.ad_name = 'WIP.AD_WIP_PA'
+ORDER BY
+    2,
+    4]]></sql>
+  </item>
+  <item>
+    <time>2016-10-26 13:31:39</time>
+    <sql><![CDATA[SELECT
+    a.ARCHIVE_SEQ,
+    a.BIZ_CATEGORY,
+    b.AD_NAME,
+    a2.ARCH_ID,
+    a2.ARCH_ACTION,
+    a2.REQ_NAME,
+	1 차수,
+    a2.START_TIME,
+    a2.ELLAPSED_TIME,
+    a2.ROWS_ARCHIVED,
+    a2.TABLE_NAME,
+    a2.ARCHIVED_ROWS,
+	a2.P_AD_NAME,
+	a2.BIZ_NAME,
+	a2.START_DATE,
+	a2.END_DATE,
+	a2.P_ARCH_ID,
+	a2.PRE_ARCH_ID,
+	a2.BIZ_CODE,
+	a2.CUTOFF_DATE,
+	a2.LEDGERID,
+	a2.PERIODFROM,
+	a2.PERIODTO,
+	a2.BUDVER,
+	a2.APP_SH_NAME,
+	a2.APP_ID,
+	a2.LEDGER_ID,
+	a2.START_BP,
+	a2.END_BP,
+	a2.START_MON,
+	a2.END_MON
+--    a2.*
+FROM
+    OPTIM.ARCH_POLICY_INFO a,
+    OPTIM.ARCH_SEQ_INFO b,
+    (
+        SELECT
+            c.ARCH_ID, c.ad_name, c.ARCH_ACTION, c.req_name, c.start_time, c.ellapsed_time, c.rows_archived,
+            c.TABLE_NAME,
+            c.ARCHIVED_ROWS,
+            d.archive_seq,
+			d.P_AD_NAME,
+			d.BIZ_NAME,
+			d.START_DATE,
+			d.END_DATE,
+			d.P_ARCH_ID,
+			d.PRE_ARCH_ID,
+			d.BIZ_CODE,
+			d.CUTOFF_DATE,
+			d.LEDGERID,
+			d.PERIODFROM,
+			d.PERIODTO,
+			d.BUDVER,
+			d.APP_SH_NAME,
+			d.APP_ID,
+			d.LEDGER_ID,
+			d.START_BP,
+			d.END_BP,
+			d.START_MON,
+			d.END_MON
+        FROM
+            (
+                SELECT
+                    first_value(aa.ARCH_ID) over(
+                        partition BY aa.AD_NAME
+                    ORDER BY
+                        aa.ARCH_ID DESC
+                    ) latest,
+                    aa.ARCH_ID,
+                    aa.AD_NAME,
+                    aa.ARCH_ACTION,
+                    aa.REQ_NAME,
+                    aa.ARCHIVE_SEQ,
+                    bb.START_TIME,
+                    bb.ELLAPSED_TIME,
+                    bb.ROWS_ARCHIVED,
+                    bb.ROWS_INSERTED,
+                    bb.ROWS_EXTRACTED,
+                    cc.TABLE_NAME,
+                    cc.ARCHIVED_ROWS
+                FROM
+                    OPTIM.ARCH_JOB_INFO aa,
+                    OPTIM.ARCH_JOB_RESULT bb,
+                    OPTIM.ARCH_JOB_RESULT_DTL cc
+                WHERE
+                    aa.ARCH_ID = bb.ARCH_ID
+                    AND aa.ARCH_ACTION = 'A'
+                    AND aa.STATUS = 'C'
+                    AND aa.ARCH_ID = cc.ARCH_ID
+            ) c,
+            (
+                SELECT
+                    *
+                FROM
+                    (
+                        SELECT
+                            arch_id,
+                            archive_seq,
+                            param_name,
+                            param_value
+                        FROM
+                            OPTIM.ARCH_JOB_PARAM_INFO
+                    ) PIVOT(
+                        MAX(PARAM_VALUE) FOR PARAM_NAME IN(
+						'AD_NAME' as P_AD_NAME,
+						'BIZ_NAME' as BIZ_NAME,
+						'START_DATE' as START_DATE,
+						'END_DATE' as END_DATE,
+						'ARCH_ID' as P_ARCH_ID,
+						'PRE_ARCH_ID' as PRE_ARCH_ID,
+						'BIZ_CODE' as BIZ_CODE,
+						'CUTOFF_DATE' as CUTOFF_DATE,
+						'LEDGERID' as LEDGERID,
+						'PERIODFROM' as PERIODFROM,
+						'PERIODTO' as PERIODTO,
+						'BUDVER' as BUDVER,
+						'APP_SH_NAME' as APP_SH_NAME,
+						'APP_ID' as APP_ID,
+						'LEDGER_ID' as LEDGER_ID,
+						'START_BP' as START_BP,
+						'END_BP' as END_BP,
+						'START_MON' as START_MON,
+						'END_MON' as END_MON
+                        )
+                    )
+            ) d
+        WHERE
+            c.ARCH_ID = c.latest
+            AND c.ARCH_ID = d.ARCH_ID(+)
+            AND c.ARCHIVE_SEQ = d.ARCHIVE_SEQ(+)
+    ) a2
+WHERE
+    a.ARCHIVE_SEQ = b.ARCHIVE_SEQ
+    and b.ARCHIVE_SEQ = a2.ARCHIVE_SEQ(+)
+    AND b.AD_NAME = a2.AD_NAME(+)
+    AND b.AD_NAME not like '%_AP'
+--    and a2.start_time > to_date('2016-10-18', 'YYYY-MM-DD')
+and a.archive_seq like 'XXCST00%'
+--and b.ad_name = 'WIP.AD_WIP_PA'
+ORDER BY
+    2,
+    4]]></sql>
+  </item>
+  <item>
+    <time>2016-10-26 13:32:05</time>
+    <sql><![CDATA[SELECT
+    a.ARCHIVE_SEQ,
+    a.BIZ_CATEGORY,
+    b.AD_NAME,
+    a2.ARCH_ID,
+    a2.ARCH_ACTION,
+    a2.REQ_NAME,
+	1 차수,
+    a2.START_TIME,
+    a2.ELLAPSED_TIME,
+    a2.ROWS_ARCHIVED,
+    a2.TABLE_NAME,
+    a2.ARCHIVED_ROWS,
+	a2.P_AD_NAME,
+	a2.BIZ_NAME,
+	a2.START_DATE,
+	a2.END_DATE,
+	a2.P_ARCH_ID,
+	a2.PRE_ARCH_ID,
+	a2.BIZ_CODE,
+	a2.CUTOFF_DATE,
+	a2.LEDGERID,
+	a2.PERIODFROM,
+	a2.PERIODTO,
+	a2.BUDVER,
+	a2.APP_SH_NAME,
+	a2.APP_ID,
+	a2.LEDGER_ID,
+	a2.START_BP,
+	a2.END_BP,
+	a2.START_MON,
+	a2.END_MON
+--    a2.*
+FROM
+    OPTIM.ARCH_POLICY_INFO a,
+    OPTIM.ARCH_SEQ_INFO b,
+    (
+        SELECT
+            c.ARCH_ID, c.ad_name, c.ARCH_ACTION, c.req_name, c.start_time, c.ellapsed_time, c.rows_archived,
+            c.TABLE_NAME,
+            c.ARCHIVED_ROWS,
+            d.archive_seq,
+			d.P_AD_NAME,
+			d.BIZ_NAME,
+			d.START_DATE,
+			d.END_DATE,
+			d.P_ARCH_ID,
+			d.PRE_ARCH_ID,
+			d.BIZ_CODE,
+			d.CUTOFF_DATE,
+			d.LEDGERID,
+			d.PERIODFROM,
+			d.PERIODTO,
+			d.BUDVER,
+			d.APP_SH_NAME,
+			d.APP_ID,
+			d.LEDGER_ID,
+			d.START_BP,
+			d.END_BP,
+			d.START_MON,
+			d.END_MON
+        FROM
+            (
+                SELECT
+                    first_value(aa.ARCH_ID) over(
+                        partition BY aa.AD_NAME
+                    ORDER BY
+                        aa.ARCH_ID DESC
+                    ) latest,
+                    aa.ARCH_ID,
+                    aa.AD_NAME,
+                    aa.ARCH_ACTION,
+                    aa.REQ_NAME,
+                    aa.ARCHIVE_SEQ,
+                    bb.START_TIME,
+                    bb.ELLAPSED_TIME,
+                    bb.ROWS_ARCHIVED,
+                    bb.ROWS_INSERTED,
+                    bb.ROWS_EXTRACTED,
+                    cc.TABLE_NAME,
+                    cc.ARCHIVED_ROWS
+                FROM
+                    OPTIM.ARCH_JOB_INFO aa,
+                    OPTIM.ARCH_JOB_RESULT bb,
+                    OPTIM.ARCH_JOB_RESULT_DTL cc
+                WHERE
+                    aa.ARCH_ID = bb.ARCH_ID
+                    AND aa.ARCH_ACTION = 'A'
+                    AND aa.STATUS = 'C'
+                    AND aa.ARCH_ID = cc.ARCH_ID
+            ) c,
+            (
+                SELECT
+                    *
+                FROM
+                    (
+                        SELECT
+                            arch_id,
+                            archive_seq,
+                            param_name,
+                            param_value
+                        FROM
+                            OPTIM.ARCH_JOB_PARAM_INFO
+                    ) PIVOT(
+                        MAX(PARAM_VALUE) FOR PARAM_NAME IN(
+						'AD_NAME' as P_AD_NAME,
+						'BIZ_NAME' as BIZ_NAME,
+						'START_DATE' as START_DATE,
+						'END_DATE' as END_DATE,
+						'ARCH_ID' as P_ARCH_ID,
+						'PRE_ARCH_ID' as PRE_ARCH_ID,
+						'BIZ_CODE' as BIZ_CODE,
+						'CUTOFF_DATE' as CUTOFF_DATE,
+						'LEDGERID' as LEDGERID,
+						'PERIODFROM' as PERIODFROM,
+						'PERIODTO' as PERIODTO,
+						'BUDVER' as BUDVER,
+						'APP_SH_NAME' as APP_SH_NAME,
+						'APP_ID' as APP_ID,
+						'LEDGER_ID' as LEDGER_ID,
+						'START_BP' as START_BP,
+						'END_BP' as END_BP,
+						'START_MON' as START_MON,
+						'END_MON' as END_MON
+                        )
+                    )
+            ) d
+        WHERE
+            c.ARCH_ID = c.latest
+            AND c.ARCH_ID = d.ARCH_ID(+)
+            AND c.ARCHIVE_SEQ = d.ARCHIVE_SEQ(+)
+    ) a2
+WHERE
+    a.ARCHIVE_SEQ = b.ARCHIVE_SEQ
+    and b.ARCHIVE_SEQ = a2.ARCHIVE_SEQ(+)
+    AND b.AD_NAME = a2.AD_NAME(+)
+    AND b.AD_NAME not like '%_AP'
+--    and a2.start_time > to_date('2016-10-18', 'YYYY-MM-DD')
+and a.archive_seq like 'XXCST00%'
+--and b.ad_name = 'WIP.AD_WIP_PA'
+ORDER BY
+    1,
+    3]]></sql>
+  </item>
+  <item>
+    <time>2016-10-26 13:43:13</time>
+    <sql><![CDATA[SELECT
+    a.ARCHIVE_SEQ,
+    a.BIZ_CATEGORY,
+    b.AD_NAME,
+    a2.ARCH_ID,
+    a2.ARCH_ACTION,
+    a2.REQ_NAME,
+	1 차수,
+    a2.START_TIME,
+    a2.ELLAPSED_TIME,
+    a2.ROWS_ARCHIVED,
+    a2.TABLE_NAME,
+    a2.ARCHIVED_ROWS,
+	a2.P_AD_NAME,
+	a2.BIZ_NAME,
+	a2.START_DATE,
+	a2.END_DATE,
+	a2.P_ARCH_ID,
+	a2.PRE_ARCH_ID,
+	a2.BIZ_CODE,
+	a2.CUTOFF_DATE,
+	a2.LEDGERID,
+	a2.PERIODFROM,
+	a2.PERIODTO,
+	a2.BUDVER,
+	a2.APP_SH_NAME,
+	a2.APP_ID,
+	a2.LEDGER_ID,
+	a2.START_BP,
+	a2.END_BP,
+	a2.START_MON,
+	a2.END_MON
+--    a2.*
+FROM
+    OPTIM.ARCH_POLICY_INFO a,
+    OPTIM.ARCH_SEQ_INFO b,
+    (
+        SELECT
+            c.ARCH_ID, c.ad_name, c.ARCH_ACTION, c.req_name, c.start_time, c.ellapsed_time, c.rows_archived,
+            c.TABLE_NAME,
+            c.ARCHIVED_ROWS,
+            d.archive_seq,
+			d.P_AD_NAME,
+			d.BIZ_NAME,
+			d.START_DATE,
+			d.END_DATE,
+			d.P_ARCH_ID,
+			d.PRE_ARCH_ID,
+			d.BIZ_CODE,
+			d.CUTOFF_DATE,
+			d.LEDGERID,
+			d.PERIODFROM,
+			d.PERIODTO,
+			d.BUDVER,
+			d.APP_SH_NAME,
+			d.APP_ID,
+			d.LEDGER_ID,
+			d.START_BP,
+			d.END_BP,
+			d.START_MON,
+			d.END_MON
+        FROM
+            (
+                SELECT
+                    first_value(aa.ARCH_ID) over(
+                        partition BY aa.AD_NAME
+                    ORDER BY
+                        aa.ARCH_ID DESC
+                    ) latest,
+                    aa.ARCH_ID,
+                    aa.AD_NAME,
+                    aa.ARCH_ACTION,
+                    aa.REQ_NAME,
+                    aa.ARCHIVE_SEQ,
+                    bb.START_TIME,
+                    bb.ELLAPSED_TIME,
+                    bb.ROWS_ARCHIVED,
+                    bb.ROWS_INSERTED,
+                    bb.ROWS_EXTRACTED,
+                    cc.TABLE_NAME,
+                    cc.ARCHIVED_ROWS
+                FROM
+                    OPTIM.ARCH_JOB_INFO aa,
+                    OPTIM.ARCH_JOB_RESULT bb,
+                    OPTIM.ARCH_JOB_RESULT_DTL cc
+                WHERE
+                    aa.ARCH_ID = bb.ARCH_ID
+                    AND aa.ARCH_ACTION = 'A'
+                    AND aa.STATUS = 'C'
+                    AND aa.ARCH_ID = cc.ARCH_ID
+            ) c,
+            (
+                SELECT
+                    *
+                FROM
+                    (
+                        SELECT
+                            arch_id,
+                            archive_seq,
+                            param_name,
+                            param_value
+                        FROM
+                            OPTIM.ARCH_JOB_PARAM_INFO
+                    ) PIVOT(
+                        MAX(PARAM_VALUE) FOR PARAM_NAME IN(
+						'AD_NAME' as P_AD_NAME,
+						'BIZ_NAME' as BIZ_NAME,
+						'START_DATE' as START_DATE,
+						'END_DATE' as END_DATE,
+						'ARCH_ID' as P_ARCH_ID,
+						'PRE_ARCH_ID' as PRE_ARCH_ID,
+						'BIZ_CODE' as BIZ_CODE,
+						'CUTOFF_DATE' as CUTOFF_DATE,
+						'LEDGERID' as LEDGERID,
+						'PERIODFROM' as PERIODFROM,
+						'PERIODTO' as PERIODTO,
+						'BUDVER' as BUDVER,
+						'APP_SH_NAME' as APP_SH_NAME,
+						'APP_ID' as APP_ID,
+						'LEDGER_ID' as LEDGER_ID,
+						'START_BP' as START_BP,
+						'END_BP' as END_BP,
+						'START_MON' as START_MON,
+						'END_MON' as END_MON
+                        )
+                    )
+            ) d
+        WHERE
+            c.ARCH_ID = c.latest
+            AND c.ARCH_ID = d.ARCH_ID(+)
+            AND c.ARCHIVE_SEQ = d.ARCHIVE_SEQ(+)
+    ) a2
+WHERE
+    a.ARCHIVE_SEQ = b.ARCHIVE_SEQ
+    and b.ARCHIVE_SEQ = a2.ARCHIVE_SEQ(+)
+    AND b.AD_NAME = a2.AD_NAME(+)
+    AND b.AD_NAME not like '%_AP'
+--    and a2.start_time > to_date('2016-10-18', 'YYYY-MM-DD')
+and a.archive_seq = 'BOM001'
+--and b.ad_name = 'WIP.AD_WIP_PA'
+ORDER BY
+    1,
+    3]]></sql>
+  </item>
+  <item>
+    <time>2016-10-26 13:53:09</time>
+    <sql><![CDATA[SELECT
+    a.ARCHIVE_SEQ,
+    a.BIZ_CATEGORY,
+    b.AD_NAME,
+    a2.ARCH_ID,
+    a2.ARCH_ACTION,
+    a2.REQ_NAME,
+	1 차수,
+    a2.START_TIME,
+    a2.ELLAPSED_TIME,
+    a2.ROWS_ARCHIVED,
+    a2.TABLE_NAME,
+    a2.ARCHIVED_ROWS,
+	a2.P_AD_NAME,
+	a2.BIZ_NAME,
+	a2.START_DATE,
+	a2.END_DATE,
+	a2.P_ARCH_ID,
+	a2.PRE_ARCH_ID,
+	a2.BIZ_CODE,
+	a2.CUTOFF_DATE,
+	a2.LEDGERID,
+	a2.PERIODFROM,
+	a2.PERIODTO,
+	a2.BUDVER,
+	a2.APP_SH_NAME,
+	a2.APP_ID,
+	a2.LEDGER_ID,
+	a2.START_BP,
+	a2.END_BP,
+	a2.START_MON,
+	a2.END_MON
+--    a2.*
+FROM
+    OPTIM.ARCH_POLICY_INFO a,
+    OPTIM.ARCH_SEQ_INFO b,
+    (
+        SELECT
+            c.ARCH_ID, c.ad_name, c.ARCH_ACTION, c.req_name, c.start_time, c.ellapsed_time, c.rows_archived,
+            c.TABLE_NAME,
+            c.ARCHIVED_ROWS,
+            d.archive_seq,
+			d.P_AD_NAME,
+			d.BIZ_NAME,
+			d.START_DATE,
+			d.END_DATE,
+			d.P_ARCH_ID,
+			d.PRE_ARCH_ID,
+			d.BIZ_CODE,
+			d.CUTOFF_DATE,
+			d.LEDGERID,
+			d.PERIODFROM,
+			d.PERIODTO,
+			d.BUDVER,
+			d.APP_SH_NAME,
+			d.APP_ID,
+			d.LEDGER_ID,
+			d.START_BP,
+			d.END_BP,
+			d.START_MON,
+			d.END_MON
+        FROM
+            (
+                SELECT
+                    first_value(aa.ARCH_ID) over(
+                        partition BY aa.AD_NAME
+                    ORDER BY
+                        aa.ARCH_ID DESC
+                    ) latest,
+                    aa.ARCH_ID,
+                    aa.AD_NAME,
+                    aa.ARCH_ACTION,
+                    aa.REQ_NAME,
+                    aa.ARCHIVE_SEQ,
+                    bb.START_TIME,
+                    bb.ELLAPSED_TIME,
+                    bb.ROWS_ARCHIVED,
+                    bb.ROWS_INSERTED,
+                    bb.ROWS_EXTRACTED,
+                    cc.TABLE_NAME,
+                    cc.ARCHIVED_ROWS
+                FROM
+                    OPTIM.ARCH_JOB_INFO aa,
+                    OPTIM.ARCH_JOB_RESULT bb,
+                    OPTIM.ARCH_JOB_RESULT_DTL cc
+                WHERE
+                    aa.ARCH_ID = bb.ARCH_ID
+                    AND aa.ARCH_ACTION = 'A'
+                    AND aa.STATUS = 'C'
+                    AND aa.ARCH_ID = cc.ARCH_ID
+            ) c,
+            (
+                SELECT
+                    *
+                FROM
+                    (
+                        SELECT
+                            arch_id,
+                            archive_seq,
+                            param_name,
+                            param_value
+                        FROM
+                            OPTIM.ARCH_JOB_PARAM_INFO
+                    ) PIVOT(
+                        MAX(PARAM_VALUE) FOR PARAM_NAME IN(
+						'AD_NAME' as P_AD_NAME,
+						'BIZ_NAME' as BIZ_NAME,
+						'START_DATE' as START_DATE,
+						'END_DATE' as END_DATE,
+						'ARCH_ID' as P_ARCH_ID,
+						'PRE_ARCH_ID' as PRE_ARCH_ID,
+						'BIZ_CODE' as BIZ_CODE,
+						'CUTOFF_DATE' as CUTOFF_DATE,
+						'LEDGERID' as LEDGERID,
+						'PERIODFROM' as PERIODFROM,
+						'PERIODTO' as PERIODTO,
+						'BUDVER' as BUDVER,
+						'APP_SH_NAME' as APP_SH_NAME,
+						'APP_ID' as APP_ID,
+						'LEDGER_ID' as LEDGER_ID,
+						'START_BP' as START_BP,
+						'END_BP' as END_BP,
+						'START_MON' as START_MON,
+						'END_MON' as END_MON
+                        )
+                    )
+            ) d
+        WHERE
+            c.ARCH_ID = c.latest
+            AND c.ARCH_ID = d.ARCH_ID(+)
+            AND c.ARCHIVE_SEQ = d.ARCHIVE_SEQ(+)
+    ) a2
+WHERE
+    a.ARCHIVE_SEQ = b.ARCHIVE_SEQ
+    and b.ARCHIVE_SEQ = a2.ARCHIVE_SEQ(+)
+    AND b.AD_NAME = a2.AD_NAME(+)
+    AND b.AD_NAME not like '%_AP'
+--    and a2.start_time > to_date('2016-10-18', 'YYYY-MM-DD')
+and a.archive_seq = 'INV004'
+--and b.ad_name = 'WIP.AD_WIP_PA'
+ORDER BY
+    1,
+    3]]></sql>
+  </item>
+  <item>
+    <time>2016-10-26 13:58:38</time>
+    <sql><![CDATA[SELECT
+    a.ARCHIVE_SEQ,
+    a.BIZ_CATEGORY,
+    b.AD_NAME,
+    a2.ARCH_ID,
+    a2.ARCH_ACTION,
+    a2.REQ_NAME,
+	1 차수,
+    a2.START_TIME,
+    a2.ELLAPSED_TIME,
+    a2.ROWS_ARCHIVED,
+    a2.TABLE_NAME,
+    a2.ARCHIVED_ROWS,
+	a2.P_AD_NAME,
+	a2.BIZ_NAME,
+	a2.START_DATE,
+	a2.END_DATE,
+	a2.P_ARCH_ID,
+	a2.PRE_ARCH_ID,
+	a2.BIZ_CODE,
+	a2.CUTOFF_DATE,
+	a2.LEDGERID,
+	a2.PERIODFROM,
+	a2.PERIODTO,
+	a2.BUDVER,
+	a2.APP_SH_NAME,
+	a2.APP_ID,
+	a2.LEDGER_ID,
+	a2.START_BP,
+	a2.END_BP,
+	a2.START_MON,
+	a2.END_MON
+--    a2.*
+FROM
+    OPTIM.ARCH_POLICY_INFO a,
+    OPTIM.ARCH_SEQ_INFO b,
+    (
+        SELECT
+            c.ARCH_ID, c.ad_name, c.ARCH_ACTION, c.req_name, c.start_time, c.ellapsed_time, c.rows_archived,
+            c.TABLE_NAME,
+            c.ARCHIVED_ROWS,
+            d.archive_seq,
+			d.P_AD_NAME,
+			d.BIZ_NAME,
+			d.START_DATE,
+			d.END_DATE,
+			d.P_ARCH_ID,
+			d.PRE_ARCH_ID,
+			d.BIZ_CODE,
+			d.CUTOFF_DATE,
+			d.LEDGERID,
+			d.PERIODFROM,
+			d.PERIODTO,
+			d.BUDVER,
+			d.APP_SH_NAME,
+			d.APP_ID,
+			d.LEDGER_ID,
+			d.START_BP,
+			d.END_BP,
+			d.START_MON,
+			d.END_MON
+        FROM
+            (
+                SELECT
+                    first_value(aa.ARCH_ID) over(
+                        partition BY aa.AD_NAME
+                    ORDER BY
+                        aa.ARCH_ID DESC
+                    ) latest,
+                    aa.ARCH_ID,
+                    aa.AD_NAME,
+                    aa.ARCH_ACTION,
+                    aa.REQ_NAME,
+                    aa.ARCHIVE_SEQ,
+                    bb.START_TIME,
+                    bb.ELLAPSED_TIME,
+                    bb.ROWS_ARCHIVED,
+                    bb.ROWS_INSERTED,
+                    bb.ROWS_EXTRACTED,
+                    cc.TABLE_NAME,
+                    cc.ARCHIVED_ROWS
+                FROM
+                    OPTIM.ARCH_JOB_INFO aa,
+                    OPTIM.ARCH_JOB_RESULT bb,
+                    OPTIM.ARCH_JOB_RESULT_DTL cc
+                WHERE
+                    aa.ARCH_ID = bb.ARCH_ID
+                    AND aa.ARCH_ACTION = 'A'
+                    AND aa.STATUS = 'C'
+                    AND aa.ARCH_ID = cc.ARCH_ID
+            ) c,
+            (
+                SELECT
+                    *
+                FROM
+                    (
+                        SELECT
+                            arch_id,
+                            archive_seq,
+                            param_name,
+                            param_value
+                        FROM
+                            OPTIM.ARCH_JOB_PARAM_INFO
+                    ) PIVOT(
+                        MAX(PARAM_VALUE) FOR PARAM_NAME IN(
+						'AD_NAME' as P_AD_NAME,
+						'BIZ_NAME' as BIZ_NAME,
+						'START_DATE' as START_DATE,
+						'END_DATE' as END_DATE,
+						'ARCH_ID' as P_ARCH_ID,
+						'PRE_ARCH_ID' as PRE_ARCH_ID,
+						'BIZ_CODE' as BIZ_CODE,
+						'CUTOFF_DATE' as CUTOFF_DATE,
+						'LEDGERID' as LEDGERID,
+						'PERIODFROM' as PERIODFROM,
+						'PERIODTO' as PERIODTO,
+						'BUDVER' as BUDVER,
+						'APP_SH_NAME' as APP_SH_NAME,
+						'APP_ID' as APP_ID,
+						'LEDGER_ID' as LEDGER_ID,
+						'START_BP' as START_BP,
+						'END_BP' as END_BP,
+						'START_MON' as START_MON,
+						'END_MON' as END_MON
+                        )
+                    )
+            ) d
+        WHERE
+            c.ARCH_ID = c.latest
+            AND c.ARCH_ID = d.ARCH_ID(+)
+            AND c.ARCHIVE_SEQ = d.ARCHIVE_SEQ(+)
+    ) a2
+WHERE
+    a.ARCHIVE_SEQ = b.ARCHIVE_SEQ
+    and b.ARCHIVE_SEQ = a2.ARCHIVE_SEQ(+)
+    AND b.AD_NAME = a2.AD_NAME(+)
+    AND b.AD_NAME not like '%_AP'
+--    and a2.start_time > to_date('2016-10-18', 'YYYY-MM-DD')
+and a.archive_seq like 'XXINV%'
+--and b.ad_name = 'WIP.AD_WIP_PA'
+ORDER BY
+    1,
+    3]]></sql>
+  </item>
+  <item>
+    <time>2016-10-26 14:10:29</time>
+    <sql><![CDATA[SELECT
+    a.ARCHIVE_SEQ,
+    a.BIZ_CATEGORY,
+    b.AD_NAME,
+    a2.ARCH_ID,
+    a2.ARCH_ACTION,
+    a2.REQ_NAME,
+	1 차수,
+    a2.START_TIME,
+    a2.ELLAPSED_TIME,
+    a2.ROWS_ARCHIVED,
+    a2.TABLE_NAME,
+    a2.ARCHIVED_ROWS,
+	a2.P_AD_NAME,
+	a2.BIZ_NAME,
+	a2.START_DATE,
+	a2.END_DATE,
+	a2.P_ARCH_ID,
+	a2.PRE_ARCH_ID,
+	a2.BIZ_CODE,
+	a2.CUTOFF_DATE,
+	a2.LEDGERID,
+	a2.PERIODFROM,
+	a2.PERIODTO,
+	a2.BUDVER,
+	a2.APP_SH_NAME,
+	a2.APP_ID,
+	a2.LEDGER_ID,
+	a2.START_BP,
+	a2.END_BP,
+	a2.START_MON,
+	a2.END_MON
+--    a2.*
+FROM
+    OPTIM.ARCH_POLICY_INFO a,
+    OPTIM.ARCH_SEQ_INFO b,
+    (
+        SELECT
+            c.ARCH_ID, c.ad_name, c.ARCH_ACTION, c.req_name, c.start_time, c.ellapsed_time, c.rows_archived,
+            c.TABLE_NAME,
+            c.ARCHIVED_ROWS,
+            d.archive_seq,
+			d.P_AD_NAME,
+			d.BIZ_NAME,
+			d.START_DATE,
+			d.END_DATE,
+			d.P_ARCH_ID,
+			d.PRE_ARCH_ID,
+			d.BIZ_CODE,
+			d.CUTOFF_DATE,
+			d.LEDGERID,
+			d.PERIODFROM,
+			d.PERIODTO,
+			d.BUDVER,
+			d.APP_SH_NAME,
+			d.APP_ID,
+			d.LEDGER_ID,
+			d.START_BP,
+			d.END_BP,
+			d.START_MON,
+			d.END_MON
+        FROM
+            (
+                SELECT
+                    first_value(aa.ARCH_ID) over(
+                        partition BY aa.AD_NAME
+                    ORDER BY
+                        aa.ARCH_ID DESC
+                    ) latest,
+                    aa.ARCH_ID,
+                    aa.AD_NAME,
+                    aa.ARCH_ACTION,
+                    aa.REQ_NAME,
+                    aa.ARCHIVE_SEQ,
+                    bb.START_TIME,
+                    bb.ELLAPSED_TIME,
+                    bb.ROWS_ARCHIVED,
+                    bb.ROWS_INSERTED,
+                    bb.ROWS_EXTRACTED,
+                    cc.TABLE_NAME,
+                    cc.ARCHIVED_ROWS
+                FROM
+                    OPTIM.ARCH_JOB_INFO aa,
+                    OPTIM.ARCH_JOB_RESULT bb,
+                    OPTIM.ARCH_JOB_RESULT_DTL cc
+                WHERE
+                    aa.ARCH_ID = bb.ARCH_ID
+                    AND aa.ARCH_ACTION = 'A'
+                    AND aa.STATUS = 'C'
+                    AND aa.ARCH_ID = cc.ARCH_ID
+            ) c,
+            (
+                SELECT
+                    *
+                FROM
+                    (
+                        SELECT
+                            arch_id,
+                            archive_seq,
+                            param_name,
+                            param_value
+                        FROM
+                            OPTIM.ARCH_JOB_PARAM_INFO
+                    ) PIVOT(
+                        MAX(PARAM_VALUE) FOR PARAM_NAME IN(
+						'AD_NAME' as P_AD_NAME,
+						'BIZ_NAME' as BIZ_NAME,
+						'START_DATE' as START_DATE,
+						'END_DATE' as END_DATE,
+						'ARCH_ID' as P_ARCH_ID,
+						'PRE_ARCH_ID' as PRE_ARCH_ID,
+						'BIZ_CODE' as BIZ_CODE,
+						'CUTOFF_DATE' as CUTOFF_DATE,
+						'LEDGERID' as LEDGERID,
+						'PERIODFROM' as PERIODFROM,
+						'PERIODTO' as PERIODTO,
+						'BUDVER' as BUDVER,
+						'APP_SH_NAME' as APP_SH_NAME,
+						'APP_ID' as APP_ID,
+						'LEDGER_ID' as LEDGER_ID,
+						'START_BP' as START_BP,
+						'END_BP' as END_BP,
+						'START_MON' as START_MON,
+						'END_MON' as END_MON
+                        )
+                    )
+            ) d
+        WHERE
+            c.ARCH_ID = c.latest
+            AND c.ARCH_ID = d.ARCH_ID(+)
+            AND c.ARCHIVE_SEQ = d.ARCHIVE_SEQ(+)
+    ) a2
+WHERE
+    a.ARCHIVE_SEQ = b.ARCHIVE_SEQ
+    and b.ARCHIVE_SEQ = a2.ARCHIVE_SEQ(+)
+    AND b.AD_NAME = a2.AD_NAME(+)
+    AND b.AD_NAME not like '%_AP'
+--    and a2.start_time > to_date('2016-10-18', 'YYYY-MM-DD')
+and a.archive_seq like 'XXONT00%'
+--and b.ad_name = 'WIP.AD_WIP_PA'
+ORDER BY
+    1,
+    3]]></sql>
+  </item>
+  <item>
+    <time>2016-10-26 14:14:46</time>
+    <sql><![CDATA[SELECT
+    a.ARCHIVE_SEQ,
+    a.BIZ_CATEGORY,
+    b.AD_NAME,
+    a2.ARCH_ID,
+    a2.ARCH_ACTION,
+    a2.REQ_NAME,
+	1 차수,
+    a2.START_TIME,
+    a2.ELLAPSED_TIME,
+    a2.ROWS_ARCHIVED,
+    a2.TABLE_NAME,
+    a2.ARCHIVED_ROWS,
+	a2.P_AD_NAME,
+	a2.BIZ_NAME,
+	a2.START_DATE,
+	a2.END_DATE,
+	a2.P_ARCH_ID,
+	a2.PRE_ARCH_ID,
+	a2.BIZ_CODE,
+	a2.CUTOFF_DATE,
+	a2.LEDGERID,
+	a2.PERIODFROM,
+	a2.PERIODTO,
+	a2.BUDVER,
+	a2.APP_SH_NAME,
+	a2.APP_ID,
+	a2.LEDGER_ID,
+	a2.START_BP,
+	a2.END_BP,
+	a2.START_MON,
+	a2.END_MON
+--    a2.*
+FROM
+    OPTIM.ARCH_POLICY_INFO a,
+    OPTIM.ARCH_SEQ_INFO b,
+    (
+        SELECT
+            c.ARCH_ID, c.ad_name, c.ARCH_ACTION, c.req_name, c.start_time, c.ellapsed_time, c.rows_archived,
+            c.TABLE_NAME,
+            c.ARCHIVED_ROWS,
+            d.archive_seq,
+			d.P_AD_NAME,
+			d.BIZ_NAME,
+			d.START_DATE,
+			d.END_DATE,
+			d.P_ARCH_ID,
+			d.PRE_ARCH_ID,
+			d.BIZ_CODE,
+			d.CUTOFF_DATE,
+			d.LEDGERID,
+			d.PERIODFROM,
+			d.PERIODTO,
+			d.BUDVER,
+			d.APP_SH_NAME,
+			d.APP_ID,
+			d.LEDGER_ID,
+			d.START_BP,
+			d.END_BP,
+			d.START_MON,
+			d.END_MON
+        FROM
+            (
+                SELECT
+                    first_value(aa.ARCH_ID) over(
+                        partition BY aa.AD_NAME
+                    ORDER BY
+                        aa.ARCH_ID DESC
+                    ) latest,
+                    aa.ARCH_ID,
+                    aa.AD_NAME,
+                    aa.ARCH_ACTION,
+                    aa.REQ_NAME,
+                    aa.ARCHIVE_SEQ,
+                    bb.START_TIME,
+                    bb.ELLAPSED_TIME,
+                    bb.ROWS_ARCHIVED,
+                    bb.ROWS_INSERTED,
+                    bb.ROWS_EXTRACTED,
+                    cc.TABLE_NAME,
+                    cc.ARCHIVED_ROWS
+                FROM
+                    OPTIM.ARCH_JOB_INFO aa,
+                    OPTIM.ARCH_JOB_RESULT bb,
+                    OPTIM.ARCH_JOB_RESULT_DTL cc
+                WHERE
+                    aa.ARCH_ID = bb.ARCH_ID
+                    AND aa.ARCH_ACTION = 'A'
+                    AND aa.STATUS = 'C'
+                    AND aa.ARCH_ID = cc.ARCH_ID
+            ) c,
+            (
+                SELECT
+                    *
+                FROM
+                    (
+                        SELECT
+                            arch_id,
+                            archive_seq,
+                            param_name,
+                            param_value
+                        FROM
+                            OPTIM.ARCH_JOB_PARAM_INFO
+                    ) PIVOT(
+                        MAX(PARAM_VALUE) FOR PARAM_NAME IN(
+						'AD_NAME' as P_AD_NAME,
+						'BIZ_NAME' as BIZ_NAME,
+						'START_DATE' as START_DATE,
+						'END_DATE' as END_DATE,
+						'ARCH_ID' as P_ARCH_ID,
+						'PRE_ARCH_ID' as PRE_ARCH_ID,
+						'BIZ_CODE' as BIZ_CODE,
+						'CUTOFF_DATE' as CUTOFF_DATE,
+						'LEDGERID' as LEDGERID,
+						'PERIODFROM' as PERIODFROM,
+						'PERIODTO' as PERIODTO,
+						'BUDVER' as BUDVER,
+						'APP_SH_NAME' as APP_SH_NAME,
+						'APP_ID' as APP_ID,
+						'LEDGER_ID' as LEDGER_ID,
+						'START_BP' as START_BP,
+						'END_BP' as END_BP,
+						'START_MON' as START_MON,
+						'END_MON' as END_MON
+                        )
+                    )
+            ) d
+        WHERE
+            c.ARCH_ID = c.latest
+            AND c.ARCH_ID = d.ARCH_ID(+)
+            AND c.ARCHIVE_SEQ = d.ARCHIVE_SEQ(+)
+    ) a2
+WHERE
+    a.ARCHIVE_SEQ = b.ARCHIVE_SEQ
+    and b.ARCHIVE_SEQ = a2.ARCHIVE_SEQ(+)
+    AND b.AD_NAME = a2.AD_NAME(+)
+    AND b.AD_NAME not like '%_AP'
+--    and a2.start_time > to_date('2016-10-18', 'YYYY-MM-DD')
+and a.archive_seq like 'XXCST1%'
+--and b.ad_name = 'WIP.AD_WIP_PA'
+ORDER BY
+    1,
+    3]]></sql>
+  </item>
+  <item>
+    <time>2016-10-26 14:15:08</time>
+    <sql><![CDATA[SELECT
+    a.ARCHIVE_SEQ,
+    a.BIZ_CATEGORY,
+    b.AD_NAME,
+    a2.ARCH_ID,
+    a2.ARCH_ACTION,
+    a2.REQ_NAME,
+	1 차수,
+    a2.START_TIME,
+    a2.ELLAPSED_TIME,
+    a2.ROWS_ARCHIVED,
+    a2.TABLE_NAME,
+    a2.ARCHIVED_ROWS,
+	a2.P_AD_NAME,
+	a2.BIZ_NAME,
+	a2.START_DATE,
+	a2.END_DATE,
+	a2.P_ARCH_ID,
+	a2.PRE_ARCH_ID,
+	a2.BIZ_CODE,
+	a2.CUTOFF_DATE,
+	a2.LEDGERID,
+	a2.PERIODFROM,
+	a2.PERIODTO,
+	a2.BUDVER,
+	a2.APP_SH_NAME,
+	a2.APP_ID,
+	a2.LEDGER_ID,
+	a2.START_BP,
+	a2.END_BP,
+	a2.START_MON,
+	a2.END_MON
+--    a2.*
+FROM
+    OPTIM.ARCH_POLICY_INFO a,
+    OPTIM.ARCH_SEQ_INFO b,
+    (
+        SELECT
+            c.ARCH_ID, c.ad_name, c.ARCH_ACTION, c.req_name, c.start_time, c.ellapsed_time, c.rows_archived,
+            c.TABLE_NAME,
+            c.ARCHIVED_ROWS,
+            d.archive_seq,
+			d.P_AD_NAME,
+			d.BIZ_NAME,
+			d.START_DATE,
+			d.END_DATE,
+			d.P_ARCH_ID,
+			d.PRE_ARCH_ID,
+			d.BIZ_CODE,
+			d.CUTOFF_DATE,
+			d.LEDGERID,
+			d.PERIODFROM,
+			d.PERIODTO,
+			d.BUDVER,
+			d.APP_SH_NAME,
+			d.APP_ID,
+			d.LEDGER_ID,
+			d.START_BP,
+			d.END_BP,
+			d.START_MON,
+			d.END_MON
+        FROM
+            (
+                SELECT
+                    first_value(aa.ARCH_ID) over(
+                        partition BY aa.AD_NAME
+                    ORDER BY
+                        aa.ARCH_ID DESC
+                    ) latest,
+                    aa.ARCH_ID,
+                    aa.AD_NAME,
+                    aa.ARCH_ACTION,
+                    aa.REQ_NAME,
+                    aa.ARCHIVE_SEQ,
+                    bb.START_TIME,
+                    bb.ELLAPSED_TIME,
+                    bb.ROWS_ARCHIVED,
+                    bb.ROWS_INSERTED,
+                    bb.ROWS_EXTRACTED,
+                    cc.TABLE_NAME,
+                    cc.ARCHIVED_ROWS
+                FROM
+                    OPTIM.ARCH_JOB_INFO aa,
+                    OPTIM.ARCH_JOB_RESULT bb,
+                    OPTIM.ARCH_JOB_RESULT_DTL cc
+                WHERE
+                    aa.ARCH_ID = bb.ARCH_ID
+                    AND aa.ARCH_ACTION = 'A'
+                    AND aa.STATUS = 'C'
+                    AND aa.ARCH_ID = cc.ARCH_ID
+            ) c,
+            (
+                SELECT
+                    *
+                FROM
+                    (
+                        SELECT
+                            arch_id,
+                            archive_seq,
+                            param_name,
+                            param_value
+                        FROM
+                            OPTIM.ARCH_JOB_PARAM_INFO
+                    ) PIVOT(
+                        MAX(PARAM_VALUE) FOR PARAM_NAME IN(
+						'AD_NAME' as P_AD_NAME,
+						'BIZ_NAME' as BIZ_NAME,
+						'START_DATE' as START_DATE,
+						'END_DATE' as END_DATE,
+						'ARCH_ID' as P_ARCH_ID,
+						'PRE_ARCH_ID' as PRE_ARCH_ID,
+						'BIZ_CODE' as BIZ_CODE,
+						'CUTOFF_DATE' as CUTOFF_DATE,
+						'LEDGERID' as LEDGERID,
+						'PERIODFROM' as PERIODFROM,
+						'PERIODTO' as PERIODTO,
+						'BUDVER' as BUDVER,
+						'APP_SH_NAME' as APP_SH_NAME,
+						'APP_ID' as APP_ID,
+						'LEDGER_ID' as LEDGER_ID,
+						'START_BP' as START_BP,
+						'END_BP' as END_BP,
+						'START_MON' as START_MON,
+						'END_MON' as END_MON
+                        )
+                    )
+            ) d
+        WHERE
+            c.ARCH_ID = c.latest
+            AND c.ARCH_ID = d.ARCH_ID(+)
+            AND c.ARCHIVE_SEQ = d.ARCHIVE_SEQ(+)
+    ) a2
+WHERE
+    a.ARCHIVE_SEQ = b.ARCHIVE_SEQ
+    and b.ARCHIVE_SEQ = a2.ARCHIVE_SEQ(+)
+    AND b.AD_NAME = a2.AD_NAME(+)
+    AND b.AD_NAME not like '%_AP'
+--    and a2.start_time > to_date('2016-10-18', 'YYYY-MM-DD')
+and a.archive_seq like 'XXCST01%'
+--and b.ad_name = 'WIP.AD_WIP_PA'
+ORDER BY
+    1,
+    3]]></sql>
+  </item>
+  <item>
+    <time>2016-10-26 14:15:42</time>
+    <sql><![CDATA[SELECT
+    a.ARCHIVE_SEQ,
+    a.BIZ_CATEGORY,
+    b.AD_NAME,
+    a2.ARCH_ID,
+    a2.ARCH_ACTION,
+    a2.REQ_NAME,
+	1 차수,
+    a2.START_TIME,
+    a2.ELLAPSED_TIME,
+    a2.ROWS_ARCHIVED,
+    a2.TABLE_NAME,
+    a2.ARCHIVED_ROWS,
+	a2.P_AD_NAME,
+	a2.BIZ_NAME,
+	a2.START_DATE,
+	a2.END_DATE,
+	a2.P_ARCH_ID,
+	a2.PRE_ARCH_ID,
+	a2.BIZ_CODE,
+	a2.CUTOFF_DATE,
+	a2.LEDGERID,
+	a2.PERIODFROM,
+	a2.PERIODTO,
+	a2.BUDVER,
+	a2.APP_SH_NAME,
+	a2.APP_ID,
+	a2.LEDGER_ID,
+	a2.START_BP,
+	a2.END_BP,
+	a2.START_MON,
+	a2.END_MON
+--    a2.*
+FROM
+    OPTIM.ARCH_POLICY_INFO a,
+    OPTIM.ARCH_SEQ_INFO b,
+    (
+        SELECT
+            c.ARCH_ID, c.ad_name, c.ARCH_ACTION, c.req_name, c.start_time, c.ellapsed_time, c.rows_archived,
+            c.TABLE_NAME,
+            c.ARCHIVED_ROWS,
+            d.archive_seq,
+			d.P_AD_NAME,
+			d.BIZ_NAME,
+			d.START_DATE,
+			d.END_DATE,
+			d.P_ARCH_ID,
+			d.PRE_ARCH_ID,
+			d.BIZ_CODE,
+			d.CUTOFF_DATE,
+			d.LEDGERID,
+			d.PERIODFROM,
+			d.PERIODTO,
+			d.BUDVER,
+			d.APP_SH_NAME,
+			d.APP_ID,
+			d.LEDGER_ID,
+			d.START_BP,
+			d.END_BP,
+			d.START_MON,
+			d.END_MON
+        FROM
+            (
+                SELECT
+                    first_value(aa.ARCH_ID) over(
+                        partition BY aa.AD_NAME
+                    ORDER BY
+                        aa.ARCH_ID DESC
+                    ) latest,
+                    aa.ARCH_ID,
+                    aa.AD_NAME,
+                    aa.ARCH_ACTION,
+                    aa.REQ_NAME,
+                    aa.ARCHIVE_SEQ,
+                    bb.START_TIME,
+                    bb.ELLAPSED_TIME,
+                    bb.ROWS_ARCHIVED,
+                    bb.ROWS_INSERTED,
+                    bb.ROWS_EXTRACTED,
+                    cc.TABLE_NAME,
+                    cc.ARCHIVED_ROWS
+                FROM
+                    OPTIM.ARCH_JOB_INFO aa,
+                    OPTIM.ARCH_JOB_RESULT bb,
+                    OPTIM.ARCH_JOB_RESULT_DTL cc
+                WHERE
+                    aa.ARCH_ID = bb.ARCH_ID
+                    AND aa.ARCH_ACTION = 'A'
+                    AND aa.STATUS = 'C'
+                    AND aa.ARCH_ID = cc.ARCH_ID
+            ) c,
+            (
+                SELECT
+                    *
+                FROM
+                    (
+                        SELECT
+                            arch_id,
+                            archive_seq,
+                            param_name,
+                            param_value
+                        FROM
+                            OPTIM.ARCH_JOB_PARAM_INFO
+                    ) PIVOT(
+                        MAX(PARAM_VALUE) FOR PARAM_NAME IN(
+						'AD_NAME' as P_AD_NAME,
+						'BIZ_NAME' as BIZ_NAME,
+						'START_DATE' as START_DATE,
+						'END_DATE' as END_DATE,
+						'ARCH_ID' as P_ARCH_ID,
+						'PRE_ARCH_ID' as PRE_ARCH_ID,
+						'BIZ_CODE' as BIZ_CODE,
+						'CUTOFF_DATE' as CUTOFF_DATE,
+						'LEDGERID' as LEDGERID,
+						'PERIODFROM' as PERIODFROM,
+						'PERIODTO' as PERIODTO,
+						'BUDVER' as BUDVER,
+						'APP_SH_NAME' as APP_SH_NAME,
+						'APP_ID' as APP_ID,
+						'LEDGER_ID' as LEDGER_ID,
+						'START_BP' as START_BP,
+						'END_BP' as END_BP,
+						'START_MON' as START_MON,
+						'END_MON' as END_MON
+                        )
+                    )
+            ) d
+        WHERE
+            c.ARCH_ID = c.latest
+            AND c.ARCH_ID = d.ARCH_ID(+)
+            AND c.ARCHIVE_SEQ = d.ARCHIVE_SEQ(+)
+    ) a2
+WHERE
+    a.ARCHIVE_SEQ = b.ARCHIVE_SEQ
+    and b.ARCHIVE_SEQ = a2.ARCHIVE_SEQ(+)
+    AND b.AD_NAME = a2.AD_NAME(+)
+    AND b.AD_NAME not like '%_AP'
+--    and a2.start_time > to_date('2016-10-18', 'YYYY-MM-DD')
+and a.archive_seq like 'XXCST%'
+--and b.ad_name = 'WIP.AD_WIP_PA'
+ORDER BY
+    1,
+    3]]></sql>
+  </item>
+  <item>
+    <time>2016-10-26 14:45:11</time>
+    <sql><![CDATA[SELECT
+    a.ARCHIVE_SEQ,
+    a.BIZ_CATEGORY,
+    b.AD_NAME,
+    a2.ARCH_ID,
+    a2.ARCH_ACTION,
+    a2.REQ_NAME,
+	1 차수,
+    a2.START_TIME,
+    a2.ELLAPSED_TIME,
+    a2.ROWS_ARCHIVED,
+    a2.TABLE_NAME,
+    a2.ARCHIVED_ROWS,
+	a2.P_AD_NAME,
+	a2.BIZ_NAME,
+	a2.START_DATE,
+	a2.END_DATE,
+	a2.P_ARCH_ID,
+	a2.PRE_ARCH_ID,
+	a2.BIZ_CODE,
+	a2.CUTOFF_DATE,
+	a2.LEDGERID,
+	a2.PERIODFROM,
+	a2.PERIODTO,
+	a2.BUDVER,
+	a2.APP_SH_NAME,
+	a2.APP_ID,
+	a2.LEDGER_ID,
+	a2.START_BP,
+	a2.END_BP,
+	a2.START_MON,
+	a2.END_MON
+--    a2.*
+FROM
+    OPTIM.ARCH_POLICY_INFO a,
+    OPTIM.ARCH_SEQ_INFO b,
+    (
+        SELECT
+            c.ARCH_ID, c.ad_name, c.ARCH_ACTION, c.req_name, c.start_time, c.ellapsed_time, c.rows_archived,
+            c.TABLE_NAME,
+            c.ARCHIVED_ROWS,
+            d.archive_seq,
+			d.P_AD_NAME,
+			d.BIZ_NAME,
+			d.START_DATE,
+			d.END_DATE,
+			d.P_ARCH_ID,
+			d.PRE_ARCH_ID,
+			d.BIZ_CODE,
+			d.CUTOFF_DATE,
+			d.LEDGERID,
+			d.PERIODFROM,
+			d.PERIODTO,
+			d.BUDVER,
+			d.APP_SH_NAME,
+			d.APP_ID,
+			d.LEDGER_ID,
+			d.START_BP,
+			d.END_BP,
+			d.START_MON,
+			d.END_MON
+        FROM
+            (
+                SELECT
+                    first_value(aa.ARCH_ID) over(
+                        partition BY aa.AD_NAME
+                    ORDER BY
+                        aa.ARCH_ID DESC
+                    ) latest,
+                    aa.ARCH_ID,
+                    aa.AD_NAME,
+                    aa.ARCH_ACTION,
+                    aa.REQ_NAME,
+                    aa.ARCHIVE_SEQ,
+                    bb.START_TIME,
+                    bb.ELLAPSED_TIME,
+                    bb.ROWS_ARCHIVED,
+                    bb.ROWS_INSERTED,
+                    bb.ROWS_EXTRACTED,
+                    cc.TABLE_NAME,
+                    cc.ARCHIVED_ROWS
+                FROM
+                    OPTIM.ARCH_JOB_INFO aa,
+                    OPTIM.ARCH_JOB_RESULT bb,
+                    OPTIM.ARCH_JOB_RESULT_DTL cc
+                WHERE
+                    aa.ARCH_ID = bb.ARCH_ID
+                    AND aa.ARCH_ACTION = 'A'
+                    AND aa.STATUS = 'C'
+                    AND aa.ARCH_ID = cc.ARCH_ID
+            ) c,
+            (
+                SELECT
+                    *
+                FROM
+                    (
+                        SELECT
+                            arch_id,
+                            archive_seq,
+                            param_name,
+                            param_value
+                        FROM
+                            OPTIM.ARCH_JOB_PARAM_INFO
+                    ) PIVOT(
+                        MAX(PARAM_VALUE) FOR PARAM_NAME IN(
+						'AD_NAME' as P_AD_NAME,
+						'BIZ_NAME' as BIZ_NAME,
+						'START_DATE' as START_DATE,
+						'END_DATE' as END_DATE,
+						'ARCH_ID' as P_ARCH_ID,
+						'PRE_ARCH_ID' as PRE_ARCH_ID,
+						'BIZ_CODE' as BIZ_CODE,
+						'CUTOFF_DATE' as CUTOFF_DATE,
+						'LEDGERID' as LEDGERID,
+						'PERIODFROM' as PERIODFROM,
+						'PERIODTO' as PERIODTO,
+						'BUDVER' as BUDVER,
+						'APP_SH_NAME' as APP_SH_NAME,
+						'APP_ID' as APP_ID,
+						'LEDGER_ID' as LEDGER_ID,
+						'START_BP' as START_BP,
+						'END_BP' as END_BP,
+						'START_MON' as START_MON,
+						'END_MON' as END_MON
+                        )
+                    )
+            ) d
+        WHERE
+            c.ARCH_ID = c.latest
+            AND c.ARCH_ID = d.ARCH_ID(+)
+            AND c.ARCHIVE_SEQ = d.ARCHIVE_SEQ(+)
+    ) a2
+WHERE
+    a.ARCHIVE_SEQ = b.ARCHIVE_SEQ
+    and b.ARCHIVE_SEQ = a2.ARCHIVE_SEQ(+)
+    AND b.AD_NAME = a2.AD_NAME(+)
+    AND b.AD_NAME not like '%_AP'
+--    and a2.start_time > to_date('2016-10-18', 'YYYY-MM-DD')
+and a.archive_seq like 'XXPA%'
+--and b.ad_name = 'WIP.AD_WIP_PA'
+ORDER BY
+    1,
+    3]]></sql>
+  </item>
+  <item>
+    <time>2016-10-26 15:05:06</time>
+    <sql><![CDATA[SELECT
+    a.ARCHIVE_SEQ,
+    a.BIZ_CATEGORY || '-' || substr(a.DESCRIPTION, 1, decode(instr(a.DESCRIPTION, '-'),0,100,instr(a.DESCRIPTION, '-')-1)) as BIZ,
+    b.AD_NAME,
+    a2.ARCH_ID,
+    a2.ARCH_ACTION,
+    a2.REQ_NAME,
+	1 차수,
+    a2.START_TIME,
+    a2.ELLAPSED_TIME,
+    a2.ROWS_ARCHIVED,
+    a2.TABLE_NAME,
+    a2.ARCHIVED_ROWS,
+	a2.P_AD_NAME,
+	a2.BIZ_NAME,
+	a2.START_DATE,
+	a2.END_DATE,
+	a2.P_ARCH_ID,
+	a2.PRE_ARCH_ID,
+	a2.BIZ_CODE,
+	a2.CUTOFF_DATE,
+	a2.LEDGERID,
+	a2.PERIODFROM,
+	a2.PERIODTO,
+	a2.BUDVER,
+	a2.APP_SH_NAME,
+	a2.APP_ID,
+	a2.LEDGER_ID,
+	a2.START_BP,
+	a2.END_BP,
+	a2.START_MON,
+	a2.END_MON
+--    a2.*
+FROM
+    OPTIM.ARCH_POLICY_INFO a,
+    OPTIM.ARCH_SEQ_INFO b,
+    (
+        SELECT
+            c.ARCH_ID, c.ad_name, c.ARCH_ACTION, c.req_name, c.start_time, c.ellapsed_time, c.rows_archived,
+            c.TABLE_NAME,
+            c.ARCHIVED_ROWS,
+            d.archive_seq,
+			d.P_AD_NAME,
+			d.BIZ_NAME,
+			d.START_DATE,
+			d.END_DATE,
+			d.P_ARCH_ID,
+			d.PRE_ARCH_ID,
+			d.BIZ_CODE,
+			d.CUTOFF_DATE,
+			d.LEDGERID,
+			d.PERIODFROM,
+			d.PERIODTO,
+			d.BUDVER,
+			d.APP_SH_NAME,
+			d.APP_ID,
+			d.LEDGER_ID,
+			d.START_BP,
+			d.END_BP,
+			d.START_MON,
+			d.END_MON
+        FROM
+            (
+                SELECT
+                    first_value(aa.ARCH_ID) over(
+                        partition BY aa.AD_NAME
+                    ORDER BY
+                        aa.ARCH_ID DESC
+                    ) latest,
+                    aa.ARCH_ID,
+                    aa.AD_NAME,
+                    aa.ARCH_ACTION,
+                    aa.REQ_NAME,
+                    aa.ARCHIVE_SEQ,
+                    bb.START_TIME,
+                    bb.ELLAPSED_TIME,
+                    bb.ROWS_ARCHIVED,
+                    bb.ROWS_INSERTED,
+                    bb.ROWS_EXTRACTED,
+                    cc.TABLE_NAME,
+                    cc.ARCHIVED_ROWS
+                FROM
+                    OPTIM.ARCH_JOB_INFO aa,
+                    OPTIM.ARCH_JOB_RESULT bb,
+                    OPTIM.ARCH_JOB_RESULT_DTL cc
+                WHERE
+                    aa.ARCH_ID = bb.ARCH_ID
+                    AND aa.ARCH_ACTION = 'A'
+                    AND aa.STATUS = 'C'
+                    AND aa.ARCH_ID = cc.ARCH_ID
+            ) c,
+            (
+                SELECT
+                    *
+                FROM
+                    (
+                        SELECT
+                            arch_id,
+                            archive_seq,
+                            param_name,
+                            param_value
+                        FROM
+                            OPTIM.ARCH_JOB_PARAM_INFO
+                    ) PIVOT(
+                        MAX(PARAM_VALUE) FOR PARAM_NAME IN(
+						'AD_NAME' as P_AD_NAME,
+						'BIZ_NAME' as BIZ_NAME,
+						'START_DATE' as START_DATE,
+						'END_DATE' as END_DATE,
+						'ARCH_ID' as P_ARCH_ID,
+						'PRE_ARCH_ID' as PRE_ARCH_ID,
+						'BIZ_CODE' as BIZ_CODE,
+						'CUTOFF_DATE' as CUTOFF_DATE,
+						'LEDGERID' as LEDGERID,
+						'PERIODFROM' as PERIODFROM,
+						'PERIODTO' as PERIODTO,
+						'BUDVER' as BUDVER,
+						'APP_SH_NAME' as APP_SH_NAME,
+						'APP_ID' as APP_ID,
+						'LEDGER_ID' as LEDGER_ID,
+						'START_BP' as START_BP,
+						'END_BP' as END_BP,
+						'START_MON' as START_MON,
+						'END_MON' as END_MON
+                        )
+                    )
+            ) d
+        WHERE
+            c.ARCH_ID = c.latest
+            AND c.ARCH_ID = d.ARCH_ID(+)
+            AND c.ARCHIVE_SEQ = d.ARCHIVE_SEQ(+)
+    ) a2
+WHERE
+    a.ARCHIVE_SEQ = b.ARCHIVE_SEQ
+    and b.ARCHIVE_SEQ = a2.ARCHIVE_SEQ(+)
+    AND b.AD_NAME = a2.AD_NAME(+)
+    AND b.AD_NAME not like '%_AP'
+--    and a2.start_time > to_date('2016-10-18', 'YYYY-MM-DD')
+and a.archive_seq = 'XLA007'
+--and b.ad_name = 'WIP.AD_WIP_PA'
+ORDER BY
+    1,
+    3]]></sql>
+  </item>
+  <item>
+    <time>2016-10-26 15:05:25</time>
+    <sql><![CDATA[SELECT
+    a.ARCHIVE_SEQ,
+    a.BIZ_CATEGORY || '-' || substr(a.DESCRIPTION, 1, decode(instr(a.DESCRIPTION, '-'),0,100,instr(a.DESCRIPTION, '-')-1)) as BIZ,
+    b.AD_NAME,
+    a2.ARCH_ID,
+    a2.ARCH_ACTION,
+    a2.REQ_NAME,
+	1 차수,
+    a2.START_TIME,
+    a2.ELLAPSED_TIME,
+    a2.ROWS_ARCHIVED,
+    a2.TABLE_NAME,
+    a2.ARCHIVED_ROWS,
+	a2.P_AD_NAME,
+	a2.BIZ_NAME,
+	a2.START_DATE,
+	a2.END_DATE,
+	a2.P_ARCH_ID,
+	a2.PRE_ARCH_ID,
+	a2.BIZ_CODE,
+	a2.CUTOFF_DATE,
+	a2.LEDGERID,
+	a2.PERIODFROM,
+	a2.PERIODTO,
+	a2.BUDVER,
+	a2.APP_SH_NAME,
+	a2.APP_ID,
+	a2.LEDGER_ID,
+	a2.START_BP,
+	a2.END_BP,
+	a2.START_MON,
+	a2.END_MON
+--    a2.*
+FROM
+    OPTIM.ARCH_POLICY_INFO a,
+    OPTIM.ARCH_SEQ_INFO b,
+    (
+        SELECT
+            c.ARCH_ID, c.ad_name, c.ARCH_ACTION, c.req_name, c.start_time, c.ellapsed_time, c.rows_archived,
+            c.TABLE_NAME,
+            c.ARCHIVED_ROWS,
+            d.archive_seq,
+			d.P_AD_NAME,
+			d.BIZ_NAME,
+			d.START_DATE,
+			d.END_DATE,
+			d.P_ARCH_ID,
+			d.PRE_ARCH_ID,
+			d.BIZ_CODE,
+			d.CUTOFF_DATE,
+			d.LEDGERID,
+			d.PERIODFROM,
+			d.PERIODTO,
+			d.BUDVER,
+			d.APP_SH_NAME,
+			d.APP_ID,
+			d.LEDGER_ID,
+			d.START_BP,
+			d.END_BP,
+			d.START_MON,
+			d.END_MON
+        FROM
+            (
+                SELECT
+                    first_value(aa.ARCH_ID) over(
+                        partition BY aa.AD_NAME
+                    ORDER BY
+                        aa.ARCH_ID DESC
+                    ) latest,
+                    aa.ARCH_ID,
+                    aa.AD_NAME,
+                    aa.ARCH_ACTION,
+                    aa.REQ_NAME,
+                    aa.ARCHIVE_SEQ,
+                    bb.START_TIME,
+                    bb.ELLAPSED_TIME,
+                    bb.ROWS_ARCHIVED,
+                    bb.ROWS_INSERTED,
+                    bb.ROWS_EXTRACTED,
+                    cc.TABLE_NAME,
+                    cc.ARCHIVED_ROWS
+                FROM
+                    OPTIM.ARCH_JOB_INFO aa,
+                    OPTIM.ARCH_JOB_RESULT bb,
+                    OPTIM.ARCH_JOB_RESULT_DTL cc
+                WHERE
+                    aa.ARCH_ID = bb.ARCH_ID
+                    AND aa.ARCH_ACTION = 'A'
+                    AND aa.STATUS = 'C'
+                    AND aa.ARCH_ID = cc.ARCH_ID
+            ) c,
+            (
+                SELECT
+                    *
+                FROM
+                    (
+                        SELECT
+                            arch_id,
+                            archive_seq,
+                            param_name,
+                            param_value
+                        FROM
+                            OPTIM.ARCH_JOB_PARAM_INFO
+                    ) PIVOT(
+                        MAX(PARAM_VALUE) FOR PARAM_NAME IN(
+						'AD_NAME' as P_AD_NAME,
+						'BIZ_NAME' as BIZ_NAME,
+						'START_DATE' as START_DATE,
+						'END_DATE' as END_DATE,
+						'ARCH_ID' as P_ARCH_ID,
+						'PRE_ARCH_ID' as PRE_ARCH_ID,
+						'BIZ_CODE' as BIZ_CODE,
+						'CUTOFF_DATE' as CUTOFF_DATE,
+						'LEDGERID' as LEDGERID,
+						'PERIODFROM' as PERIODFROM,
+						'PERIODTO' as PERIODTO,
+						'BUDVER' as BUDVER,
+						'APP_SH_NAME' as APP_SH_NAME,
+						'APP_ID' as APP_ID,
+						'LEDGER_ID' as LEDGER_ID,
+						'START_BP' as START_BP,
+						'END_BP' as END_BP,
+						'START_MON' as START_MON,
+						'END_MON' as END_MON
+                        )
+                    )
+            ) d
+        WHERE
+            c.ARCH_ID = c.latest
+            AND c.ARCH_ID = d.ARCH_ID(+)
+            AND c.ARCHIVE_SEQ = d.ARCHIVE_SEQ(+)
+    ) a2
+WHERE
+    a.ARCHIVE_SEQ = b.ARCHIVE_SEQ
+    and b.ARCHIVE_SEQ = a2.ARCHIVE_SEQ(+)
+    AND b.AD_NAME = a2.AD_NAME(+)
+    AND b.AD_NAME not like '%_AP'
+--    and a2.start_time > to_date('2016-10-18', 'YYYY-MM-DD')
+and a.archive_seq like 'XXPA%'
+--and b.ad_name = 'WIP.AD_WIP_PA'
+ORDER BY
+    1,
+    3]]></sql>
+  </item>
+  <item>
+    <time>2016-10-26 15:09:29</time>
+    <sql><![CDATA[SELECT
+    a.ARCHIVE_SEQ,
+    a.BIZ_CATEGORY || '-' || substr(a.DESCRIPTION, 1, decode(instr(a.DESCRIPTION, '-'),0,100,instr(a.DESCRIPTION, '-')-1)) as BIZ,
+    b.AD_NAME,
+    a2.ARCH_ID,
+    a2.ARCH_ACTION,
+    a2.REQ_NAME,
+	1 차수,
+    a2.START_TIME,
+    a2.ELLAPSED_TIME,
+    a2.ROWS_ARCHIVED,
+    a2.TABLE_NAME,
+    a2.ARCHIVED_ROWS,
+	a2.P_AD_NAME,
+	a2.BIZ_NAME,
+	a2.START_DATE,
+	a2.END_DATE,
+	a2.P_ARCH_ID,
+	a2.PRE_ARCH_ID,
+	a2.BIZ_CODE,
+	a2.CUTOFF_DATE,
+	a2.LEDGERID,
+	a2.PERIODFROM,
+	a2.PERIODTO,
+	a2.BUDVER,
+	a2.APP_SH_NAME,
+	a2.APP_ID,
+	a2.LEDGER_ID,
+	a2.START_BP,
+	a2.END_BP,
+	a2.START_MON,
+	a2.END_MON
+--    a2.*
+FROM
+    OPTIM.ARCH_POLICY_INFO a,
+    OPTIM.ARCH_SEQ_INFO b,
+    (
+        SELECT
+            c.ARCH_ID, c.ad_name, c.ARCH_ACTION, c.req_name, c.start_time, c.ellapsed_time, c.rows_archived,
+            c.TABLE_NAME,
+            c.ARCHIVED_ROWS,
+            d.archive_seq,
+			d.P_AD_NAME,
+			d.BIZ_NAME,
+			d.START_DATE,
+			d.END_DATE,
+			d.P_ARCH_ID,
+			d.PRE_ARCH_ID,
+			d.BIZ_CODE,
+			d.CUTOFF_DATE,
+			d.LEDGERID,
+			d.PERIODFROM,
+			d.PERIODTO,
+			d.BUDVER,
+			d.APP_SH_NAME,
+			d.APP_ID,
+			d.LEDGER_ID,
+			d.START_BP,
+			d.END_BP,
+			d.START_MON,
+			d.END_MON
+        FROM
+            (
+                SELECT
+                    first_value(aa.ARCH_ID) over(
+                        partition BY aa.AD_NAME
+                    ORDER BY
+                        aa.ARCH_ID DESC
+                    ) latest,
+                    aa.ARCH_ID,
+                    aa.AD_NAME,
+                    aa.ARCH_ACTION,
+                    aa.REQ_NAME,
+                    aa.ARCHIVE_SEQ,
+                    bb.START_TIME,
+                    bb.ELLAPSED_TIME,
+                    bb.ROWS_ARCHIVED,
+                    bb.ROWS_INSERTED,
+                    bb.ROWS_EXTRACTED,
+                    cc.TABLE_NAME,
+                    cc.ARCHIVED_ROWS
+                FROM
+                    OPTIM.ARCH_JOB_INFO aa,
+                    OPTIM.ARCH_JOB_RESULT bb,
+                    OPTIM.ARCH_JOB_RESULT_DTL cc
+                WHERE
+                    aa.ARCH_ID = bb.ARCH_ID
+                    AND aa.ARCH_ACTION = 'A'
+                    AND aa.STATUS = 'C'
+                    AND aa.ARCH_ID = cc.ARCH_ID
+            ) c,
+            (
+                SELECT
+                    *
+                FROM
+                    (
+                        SELECT
+                            arch_id,
+                            archive_seq,
+                            param_name,
+                            param_value
+                        FROM
+                            OPTIM.ARCH_JOB_PARAM_INFO
+                    ) PIVOT(
+                        MAX(PARAM_VALUE) FOR PARAM_NAME IN(
+						'AD_NAME' as P_AD_NAME,
+						'BIZ_NAME' as BIZ_NAME,
+						'START_DATE' as START_DATE,
+						'END_DATE' as END_DATE,
+						'ARCH_ID' as P_ARCH_ID,
+						'PRE_ARCH_ID' as PRE_ARCH_ID,
+						'BIZ_CODE' as BIZ_CODE,
+						'CUTOFF_DATE' as CUTOFF_DATE,
+						'LEDGERID' as LEDGERID,
+						'PERIODFROM' as PERIODFROM,
+						'PERIODTO' as PERIODTO,
+						'BUDVER' as BUDVER,
+						'APP_SH_NAME' as APP_SH_NAME,
+						'APP_ID' as APP_ID,
+						'LEDGER_ID' as LEDGER_ID,
+						'START_BP' as START_BP,
+						'END_BP' as END_BP,
+						'START_MON' as START_MON,
+						'END_MON' as END_MON
+                        )
+                    )
+            ) d
+        WHERE
+            c.ARCH_ID = c.latest
+            AND c.ARCH_ID = d.ARCH_ID(+)
+            AND c.ARCHIVE_SEQ = d.ARCHIVE_SEQ(+)
+    ) a2
+WHERE
+    a.ARCHIVE_SEQ = b.ARCHIVE_SEQ
+    and b.ARCHIVE_SEQ = a2.ARCHIVE_SEQ(+)
+    AND b.AD_NAME = a2.AD_NAME(+)
+    AND b.AD_NAME not like '%_AP'
+--    and a2.start_time > to_date('2016-10-18', 'YYYY-MM-DD')
+and a.archive_seq like 'BOM%'
+--and b.ad_name = 'WIP.AD_WIP_PA'
+ORDER BY
+    1,
+    3]]></sql>
+  </item>
+  <item>
+    <time>2016-10-26 15:41:29</time>
+    <sql><![CDATA[SELECT
+    a.ARCHIVE_SEQ,
+    a.BIZ_CATEGORY || '-' || substr(a.DESCRIPTION, 1, decode(instr(a.DESCRIPTION, '-'),0,100,instr(a.DESCRIPTION, '-')-1)) as BIZ,
+    b.AD_NAME,
+    a2.ARCH_ID,
+    a2.ARCH_ACTION,
+    a2.REQ_NAME,
+	1 차수,
+    a2.START_TIME,
+    a2.ELLAPSED_TIME,
+    a2.ROWS_ARCHIVED,
+    a2.TABLE_NAME,
+    a2.ARCHIVED_ROWS,
+	a2.P_AD_NAME,
+	a2.BIZ_NAME,
+	a2.START_DATE,
+	a2.END_DATE,
+	a2.P_ARCH_ID,
+	a2.PRE_ARCH_ID,
+	a2.BIZ_CODE,
+	a2.CUTOFF_DATE,
+	a2.LEDGERID,
+	a2.PERIODFROM,
+	a2.PERIODTO,
+	a2.BUDVER,
+	a2.APP_SH_NAME,
+	a2.APP_ID,
+	a2.LEDGER_ID,
+	a2.START_BP,
+	a2.END_BP,
+	a2.START_MON,
+	a2.END_MON
+--    a2.*
+FROM
+    OPTIM.ARCH_POLICY_INFO a,
+    OPTIM.ARCH_SEQ_INFO b,
+    (
+        SELECT
+            c.ARCH_ID, c.ad_name, c.ARCH_ACTION, c.req_name, c.start_time, c.ellapsed_time, c.rows_archived,
+            c.TABLE_NAME,
+            c.ARCHIVED_ROWS,
+            d.archive_seq,
+			d.P_AD_NAME,
+			d.BIZ_NAME,
+			d.START_DATE,
+			d.END_DATE,
+			d.P_ARCH_ID,
+			d.PRE_ARCH_ID,
+			d.BIZ_CODE,
+			d.CUTOFF_DATE,
+			d.LEDGERID,
+			d.PERIODFROM,
+			d.PERIODTO,
+			d.BUDVER,
+			d.APP_SH_NAME,
+			d.APP_ID,
+			d.LEDGER_ID,
+			d.START_BP,
+			d.END_BP,
+			d.START_MON,
+			d.END_MON
+        FROM
+            (
+                SELECT
+                    first_value(aa.ARCH_ID) over(
+                        partition BY aa.AD_NAME
+                    ORDER BY
+                        aa.ARCH_ID DESC
+                    ) latest,
+                    aa.ARCH_ID,
+                    aa.AD_NAME,
+                    aa.ARCH_ACTION,
+                    aa.REQ_NAME,
+                    aa.ARCHIVE_SEQ,
+                    bb.START_TIME,
+                    bb.ELLAPSED_TIME,
+                    bb.ROWS_ARCHIVED,
+                    bb.ROWS_INSERTED,
+                    bb.ROWS_EXTRACTED,
+                    cc.TABLE_NAME,
+                    cc.ARCHIVED_ROWS
+                FROM
+                    OPTIM.ARCH_JOB_INFO aa,
+                    OPTIM.ARCH_JOB_RESULT bb,
+                    OPTIM.ARCH_JOB_RESULT_DTL cc
+                WHERE
+                    aa.ARCH_ID = bb.ARCH_ID
+                    AND aa.ARCH_ACTION = 'A'
+                    AND aa.STATUS = 'C'
+                    AND aa.ARCH_ID = cc.ARCH_ID
+            ) c,
+            (
+                SELECT
+                    *
+                FROM
+                    (
+                        SELECT
+                            arch_id,
+                            archive_seq,
+                            param_name,
+                            param_value
+                        FROM
+                            OPTIM.ARCH_JOB_PARAM_INFO
+                    ) PIVOT(
+                        MAX(PARAM_VALUE) FOR PARAM_NAME IN(
+						'AD_NAME' as P_AD_NAME,
+						'BIZ_NAME' as BIZ_NAME,
+						'START_DATE' as START_DATE,
+						'END_DATE' as END_DATE,
+						'ARCH_ID' as P_ARCH_ID,
+						'PRE_ARCH_ID' as PRE_ARCH_ID,
+						'BIZ_CODE' as BIZ_CODE,
+						'CUTOFF_DATE' as CUTOFF_DATE,
+						'LEDGERID' as LEDGERID,
+						'PERIODFROM' as PERIODFROM,
+						'PERIODTO' as PERIODTO,
+						'BUDVER' as BUDVER,
+						'APP_SH_NAME' as APP_SH_NAME,
+						'APP_ID' as APP_ID,
+						'LEDGER_ID' as LEDGER_ID,
+						'START_BP' as START_BP,
+						'END_BP' as END_BP,
+						'START_MON' as START_MON,
+						'END_MON' as END_MON
+                        )
+                    )
+            ) d
+        WHERE
+            c.ARCH_ID = c.latest
+            AND c.ARCH_ID = d.ARCH_ID(+)
+            AND c.ARCHIVE_SEQ = d.ARCHIVE_SEQ(+)
+    ) a2
+WHERE
+    a.ARCHIVE_SEQ = b.ARCHIVE_SEQ
+    and b.ARCHIVE_SEQ = a2.ARCHIVE_SEQ(+)
+    AND b.AD_NAME = a2.AD_NAME(+)
+    AND b.AD_NAME not like '%_AP'
+--    and a2.start_time > to_date('2016-10-18', 'YYYY-MM-DD')
+and a.archive_seq like 'GL%'
+--and b.ad_name = 'WIP.AD_WIP_PA'
+ORDER BY
+    1,
+    3]]></sql>
+  </item>
+  <item>
+    <time>2016-10-26 15:54:35</time>
+    <sql><![CDATA[SELECT
+    a.ARCHIVE_SEQ,
+    a.BIZ_CATEGORY || '-' || substr(a.DESCRIPTION, 1, decode(instr(a.DESCRIPTION, '-'),0,100,instr(a.DESCRIPTION, '-')-1)) as BIZ,
+    b.AD_NAME,
+    a2.ARCH_ID,
+    a2.ARCH_ACTION,
+    a2.REQ_NAME,
+	1 차수,
+    a2.START_TIME,
+    a2.ELLAPSED_TIME,
+    a2.ROWS_ARCHIVED,
+    a2.TABLE_NAME,
+    a2.ARCHIVED_ROWS,
+	a2.P_AD_NAME,
+	a2.BIZ_NAME,
+	a2.START_DATE,
+	a2.END_DATE,
+	a2.P_ARCH_ID,
+	a2.PRE_ARCH_ID,
+	a2.BIZ_CODE,
+	a2.CUTOFF_DATE,
+	a2.LEDGERID,
+	a2.PERIODFROM,
+	a2.PERIODTO,
+	a2.BUDVER,
+	a2.APP_SH_NAME,
+	a2.APP_ID,
+	a2.LEDGER_ID,
+	a2.START_BP,
+	a2.END_BP,
+	a2.START_MON,
+	a2.END_MON
+--    a2.*
+FROM
+    OPTIM.ARCH_POLICY_INFO a,
+    OPTIM.ARCH_SEQ_INFO b,
+    (
+        SELECT
+            c.ARCH_ID, c.ad_name, c.ARCH_ACTION, c.req_name, c.start_time, c.ellapsed_time, c.rows_archived,
+            c.TABLE_NAME,
+            c.ARCHIVED_ROWS,
+            d.archive_seq,
+			d.P_AD_NAME,
+			d.BIZ_NAME,
+			d.START_DATE,
+			d.END_DATE,
+			d.P_ARCH_ID,
+			d.PRE_ARCH_ID,
+			d.BIZ_CODE,
+			d.CUTOFF_DATE,
+			d.LEDGERID,
+			d.PERIODFROM,
+			d.PERIODTO,
+			d.BUDVER,
+			d.APP_SH_NAME,
+			d.APP_ID,
+			d.LEDGER_ID,
+			d.START_BP,
+			d.END_BP,
+			d.START_MON,
+			d.END_MON
+        FROM
+            (
+                SELECT
+                    first_value(aa.ARCH_ID) over(
+                        partition BY aa.AD_NAME
+                    ORDER BY
+                        aa.ARCH_ID DESC
+                    ) latest,
+                    aa.ARCH_ID,
+                    aa.AD_NAME,
+                    aa.ARCH_ACTION,
+                    aa.REQ_NAME,
+                    aa.ARCHIVE_SEQ,
+                    bb.START_TIME,
+                    bb.ELLAPSED_TIME,
+                    bb.ROWS_ARCHIVED,
+                    bb.ROWS_INSERTED,
+                    bb.ROWS_EXTRACTED,
+                    cc.TABLE_NAME,
+                    cc.ARCHIVED_ROWS
+                FROM
+                    OPTIM.ARCH_JOB_INFO aa,
+                    OPTIM.ARCH_JOB_RESULT bb,
+                    OPTIM.ARCH_JOB_RESULT_DTL cc
+                WHERE
+                    aa.ARCH_ID = bb.ARCH_ID
+                    AND aa.ARCH_ACTION = 'A'
+                    AND aa.STATUS = 'C'
+                    AND aa.ARCH_ID = cc.ARCH_ID
+            ) c,
+            (
+                SELECT
+                    *
+                FROM
+                    (
+                        SELECT
+                            arch_id,
+                            archive_seq,
+                            param_name,
+                            param_value
+                        FROM
+                            OPTIM.ARCH_JOB_PARAM_INFO
+                    ) PIVOT(
+                        MAX(PARAM_VALUE) FOR PARAM_NAME IN(
+						'AD_NAME' as P_AD_NAME,
+						'BIZ_NAME' as BIZ_NAME,
+						'START_DATE' as START_DATE,
+						'END_DATE' as END_DATE,
+						'ARCH_ID' as P_ARCH_ID,
+						'PRE_ARCH_ID' as PRE_ARCH_ID,
+						'BIZ_CODE' as BIZ_CODE,
+						'CUTOFF_DATE' as CUTOFF_DATE,
+						'LEDGERID' as LEDGERID,
+						'PERIODFROM' as PERIODFROM,
+						'PERIODTO' as PERIODTO,
+						'BUDVER' as BUDVER,
+						'APP_SH_NAME' as APP_SH_NAME,
+						'APP_ID' as APP_ID,
+						'LEDGER_ID' as LEDGER_ID,
+						'START_BP' as START_BP,
+						'END_BP' as END_BP,
+						'START_MON' as START_MON,
+						'END_MON' as END_MON
+                        )
+                    )
+            ) d
+        WHERE
+            c.ARCH_ID = c.latest
+            AND c.ARCH_ID = d.ARCH_ID(+)
+            AND c.ARCHIVE_SEQ = d.ARCHIVE_SEQ(+)
+    ) a2
+WHERE
+    a.ARCHIVE_SEQ = b.ARCHIVE_SEQ
+    and b.ARCHIVE_SEQ = a2.ARCHIVE_SEQ(+)
+    AND b.AD_NAME = a2.AD_NAME(+)
+    AND b.AD_NAME not like '%_AP'
+--    and a2.start_time > to_date('2016-10-18', 'YYYY-MM-DD')
+and a.archive_seq like 'INV006%'
+--and b.ad_name = 'WIP.AD_WIP_PA'
+ORDER BY
+    1,
+    3]]></sql>
+  </item>
+  <item>
+    <time>2016-10-26 15:57:49</time>
+    <sql><![CDATA[SELECT
+    a.ARCHIVE_SEQ,
+    a.BIZ_CATEGORY || '-' || substr(a.DESCRIPTION, 1, decode(instr(a.DESCRIPTION, '-'),0,100,instr(a.DESCRIPTION, '-')-1)) as BIZ,
+    b.AD_NAME,
+    a2.ARCH_ID,
+    a2.ARCH_ACTION,
+    a2.REQ_NAME,
+	1 차수,
+    a2.START_TIME,
+    a2.ELLAPSED_TIME,
+    a2.ROWS_ARCHIVED,
+    a2.TABLE_NAME,
+    a2.ARCHIVED_ROWS,
+	a2.P_AD_NAME,
+	a2.BIZ_NAME,
+	a2.START_DATE,
+	a2.END_DATE,
+	a2.P_ARCH_ID,
+	a2.PRE_ARCH_ID,
+	a2.BIZ_CODE,
+	a2.CUTOFF_DATE,
+	a2.LEDGERID,
+	a2.PERIODFROM,
+	a2.PERIODTO,
+	a2.BUDVER,
+	a2.APP_SH_NAME,
+	a2.APP_ID,
+	a2.LEDGER_ID,
+	a2.START_BP,
+	a2.END_BP,
+	a2.START_MON,
+	a2.END_MON
+--    a2.*
+FROM
+    OPTIM.ARCH_POLICY_INFO a,
+    OPTIM.ARCH_SEQ_INFO b,
+    (
+        SELECT
+            c.ARCH_ID, c.ad_name, c.ARCH_ACTION, c.req_name, c.start_time, c.ellapsed_time, c.rows_archived,
+            c.TABLE_NAME,
+            c.ARCHIVED_ROWS,
+            d.archive_seq,
+			d.P_AD_NAME,
+			d.BIZ_NAME,
+			d.START_DATE,
+			d.END_DATE,
+			d.P_ARCH_ID,
+			d.PRE_ARCH_ID,
+			d.BIZ_CODE,
+			d.CUTOFF_DATE,
+			d.LEDGERID,
+			d.PERIODFROM,
+			d.PERIODTO,
+			d.BUDVER,
+			d.APP_SH_NAME,
+			d.APP_ID,
+			d.LEDGER_ID,
+			d.START_BP,
+			d.END_BP,
+			d.START_MON,
+			d.END_MON
+        FROM
+            (
+                SELECT
+                    first_value(aa.ARCH_ID) over(
+                        partition BY aa.AD_NAME
+                    ORDER BY
+                        aa.ARCH_ID DESC
+                    ) latest,
+                    aa.ARCH_ID,
+                    aa.AD_NAME,
+                    aa.ARCH_ACTION,
+                    aa.REQ_NAME,
+                    aa.ARCHIVE_SEQ,
+                    bb.START_TIME,
+                    bb.ELLAPSED_TIME,
+                    bb.ROWS_ARCHIVED,
+                    bb.ROWS_INSERTED,
+                    bb.ROWS_EXTRACTED,
+                    cc.TABLE_NAME,
+                    cc.ARCHIVED_ROWS
+                FROM
+                    OPTIM.ARCH_JOB_INFO aa,
+                    OPTIM.ARCH_JOB_RESULT bb,
+                    OPTIM.ARCH_JOB_RESULT_DTL cc
+                WHERE
+                    aa.ARCH_ID = bb.ARCH_ID
+                    AND aa.ARCH_ACTION = 'A'
+                    AND aa.STATUS = 'C'
+                    AND aa.ARCH_ID = cc.ARCH_ID
+            ) c,
+            (
+                SELECT
+                    *
+                FROM
+                    (
+                        SELECT
+                            arch_id,
+                            archive_seq,
+                            param_name,
+                            param_value
+                        FROM
+                            OPTIM.ARCH_JOB_PARAM_INFO
+                    ) PIVOT(
+                        MAX(PARAM_VALUE) FOR PARAM_NAME IN(
+						'AD_NAME' as P_AD_NAME,
+						'BIZ_NAME' as BIZ_NAME,
+						'START_DATE' as START_DATE,
+						'END_DATE' as END_DATE,
+						'ARCH_ID' as P_ARCH_ID,
+						'PRE_ARCH_ID' as PRE_ARCH_ID,
+						'BIZ_CODE' as BIZ_CODE,
+						'CUTOFF_DATE' as CUTOFF_DATE,
+						'LEDGERID' as LEDGERID,
+						'PERIODFROM' as PERIODFROM,
+						'PERIODTO' as PERIODTO,
+						'BUDVER' as BUDVER,
+						'APP_SH_NAME' as APP_SH_NAME,
+						'APP_ID' as APP_ID,
+						'LEDGER_ID' as LEDGER_ID,
+						'START_BP' as START_BP,
+						'END_BP' as END_BP,
+						'START_MON' as START_MON,
+						'END_MON' as END_MON
+                        )
+                    )
+            ) d
+        WHERE
+            c.ARCH_ID = c.latest
+            AND c.ARCH_ID = d.ARCH_ID(+)
+            AND c.ARCHIVE_SEQ = d.ARCHIVE_SEQ(+)
+    ) a2
+WHERE
+    a.ARCHIVE_SEQ = b.ARCHIVE_SEQ
+    and b.ARCHIVE_SEQ = a2.ARCHIVE_SEQ(+)
+    AND b.AD_NAME = a2.AD_NAME(+)
+    AND b.AD_NAME not like '%_AP'
+--    and a2.start_time > to_date('2016-10-18', 'YYYY-MM-DD')
+and a.archive_seq like 'CSI004%'
+--and b.ad_name = 'WIP.AD_WIP_PA'
+ORDER BY
+    1,
+    3]]></sql>
+  </item>
+  <item>
+    <time>2016-10-26 16:18:39</time>
+    <sql><![CDATA[select 1 from dual]]></sql>
+  </item>
+  <item>
+    <time>2016-10-26 16:38:26</time>
+    <sql><![CDATA[SELECT
+    a.ARCHIVE_SEQ,
+    a.BIZ_CATEGORY || '-' || substr(a.DESCRIPTION, 1, decode(instr(a.DESCRIPTION, '-'),0,100,instr(a.DESCRIPTION, '-')-1)) as BIZ,
+    b.AD_NAME,
+    a2.ARCH_ID,
+    a2.ARCH_ACTION,
+    a2.REQ_NAME,
+	1 차수,
+    a2.START_TIME,
+    a2.ELLAPSED_TIME,
+    a2.ROWS_ARCHIVED,
+    a2.TABLE_NAME,
+    a2.ARCHIVED_ROWS,
+	a2.P_AD_NAME,
+	a2.BIZ_NAME,
+	a2.START_DATE,
+	a2.END_DATE,
+	a2.P_ARCH_ID,
+	a2.PRE_ARCH_ID,
+	a2.BIZ_CODE,
+	a2.CUTOFF_DATE,
+	a2.LEDGERID,
+	a2.PERIODFROM,
+	a2.PERIODTO,
+	a2.BUDVER,
+	a2.APP_SH_NAME,
+	a2.APP_ID,
+	a2.LEDGER_ID,
+	a2.START_BP,
+	a2.END_BP,
+	a2.START_MON,
+	a2.END_MON
+--    a2.*
+FROM
+    OPTIM.ARCH_POLICY_INFO a,
+    OPTIM.ARCH_SEQ_INFO b,
+    (
+        SELECT
+            c.ARCH_ID, c.ad_name, c.ARCH_ACTION, c.req_name, c.start_time, c.ellapsed_time, c.rows_archived,
+            c.TABLE_NAME,
+            c.ARCHIVED_ROWS,
+            d.archive_seq,
+			d.P_AD_NAME,
+			d.BIZ_NAME,
+			d.START_DATE,
+			d.END_DATE,
+			d.P_ARCH_ID,
+			d.PRE_ARCH_ID,
+			d.BIZ_CODE,
+			d.CUTOFF_DATE,
+			d.LEDGERID,
+			d.PERIODFROM,
+			d.PERIODTO,
+			d.BUDVER,
+			d.APP_SH_NAME,
+			d.APP_ID,
+			d.LEDGER_ID,
+			d.START_BP,
+			d.END_BP,
+			d.START_MON,
+			d.END_MON
+        FROM
+            (
+                SELECT
+                    first_value(aa.ARCH_ID) over(
+                        partition BY aa.AD_NAME
+                    ORDER BY
+                        aa.ARCH_ID DESC
+                    ) latest,
+                    aa.ARCH_ID,
+                    aa.AD_NAME,
+                    aa.ARCH_ACTION,
+                    aa.REQ_NAME,
+                    aa.ARCHIVE_SEQ,
+                    bb.START_TIME,
+                    bb.ELLAPSED_TIME,
+                    bb.ROWS_ARCHIVED,
+                    bb.ROWS_INSERTED,
+                    bb.ROWS_EXTRACTED,
+                    cc.TABLE_NAME,
+                    cc.ARCHIVED_ROWS
+                FROM
+                    OPTIM.ARCH_JOB_INFO aa,
+                    OPTIM.ARCH_JOB_RESULT bb,
+                    OPTIM.ARCH_JOB_RESULT_DTL cc
+                WHERE
+                    aa.ARCH_ID = bb.ARCH_ID
+                    AND aa.ARCH_ACTION = 'A'
+                    AND aa.STATUS = 'C'
+                    AND aa.ARCH_ID = cc.ARCH_ID
+            ) c,
+            (
+                SELECT
+                    *
+                FROM
+                    (
+                        SELECT
+                            arch_id,
+                            archive_seq,
+                            param_name,
+                            param_value
+                        FROM
+                            OPTIM.ARCH_JOB_PARAM_INFO
+                    ) PIVOT(
+                        MAX(PARAM_VALUE) FOR PARAM_NAME IN(
+						'AD_NAME' as P_AD_NAME,
+						'BIZ_NAME' as BIZ_NAME,
+						'START_DATE' as START_DATE,
+						'END_DATE' as END_DATE,
+						'ARCH_ID' as P_ARCH_ID,
+						'PRE_ARCH_ID' as PRE_ARCH_ID,
+						'BIZ_CODE' as BIZ_CODE,
+						'CUTOFF_DATE' as CUTOFF_DATE,
+						'LEDGERID' as LEDGERID,
+						'PERIODFROM' as PERIODFROM,
+						'PERIODTO' as PERIODTO,
+						'BUDVER' as BUDVER,
+						'APP_SH_NAME' as APP_SH_NAME,
+						'APP_ID' as APP_ID,
+						'LEDGER_ID' as LEDGER_ID,
+						'START_BP' as START_BP,
+						'END_BP' as END_BP,
+						'START_MON' as START_MON,
+						'END_MON' as END_MON
+                        )
+                    )
+            ) d
+        WHERE
+            c.ARCH_ID = c.latest
+            AND c.ARCH_ID = d.ARCH_ID(+)
+            AND c.ARCHIVE_SEQ = d.ARCHIVE_SEQ(+)
+    ) a2
+WHERE
+    a.ARCHIVE_SEQ = b.ARCHIVE_SEQ
+    and b.ARCHIVE_SEQ = a2.ARCHIVE_SEQ(+)
+    AND b.AD_NAME = a2.AD_NAME(+)
+    AND b.AD_NAME not like '%_AP'
+--    and a2.start_time > to_date('2016-10-18', 'YYYY-MM-DD')
+and a.archive_seq like 'BOM001%'
+--and b.ad_name = 'WIP.AD_WIP_PA'
+ORDER BY
+    1,
+    3]]></sql>
+  </item>
+  <item>
+    <time>2016-10-26 17:02:42</time>
+    <sql><![CDATA[SELECT
+    a.ARCHIVE_SEQ,
+    a.BIZ_CATEGORY || '-' || substr(a.DESCRIPTION, 1, decode(instr(a.DESCRIPTION, '-'),0,100,instr(a.DESCRIPTION, '-')-1)) as BIZ,
+    b.AD_NAME,
+    a2.ARCH_ID,
+    a2.ARCH_ACTION,
+    a2.REQ_NAME,
+	1 차수,
+    a2.START_TIME,
+    a2.ELLAPSED_TIME,
+    a2.ROWS_ARCHIVED,
+    a2.TABLE_NAME,
+    a2.ARCHIVED_ROWS,
+	a2.P_AD_NAME,
+	a2.BIZ_NAME,
+	a2.START_DATE,
+	a2.END_DATE,
+	a2.P_ARCH_ID,
+	a2.PRE_ARCH_ID,
+	a2.BIZ_CODE,
+	a2.CUTOFF_DATE,
+	a2.LEDGERID,
+	a2.PERIODFROM,
+	a2.PERIODTO,
+	a2.BUDVER,
+	a2.APP_SH_NAME,
+	a2.APP_ID,
+	a2.LEDGER_ID,
+	a2.START_BP,
+	a2.END_BP,
+	a2.START_MON,
+	a2.END_MON
+--    a2.*
+FROM
+    OPTIM.ARCH_POLICY_INFO a,
+    OPTIM.ARCH_SEQ_INFO b,
+    (
+        SELECT
+            c.ARCH_ID, c.ad_name, c.ARCH_ACTION, c.req_name, c.start_time, c.ellapsed_time, c.rows_archived,
+            c.TABLE_NAME,
+            c.ARCHIVED_ROWS,
+            d.archive_seq,
+			d.P_AD_NAME,
+			d.BIZ_NAME,
+			d.START_DATE,
+			d.END_DATE,
+			d.P_ARCH_ID,
+			d.PRE_ARCH_ID,
+			d.BIZ_CODE,
+			d.CUTOFF_DATE,
+			d.LEDGERID,
+			d.PERIODFROM,
+			d.PERIODTO,
+			d.BUDVER,
+			d.APP_SH_NAME,
+			d.APP_ID,
+			d.LEDGER_ID,
+			d.START_BP,
+			d.END_BP,
+			d.START_MON,
+			d.END_MON
+        FROM
+            (
+                SELECT
+                    first_value(aa.ARCH_ID) over(
+                        partition BY aa.AD_NAME
+                    ORDER BY
+                        aa.ARCH_ID DESC
+                    ) latest,
+                    aa.ARCH_ID,
+                    aa.AD_NAME,
+                    aa.ARCH_ACTION,
+                    aa.REQ_NAME,
+                    aa.ARCHIVE_SEQ,
+                    bb.START_TIME,
+                    bb.ELLAPSED_TIME,
+                    bb.ROWS_ARCHIVED,
+                    bb.ROWS_INSERTED,
+                    bb.ROWS_EXTRACTED,
+                    cc.TABLE_NAME,
+                    cc.ARCHIVED_ROWS
+                FROM
+                    OPTIM.ARCH_JOB_INFO aa,
+                    OPTIM.ARCH_JOB_RESULT bb,
+                    OPTIM.ARCH_JOB_RESULT_DTL cc
+                WHERE
+                    aa.ARCH_ID = bb.ARCH_ID
+                    AND aa.ARCH_ACTION = 'A'
+                    AND aa.STATUS = 'C'
+                    AND aa.ARCH_ID = cc.ARCH_ID
+            ) c,
+            (
+                SELECT
+                    *
+                FROM
+                    (
+                        SELECT
+                            arch_id,
+                            archive_seq,
+                            param_name,
+                            param_value
+                        FROM
+                            OPTIM.ARCH_JOB_PARAM_INFO
+                    ) PIVOT(
+                        MAX(PARAM_VALUE) FOR PARAM_NAME IN(
+						'AD_NAME' as P_AD_NAME,
+						'BIZ_NAME' as BIZ_NAME,
+						'START_DATE' as START_DATE,
+						'END_DATE' as END_DATE,
+						'ARCH_ID' as P_ARCH_ID,
+						'PRE_ARCH_ID' as PRE_ARCH_ID,
+						'BIZ_CODE' as BIZ_CODE,
+						'CUTOFF_DATE' as CUTOFF_DATE,
+						'LEDGERID' as LEDGERID,
+						'PERIODFROM' as PERIODFROM,
+						'PERIODTO' as PERIODTO,
+						'BUDVER' as BUDVER,
+						'APP_SH_NAME' as APP_SH_NAME,
+						'APP_ID' as APP_ID,
+						'LEDGER_ID' as LEDGER_ID,
+						'START_BP' as START_BP,
+						'END_BP' as END_BP,
+						'START_MON' as START_MON,
+						'END_MON' as END_MON
+                        )
+                    )
+            ) d
+        WHERE
+            c.ARCH_ID = c.latest
+            AND c.ARCH_ID = d.ARCH_ID(+)
+            AND c.ARCHIVE_SEQ = d.ARCHIVE_SEQ(+)
+    ) a2
+WHERE
+    a.ARCHIVE_SEQ = b.ARCHIVE_SEQ
+    and b.ARCHIVE_SEQ = a2.ARCHIVE_SEQ(+)
+    AND b.AD_NAME = a2.AD_NAME(+)
+    AND b.AD_NAME not like '%_AP'
+--    and a2.start_time > to_date('2016-10-18', 'YYYY-MM-DD')
+and a.archive_seq like 'XXINV%'
+--and b.ad_name = 'WIP.AD_WIP_PA'
+ORDER BY
+    1,
+    3]]></sql>
+  </item>
+</QUERY>
+

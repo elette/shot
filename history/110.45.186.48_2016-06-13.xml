@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<QUERY>
+  <item>
+    <time>2016-06-13 16:44:10</time>
+    <sql><![CDATA[SELECT C.APPLICATION_HANDLE, C.APPLICATION_NAME, L.LOCK_NAME
+  FROM TABLE(MON_GET_CONNECTION(NULL,-2)) C,
+       TABLE(MON_GET_AGENT('','','',-2)) A,
+       TABLE (MON_GET_APPL_LOCKWAIT(null, -2)) L
+ WHERE C.APPLICATION_HANDLE = A.APPLICATION_HANDLE
+   AND C.APPLICATION_HANDLE = L.HLD_APPLICATION_HANDLE]]></sql>
+  </item>
+  <item>
+    <time>2016-06-13 16:44:19</time>
+    <sql><![CDATA[SELECT *
+  FROM TABLE(MON_GET_AGENT('','',CAST(NULL AS BIGINT),-2))]]></sql>
+  </item>
+  <item>
+    <time>2016-06-13 16:44:31</time>
+    <sql><![CDATA[SELECT member, uow_id, activity_id, activity_type, application_handle, STMT_EXEC_TIME, varchar(stmt_text, 256) as stmt_text
+  FROM table(MON_GET_ACTIVITY(NULL, -1)) as T
+ ORDER BY member, uow_id, activity_id]]></sql>
+  </item>
+  <item>
+    <time>2016-06-13 16:44:49</time>
+    <sql><![CDATA[SELECT SUBSTR(P.STMT_TEXT,1,45) AS TEXT 
+   FROM TABLE(MON_GET_ROUTINE_EXEC_LIST(NULL, NULL, NULL, NULL, -1)) 
+   AS T, TABLE(MON_GET_PKG_CACHE_STMT(NULL,NULL,NULL,-1)) AS P 
+   WHERE T.EXECUTABLE_ID = P.EXECUTABLE_ID]]></sql>
+  </item>
+  <item>
+    <time>2016-06-13 16:44:55</time>
+    <sql><![CDATA[SELECT ROUTINE_TYPE, ROUTINE_SCHEMA, ROUTINE_NAME, SPECIFIC_NAME, TOTAL_CPU_TIME 
+   FROM TABLE(MON_GET_ROUTINE(NULL, NULL, NULL, NULL, NULL)) 
+   AS T ORDER BY TOTAL_CPU_TIME DESC]]></sql>
+  </item>
+  <item>
+    <time>2016-06-13 16:45:00</time>
+    <sql><![CDATA[SELECT STMT_TEXT, STMTID, PLANID, SEMANTIC_ENV_ID,
+      ( SELECT B.SECTION_ENV
+        FROM TABLE(MON_GET_SECTION(A.EXECUTABLE_ID)) AS B)
+         SECTION_DATA
+      FROM TABLE(MON_GET_PKG_CACHE_STMT(NULL,NULL,NULL,-2)) AS A]]></sql>
+  </item>
+</QUERY>
+

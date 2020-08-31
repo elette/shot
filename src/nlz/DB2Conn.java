@@ -61,7 +61,7 @@ public class DB2Conn {
 	 return new ArrayList();
 	}
 	
-	ArrayList rows = new ArrayList();
+	ArrayList<HashMap> rows = new ArrayList<>();
 	ResultSetMetaData rsmd = null;
 	try {
 	 rsmd = rs.getMetaData();
@@ -73,13 +73,13 @@ public class DB2Conn {
 		columns_key[i - 1] = rsmd.getColumnName(i);
 	 }
 	 
-	 HashMap columns = null;
+	 HashMap<String, Object> columns = null;
 	 Reader input = null;
 	 char[] buffer	= null;
 	 int byteRead=-1;
 	 while (rs.next()) {
 	 
-		columns = new HashMap(count);
+		columns = new HashMap<>(count);
 		for (int i = 1; i <= count; i++) {		
 		 
 		 if(rs.getObject(columns_key[i-1])	instanceof Clob){

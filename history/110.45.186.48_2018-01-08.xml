@@ -1,0 +1,1054 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<QUERY>
+  <item>
+    <time>2018-01-08 17:45:00</time>
+    <sql><![CDATA[SELECT
+substr(hex(x.SNAPSHOT_TIMESTAMP),1,14)
+,x.rownum
+,x.appls_cur_cons
+,x.appls_in_db2
+,x.select_sql_stmts
+,x.uid_sql_stmts
+,x.total_sorts
+,x.total_sort_time
+,x.sort_overflows
+,x.active_sorts
+,x.lock_list_in_use
+,CASE pkg_cache_lookups when 0 then NULL
+else
+case when dec(((1 - dec(x.pkg_cache_inserts) / dec(x.pkg_cache_lookups)) * 100),15,2) < 0 then NULL
+else dec(((1 - dec(x.pkg_cache_inserts) / dec(x.pkg_cache_lookups)) * 100),15,2) end end AS PKG_CACHE
+
+,CASE cat_cache_lookups when 0 then NULL
+else
+case when dec(((1 - dec(x.cat_cache_inserts) / dec(x.cat_cache_lookups)) * 100),15,2) < 0 then NULL
+else dec(((1 - dec(x.cat_cache_inserts) / dec(x.cat_cache_lookups)) * 100),15,2) end end AS CAT_CACHE
+
+,x.pkg_cache_lookups,  x.pkg_cache_inserts
+,x.cat_cache_lookups,  x.cat_cache_inserts
+
+FROM (SELECT
+a.rownum
+,a.appls_cur_cons                             as appls_cur_cons
+,a.appls_in_db2                               as appls_in_db2
+,a.rows_selected      - b.rows_selected       as select_sql_stmts
+,a.rows_updated       - b.rows_updated        as uid_sql_stmts
+,a.total_sorts        - b.total_sorts         as total_sorts
+,a.total_sort_time    - b.total_sort_time     as total_sort_time
+,a.sort_overflows     - b.sort_overflows      as sort_overflows
+,a.active_sorts                               as active_sorts
+,a.lock_list_in_use                           as lock_list_in_use
+,a.pkg_cache_lookups  - b.pkg_cache_lookups   as pkg_cache_lookups
+,a.pkg_cache_inserts  - b.pkg_cache_inserts   as pkg_cache_inserts
+,a.cat_cache_lookups  - b.cat_cache_lookups   as cat_cache_lookups
+,a.cat_cache_inserts  - b.cat_cache_inserts   as cat_cache_inserts
+,a.SNAPSHOT_TIMESTAMP                         as SNAPSHOT_TIMESTAMP
+FROM (SELECT  ROWNUMBER() over(order by snapshot_timestamp) as rownum
+,dbpartitionnum
+,appls_cur_cons
+,appls_in_db2
+,rows_selected
+,rows_updated
+,total_sorts
+,total_sort_time
+,sort_overflows
+,active_sorts
+,lock_list_in_use
+,pkg_cache_lookups
+,pkg_cache_inserts
+,cat_cache_lookups
+,cat_cache_inserts
+,snapshot_timestamp
+FROM dbccs.snapdb
+ORDER BY snapshot_timestamp) a,
+(SELECT  ROWNUMBER() over(order by snapshot_timestamp)+1 AS rownum
+,dbpartitionnum
+,appls_cur_cons
+,appls_in_db2
+,rows_selected
+,rows_updated
+,total_sorts
+,total_sort_time
+,sort_overflows
+,active_sorts
+,lock_list_in_use
+,pkg_cache_lookups
+,pkg_cache_inserts
+,cat_cache_lookups
+,cat_cache_inserts
+,snapshot_timestamp
+FROM dbccs.snapdb
+ORDER BY snapshot_timestamp) b
+WHERE a.rownum = b.rownum) x]]></sql>
+  </item>
+  <item>
+    <time>2018-01-08 17:45:13</time>
+    <sql><![CDATA[SELECT
+substr(hex(x.SNAPSHOT_TIMESTAMP),1,14)
+,CASE pkg_cache_lookups when 0 then NULL
+else
+case when dec(((1 - dec(x.pkg_cache_inserts) / dec(x.pkg_cache_lookups)) * 100),15,2) < 0 then NULL
+else dec(((1 - dec(x.pkg_cache_inserts) / dec(x.pkg_cache_lookups)) * 100),15,2) end end AS PKG_CACHE
+
+,CASE cat_cache_lookups when 0 then NULL
+else
+case when dec(((1 - dec(x.cat_cache_inserts) / dec(x.cat_cache_lookups)) * 100),15,2) < 0 then NULL
+else dec(((1 - dec(x.cat_cache_inserts) / dec(x.cat_cache_lookups)) * 100),15,2) end end AS CAT_CACHE
+
+,x.pkg_cache_lookups,  x.pkg_cache_inserts
+,x.cat_cache_lookups,  x.cat_cache_inserts
+
+FROM (SELECT
+a.rownum
+,a.appls_cur_cons                             as appls_cur_cons
+,a.appls_in_db2                               as appls_in_db2
+,a.rows_selected      - b.rows_selected       as select_sql_stmts
+,a.rows_updated       - b.rows_updated        as uid_sql_stmts
+,a.total_sorts        - b.total_sorts         as total_sorts
+,a.total_sort_time    - b.total_sort_time     as total_sort_time
+,a.sort_overflows     - b.sort_overflows      as sort_overflows
+,a.active_sorts                               as active_sorts
+,a.lock_list_in_use                           as lock_list_in_use
+,a.pkg_cache_lookups  - b.pkg_cache_lookups   as pkg_cache_lookups
+,a.pkg_cache_inserts  - b.pkg_cache_inserts   as pkg_cache_inserts
+,a.cat_cache_lookups  - b.cat_cache_lookups   as cat_cache_lookups
+,a.cat_cache_inserts  - b.cat_cache_inserts   as cat_cache_inserts
+,a.SNAPSHOT_TIMESTAMP                         as SNAPSHOT_TIMESTAMP
+FROM (SELECT  ROWNUMBER() over(order by snapshot_timestamp) as rownum
+,dbpartitionnum
+,appls_cur_cons
+,appls_in_db2
+,rows_selected
+,rows_updated
+,total_sorts
+,total_sort_time
+,sort_overflows
+,active_sorts
+,lock_list_in_use
+,pkg_cache_lookups
+,pkg_cache_inserts
+,cat_cache_lookups
+,cat_cache_inserts
+,snapshot_timestamp
+FROM dbccs.snapdb
+ORDER BY snapshot_timestamp) a,
+(SELECT  ROWNUMBER() over(order by snapshot_timestamp)+1 AS rownum
+,dbpartitionnum
+,appls_cur_cons
+,appls_in_db2
+,rows_selected
+,rows_updated
+,total_sorts
+,total_sort_time
+,sort_overflows
+,active_sorts
+,lock_list_in_use
+,pkg_cache_lookups
+,pkg_cache_inserts
+,cat_cache_lookups
+,cat_cache_inserts
+,snapshot_timestamp
+FROM dbccs.snapdb
+ORDER BY snapshot_timestamp) b
+WHERE a.rownum = b.rownum) x]]></sql>
+  </item>
+  <item>
+    <time>2018-01-08 17:50:11</time>
+    <sql><![CDATA[SELECT
+to_char(x.SNAPSHOT_TIMESTAMP, 'YYYY-MM-DD HH24:MI:SS') as time
+,x.appls_cur_cons
+,x.appls_in_db2
+FROM (SELECT
+a.rownum
+,a.appls_cur_cons                             as appls_cur_cons
+,a.appls_in_db2                               as appls_in_db2
+,a.rows_selected      - b.rows_selected       as select_sql_stmts
+,a.rows_updated       - b.rows_updated        as uid_sql_stmts
+,a.total_sorts        - b.total_sorts         as total_sorts
+,a.total_sort_time    - b.total_sort_time     as total_sort_time
+,a.sort_overflows     - b.sort_overflows      as sort_overflows
+,a.active_sorts                               as active_sorts
+,a.lock_list_in_use                           as lock_list_in_use
+,a.pkg_cache_lookups  - b.pkg_cache_lookups   as pkg_cache_lookups
+,a.pkg_cache_inserts  - b.pkg_cache_inserts   as pkg_cache_inserts
+,a.cat_cache_lookups  - b.cat_cache_lookups   as cat_cache_lookups
+,a.cat_cache_inserts  - b.cat_cache_inserts   as cat_cache_inserts
+,a.SNAPSHOT_TIMESTAMP                         as SNAPSHOT_TIMESTAMP
+FROM (SELECT  ROWNUMBER() over(order by snapshot_timestamp) as rownum
+,dbpartitionnum
+,appls_cur_cons
+,appls_in_db2
+,rows_selected
+,rows_updated
+,total_sorts
+,total_sort_time
+,sort_overflows
+,active_sorts
+,lock_list_in_use
+,pkg_cache_lookups
+,pkg_cache_inserts
+,cat_cache_lookups
+,cat_cache_inserts
+,snapshot_timestamp
+FROM dbccs.snapdb
+ORDER BY snapshot_timestamp) a,
+(SELECT  ROWNUMBER() over(order by snapshot_timestamp)+1 AS rownum
+,dbpartitionnum
+,appls_cur_cons
+,appls_in_db2
+,rows_selected
+,rows_updated
+,total_sorts
+,total_sort_time
+,sort_overflows
+,active_sorts
+,lock_list_in_use
+,pkg_cache_lookups
+,pkg_cache_inserts
+,cat_cache_lookups
+,cat_cache_inserts
+,snapshot_timestamp
+FROM dbccs.snapdb
+ORDER BY snapshot_timestamp) b
+WHERE a.rownum = b.rownum) x]]></sql>
+  </item>
+  <item>
+    <time>2018-01-08 17:50:50</time>
+    <sql><![CDATA[SELECT
+to_char(x.SNAPSHOT_TIMESTAMP, 'YYYY-MM-DD HH24:MI:SS') as time
+,CASE pkg_cache_lookups when 0 then NULL
+else
+case when dec(((1 - dec(x.pkg_cache_inserts) / dec(x.pkg_cache_lookups)) * 100),15,2) < 0 then NULL
+else dec(((1 - dec(x.pkg_cache_inserts) / dec(x.pkg_cache_lookups)) * 100),15,2) end end AS PKG_CACHE
+
+,CASE cat_cache_lookups when 0 then NULL
+else
+case when dec(((1 - dec(x.cat_cache_inserts) / dec(x.cat_cache_lookups)) * 100),15,2) < 0 then NULL
+else dec(((1 - dec(x.cat_cache_inserts) / dec(x.cat_cache_lookups)) * 100),15,2) end end AS CAT_CACHE
+
+,x.pkg_cache_lookups,  x.pkg_cache_inserts
+,x.cat_cache_lookups,  x.cat_cache_inserts
+
+FROM (SELECT
+a.rownum
+,a.appls_cur_cons                             as appls_cur_cons
+,a.appls_in_db2                               as appls_in_db2
+,a.rows_selected      - b.rows_selected       as select_sql_stmts
+,a.rows_updated       - b.rows_updated        as uid_sql_stmts
+,a.total_sorts        - b.total_sorts         as total_sorts
+,a.total_sort_time    - b.total_sort_time     as total_sort_time
+,a.sort_overflows     - b.sort_overflows      as sort_overflows
+,a.active_sorts                               as active_sorts
+,a.lock_list_in_use                           as lock_list_in_use
+,a.pkg_cache_lookups  - b.pkg_cache_lookups   as pkg_cache_lookups
+,a.pkg_cache_inserts  - b.pkg_cache_inserts   as pkg_cache_inserts
+,a.cat_cache_lookups  - b.cat_cache_lookups   as cat_cache_lookups
+,a.cat_cache_inserts  - b.cat_cache_inserts   as cat_cache_inserts
+,a.SNAPSHOT_TIMESTAMP                         as SNAPSHOT_TIMESTAMP
+FROM (SELECT  ROWNUMBER() over(order by snapshot_timestamp) as rownum
+,dbpartitionnum
+,appls_cur_cons
+,appls_in_db2
+,rows_selected
+,rows_updated
+,total_sorts
+,total_sort_time
+,sort_overflows
+,active_sorts
+,lock_list_in_use
+,pkg_cache_lookups
+,pkg_cache_inserts
+,cat_cache_lookups
+,cat_cache_inserts
+,snapshot_timestamp
+FROM dbccs.snapdb
+ORDER BY snapshot_timestamp) a,
+(SELECT  ROWNUMBER() over(order by snapshot_timestamp)+1 AS rownum
+,dbpartitionnum
+,appls_cur_cons
+,appls_in_db2
+,rows_selected
+,rows_updated
+,total_sorts
+,total_sort_time
+,sort_overflows
+,active_sorts
+,lock_list_in_use
+,pkg_cache_lookups
+,pkg_cache_inserts
+,cat_cache_lookups
+,cat_cache_inserts
+,snapshot_timestamp
+FROM dbccs.snapdb
+ORDER BY snapshot_timestamp) b
+WHERE a.rownum = b.rownum) x]]></sql>
+  </item>
+  <item>
+    <time>2018-01-08 17:53:56</time>
+    <sql><![CDATA[SELECT
+to_char(x.SNAPSHOT_TIMESTAMP, 'YYYY-MM-DD HH24:MI:SS') as time
+,CASE pkg_cache_lookups when 0 then NULL
+else
+case when dec(((1 - dec(x.pkg_cache_inserts) / dec(x.pkg_cache_lookups)) * 100),15,2) < 0 then NULL
+else dec(((1 - dec(x.pkg_cache_inserts) / dec(x.pkg_cache_lookups)) * 100),15,2) end end AS PKG_CACHE
+
+,CASE cat_cache_lookups when 0 then NULL
+else
+case when dec(((1 - dec(x.cat_cache_inserts) / dec(x.cat_cache_lookups)) * 100),15,2) < 0 then NULL
+else dec(((1 - dec(x.cat_cache_inserts) / dec(x.cat_cache_lookups)) * 100),15,2) end end AS CAT_CACHE
+
+,x.pkg_cache_lookups,  x.pkg_cache_inserts
+,x.cat_cache_lookups,  x.cat_cache_inserts
+
+FROM (SELECT
+a.rownum
+,a.appls_cur_cons                             as appls_cur_cons
+,a.appls_in_db2                               as appls_in_db2
+,a.rows_selected      - b.rows_selected       as select_sql_stmts
+,a.rows_updated       - b.rows_updated        as uid_sql_stmts
+,a.total_sorts        - b.total_sorts         as total_sorts
+,a.total_sort_time    - b.total_sort_time     as total_sort_time
+,a.sort_overflows     - b.sort_overflows      as sort_overflows
+,a.active_sorts                               as active_sorts
+,a.lock_list_in_use                           as lock_list_in_use
+,a.pkg_cache_lookups  - b.pkg_cache_lookups   as pkg_cache_lookups
+,a.pkg_cache_inserts  - b.pkg_cache_inserts   as pkg_cache_inserts
+,a.cat_cache_lookups  - b.cat_cache_lookups   as cat_cache_lookups
+,a.cat_cache_inserts  - b.cat_cache_inserts   as cat_cache_inserts
+,a.PKG_CACHE_NUM_OVERFLOWS - b.PKG_CACHE_NUM_OVERFLOWS as PKG_CACHE_NUM_OVERFLOWS
+a.CAT_CACHE_OVERFLOWS - b.CAT_CACHE_OVERFLOWS as CAT_CACHE_OVERFLOWS
+,a.SNAPSHOT_TIMESTAMP                         as SNAPSHOT_TIMESTAMP
+FROM (SELECT  ROWNUMBER() over(order by snapshot_timestamp) as rownum
+,dbpartitionnum
+,appls_cur_cons
+,appls_in_db2
+,rows_selected
+,rows_updated
+,total_sorts
+,total_sort_time
+,sort_overflows
+,active_sorts
+,lock_list_in_use
+,pkg_cache_lookups
+,pkg_cache_inserts
+,cat_cache_lookups
+,cat_cache_inserts
+,PKG_CACHE_NUM_OVERFLOWS
+,CAT_CACHE_OVERFLOWS
+,snapshot_timestamp
+FROM dbccs.snapdb
+ORDER BY snapshot_timestamp) a,
+(SELECT  ROWNUMBER() over(order by snapshot_timestamp)+1 AS rownum
+,dbpartitionnum
+,appls_cur_cons
+,appls_in_db2
+,rows_selected
+,rows_updated
+,total_sorts
+,total_sort_time
+,sort_overflows
+,active_sorts
+,lock_list_in_use
+,pkg_cache_lookups
+,pkg_cache_inserts
+,cat_cache_lookups
+,cat_cache_inserts
+,PKG_CACHE_NUM_OVERFLOWS
+,CAT_CACHE_OVERFLOWS
+,snapshot_timestamp
+FROM dbccs.snapdb
+ORDER BY snapshot_timestamp) b
+WHERE a.rownum = b.rownum) x]]></sql>
+  </item>
+  <item>
+    <time>2018-01-08 17:54:17</time>
+    <sql><![CDATA[SELECT
+to_char(x.SNAPSHOT_TIMESTAMP, 'YYYY-MM-DD HH24:MI:SS') as time
+,CASE pkg_cache_lookups when 0 then NULL
+else
+case when dec(((1 - dec(x.pkg_cache_inserts) / dec(x.pkg_cache_lookups)) * 100),15,2) < 0 then NULL
+else dec(((1 - dec(x.pkg_cache_inserts) / dec(x.pkg_cache_lookups)) * 100),15,2) end end AS PKG_CACHE
+
+,CASE cat_cache_lookups when 0 then NULL
+else
+case when dec(((1 - dec(x.cat_cache_inserts) / dec(x.cat_cache_lookups)) * 100),15,2) < 0 then NULL
+else dec(((1 - dec(x.cat_cache_inserts) / dec(x.cat_cache_lookups)) * 100),15,2) end end AS CAT_CACHE
+
+,x.pkg_cache_lookups,  x.pkg_cache_inserts
+,x.cat_cache_lookups,  x.cat_cache_inserts
+
+FROM (SELECT
+a.rownum
+,a.appls_cur_cons                             as appls_cur_cons
+,a.appls_in_db2                               as appls_in_db2
+,a.rows_selected      - b.rows_selected       as select_sql_stmts
+,a.rows_updated       - b.rows_updated        as uid_sql_stmts
+,a.total_sorts        - b.total_sorts         as total_sorts
+,a.total_sort_time    - b.total_sort_time     as total_sort_time
+,a.sort_overflows     - b.sort_overflows      as sort_overflows
+,a.active_sorts                               as active_sorts
+,a.lock_list_in_use                           as lock_list_in_use
+,a.pkg_cache_lookups  - b.pkg_cache_lookups   as pkg_cache_lookups
+,a.pkg_cache_inserts  - b.pkg_cache_inserts   as pkg_cache_inserts
+,a.cat_cache_lookups  - b.cat_cache_lookups   as cat_cache_lookups
+,a.cat_cache_inserts  - b.cat_cache_inserts   as cat_cache_inserts
+,a.PKG_CACHE_NUM_OVERFLOWS - b.PKG_CACHE_NUM_OVERFLOWS as PKG_CACHE_NUM_OVERFLOWS
+,a.CAT_CACHE_OVERFLOWS - b.CAT_CACHE_OVERFLOWS as CAT_CACHE_OVERFLOWS
+,a.SNAPSHOT_TIMESTAMP                         as SNAPSHOT_TIMESTAMP
+FROM (SELECT  ROWNUMBER() over(order by snapshot_timestamp) as rownum
+,dbpartitionnum
+,appls_cur_cons
+,appls_in_db2
+,rows_selected
+,rows_updated
+,total_sorts
+,total_sort_time
+,sort_overflows
+,active_sorts
+,lock_list_in_use
+,pkg_cache_lookups
+,pkg_cache_inserts
+,cat_cache_lookups
+,cat_cache_inserts
+,PKG_CACHE_NUM_OVERFLOWS
+,CAT_CACHE_OVERFLOWS
+,snapshot_timestamp
+FROM dbccs.snapdb
+ORDER BY snapshot_timestamp) a,
+(SELECT  ROWNUMBER() over(order by snapshot_timestamp)+1 AS rownum
+,dbpartitionnum
+,appls_cur_cons
+,appls_in_db2
+,rows_selected
+,rows_updated
+,total_sorts
+,total_sort_time
+,sort_overflows
+,active_sorts
+,lock_list_in_use
+,pkg_cache_lookups
+,pkg_cache_inserts
+,cat_cache_lookups
+,cat_cache_inserts
+,PKG_CACHE_NUM_OVERFLOWS
+,CAT_CACHE_OVERFLOWS
+,snapshot_timestamp
+FROM dbccs.snapdb
+ORDER BY snapshot_timestamp) b
+WHERE a.rownum = b.rownum) x]]></sql>
+  </item>
+  <item>
+    <time>2018-01-08 17:54:52</time>
+    <sql><![CDATA[SELECT
+to_char(x.SNAPSHOT_TIMESTAMP, 'YYYY-MM-DD HH24:MI:SS') as time
+,CASE pkg_cache_lookups when 0 then NULL
+else
+case when dec(((1 - dec(x.pkg_cache_inserts) / dec(x.pkg_cache_lookups)) * 100),15,2) < 0 then NULL
+else dec(((1 - dec(x.pkg_cache_inserts) / dec(x.pkg_cache_lookups)) * 100),15,2) end end AS PKG_CACHE
+
+,CASE cat_cache_lookups when 0 then NULL
+else
+case when dec(((1 - dec(x.cat_cache_inserts) / dec(x.cat_cache_lookups)) * 100),15,2) < 0 then NULL
+else dec(((1 - dec(x.cat_cache_inserts) / dec(x.cat_cache_lookups)) * 100),15,2) end end AS CAT_CACHE
+
+,x.pkg_cache_lookups,  x.pkg_cache_inserts
+,x.cat_cache_lookups,  x.cat_cache_inserts
+,x.PKG_CACHE_NUM_OVERFLOWS ,x.CAT_CACHE_OVERFLOWS
+FROM (SELECT
+a.rownum
+,a.appls_cur_cons                             as appls_cur_cons
+,a.appls_in_db2                               as appls_in_db2
+,a.rows_selected      - b.rows_selected       as select_sql_stmts
+,a.rows_updated       - b.rows_updated        as uid_sql_stmts
+,a.total_sorts        - b.total_sorts         as total_sorts
+,a.total_sort_time    - b.total_sort_time     as total_sort_time
+,a.sort_overflows     - b.sort_overflows      as sort_overflows
+,a.active_sorts                               as active_sorts
+,a.lock_list_in_use                           as lock_list_in_use
+,a.pkg_cache_lookups  - b.pkg_cache_lookups   as pkg_cache_lookups
+,a.pkg_cache_inserts  - b.pkg_cache_inserts   as pkg_cache_inserts
+,a.cat_cache_lookups  - b.cat_cache_lookups   as cat_cache_lookups
+,a.cat_cache_inserts  - b.cat_cache_inserts   as cat_cache_inserts
+,a.PKG_CACHE_NUM_OVERFLOWS - b.PKG_CACHE_NUM_OVERFLOWS as PKG_CACHE_NUM_OVERFLOWS
+,a.CAT_CACHE_OVERFLOWS - b.CAT_CACHE_OVERFLOWS as CAT_CACHE_OVERFLOWS
+,a.SNAPSHOT_TIMESTAMP                         as SNAPSHOT_TIMESTAMP
+FROM (SELECT  ROWNUMBER() over(order by snapshot_timestamp) as rownum
+,dbpartitionnum
+,appls_cur_cons
+,appls_in_db2
+,rows_selected
+,rows_updated
+,total_sorts
+,total_sort_time
+,sort_overflows
+,active_sorts
+,lock_list_in_use
+,pkg_cache_lookups
+,pkg_cache_inserts
+,cat_cache_lookups
+,cat_cache_inserts
+,PKG_CACHE_NUM_OVERFLOWS
+,CAT_CACHE_OVERFLOWS
+,snapshot_timestamp
+FROM dbccs.snapdb
+ORDER BY snapshot_timestamp) a,
+(SELECT  ROWNUMBER() over(order by snapshot_timestamp)+1 AS rownum
+,dbpartitionnum
+,appls_cur_cons
+,appls_in_db2
+,rows_selected
+,rows_updated
+,total_sorts
+,total_sort_time
+,sort_overflows
+,active_sorts
+,lock_list_in_use
+,pkg_cache_lookups
+,pkg_cache_inserts
+,cat_cache_lookups
+,cat_cache_inserts
+,PKG_CACHE_NUM_OVERFLOWS
+,CAT_CACHE_OVERFLOWS
+,snapshot_timestamp
+FROM dbccs.snapdb
+ORDER BY snapshot_timestamp) b
+WHERE a.rownum = b.rownum) x]]></sql>
+  </item>
+  <item>
+    <time>2018-01-08 18:01:51</time>
+    <sql><![CDATA[SELECT
+to_char(x.SNAPSHOT_TIMESTAMP, 'YYYY-MM-DD HH24:MI:SS') as time
+, TOTAL_LOG_USED
+, SEC_LOG_USED_TOP
+, TOT_LOG_USED_TOP
+
+FROM dbccs.snapdb]]></sql>
+  </item>
+  <item>
+    <time>2018-01-08 18:02:01</time>
+    <sql><![CDATA[SELECT
+to_char(SNAPSHOT_TIMESTAMP, 'YYYY-MM-DD HH24:MI:SS') as time
+, TOTAL_LOG_USED
+, SEC_LOG_USED_TOP
+, TOT_LOG_USED_TOP
+
+FROM dbccs.snapdb]]></sql>
+  </item>
+  <item>
+    <time>2018-01-08 18:02:45</time>
+    <sql><![CDATA[SELECT
+substr(hex(x.SNAPSHOT_TIMESTAMP),1,14)
+,x.rownum
+,x.appls_cur_cons
+,x.appls_in_db2
+,x.select_sql_stmts
+,x.uid_sql_stmts
+,x.total_sorts
+,x.total_sort_time
+,x.sort_overflows
+,x.active_sorts
+,x.lock_list_in_use
+,CASE pkg_cache_lookups when 0 then NULL
+else
+case when dec(((1 - dec(x.pkg_cache_inserts) / dec(x.pkg_cache_lookups)) * 100),15,2) < 0 then NULL
+else dec(((1 - dec(x.pkg_cache_inserts) / dec(x.pkg_cache_lookups)) * 100),15,2) end end AS PKG_CACHE
+
+,CASE cat_cache_lookups when 0 then NULL
+else
+case when dec(((1 - dec(x.cat_cache_inserts) / dec(x.cat_cache_lookups)) * 100),15,2) < 0 then NULL
+else dec(((1 - dec(x.cat_cache_inserts) / dec(x.cat_cache_lookups)) * 100),15,2) end end AS CAT_CACHE
+
+,x.pkg_cache_lookups,  x.pkg_cache_inserts
+,x.cat_cache_lookups,  x.cat_cache_inserts
+
+FROM (SELECT
+a.rownum
+,a.appls_cur_cons                             as appls_cur_cons
+,a.appls_in_db2                               as appls_in_db2
+,a.rows_selected      - b.rows_selected       as select_sql_stmts
+,a.rows_updated       - b.rows_updated        as uid_sql_stmts
+,a.total_sorts        - b.total_sorts         as total_sorts
+,a.total_sort_time    - b.total_sort_time     as total_sort_time
+,a.sort_overflows     - b.sort_overflows      as sort_overflows
+,a.active_sorts                               as active_sorts
+,a.lock_list_in_use                           as lock_list_in_use
+,a.pkg_cache_lookups  - b.pkg_cache_lookups   as pkg_cache_lookups
+,a.pkg_cache_inserts  - b.pkg_cache_inserts   as pkg_cache_inserts
+,a.cat_cache_lookups  - b.cat_cache_lookups   as cat_cache_lookups
+,a.cat_cache_inserts  - b.cat_cache_inserts   as cat_cache_inserts
+,a.SNAPSHOT_TIMESTAMP                         as SNAPSHOT_TIMESTAMP
+FROM (SELECT  ROWNUMBER() over(order by snapshot_timestamp) as rownum
+,dbpartitionnum
+,appls_cur_cons
+,appls_in_db2
+,rows_selected
+,rows_updated
+,total_sorts
+,total_sort_time
+,sort_overflows
+,active_sorts
+,lock_list_in_use
+,pkg_cache_lookups
+,pkg_cache_inserts
+,cat_cache_lookups
+,cat_cache_inserts
+,snapshot_timestamp
+FROM dbccs.snapdb
+ORDER BY snapshot_timestamp) a,
+(SELECT  ROWNUMBER() over(order by snapshot_timestamp)+1 AS rownum
+,dbpartitionnum
+,appls_cur_cons
+,appls_in_db2
+,rows_selected
+,rows_updated
+,total_sorts
+,total_sort_time
+,sort_overflows
+,active_sorts
+,lock_list_in_use
+,pkg_cache_lookups
+,pkg_cache_inserts
+,cat_cache_lookups
+,cat_cache_inserts
+,snapshot_timestamp
+FROM dbccs.snapdb
+ORDER BY snapshot_timestamp) b
+WHERE a.rownum = b.rownum) x]]></sql>
+  </item>
+  <item>
+    <time>2018-01-08 18:05:57</time>
+    <sql><![CDATA[SELECT
+to_char(x.SNAPSHOT_TIMESTAMP, 'YYYY-MM-DD HH24:MI:SS') as time
+,CASE pkg_cache_lookups when 0 then NULL
+else
+case when dec(((1 - dec(x.pkg_cache_inserts) / dec(x.pkg_cache_lookups)) * 100),15,2) < 0 then NULL
+else dec(((1 - dec(x.pkg_cache_inserts) / dec(x.pkg_cache_lookups)) * 100),15,2) end end AS PKG_CACHE
+
+,CASE cat_cache_lookups when 0 then NULL
+else
+case when dec(((1 - dec(x.cat_cache_inserts) / dec(x.cat_cache_lookups)) * 100),15,2) < 0 then NULL
+else dec(((1 - dec(x.cat_cache_inserts) / dec(x.cat_cache_lookups)) * 100),15,2) end end AS CAT_CACHE
+
+,x.pkg_cache_lookups,  x.pkg_cache_inserts
+,x.cat_cache_lookups,  x.cat_cache_inserts
+,x.PKG_CACHE_NUM_OVERFLOWS ,x.CAT_CACHE_OVERFLOWS
+FROM (SELECT
+a.rownum
+,a.appls_cur_cons                             as appls_cur_cons
+,a.appls_in_db2                               as appls_in_db2
+,a.rows_selected      - b.rows_selected       as select_sql_stmts
+,a.rows_updated       - b.rows_updated        as uid_sql_stmts
+,a.total_sorts        - b.total_sorts         as total_sorts
+,a.total_sort_time    - b.total_sort_time     as total_sort_time
+,a.sort_overflows     - b.sort_overflows      as sort_overflows
+,a.active_sorts                               as active_sorts
+,a.lock_list_in_use                           as lock_list_in_use
+,a.pkg_cache_lookups  - b.pkg_cache_lookups   as pkg_cache_lookups
+,a.pkg_cache_inserts  - b.pkg_cache_inserts   as pkg_cache_inserts
+,a.cat_cache_lookups  - b.cat_cache_lookups   as cat_cache_lookups
+,a.cat_cache_inserts  - b.cat_cache_inserts   as cat_cache_inserts
+,a.PKG_CACHE_NUM_OVERFLOWS - b.PKG_CACHE_NUM_OVERFLOWS as PKG_CACHE_NUM_OVERFLOWS
+,a.CAT_CACHE_OVERFLOWS - b.CAT_CACHE_OVERFLOWS as CAT_CACHE_OVERFLOWS
+,a.TOTAL_LOG_USED - b.TOTAL_LOG_USED as TOTAL_LOG_USED
+,a.SEC_LOG_USED_TOP - b.SEC_LOG_USED_TOP as SEC_LOG_USED_TOP
+,a.TOT_LOG_USED_TOP - b.TOT_LOG_USED_TOP as TOT_LOG_USED_TOP
+,a.SNAPSHOT_TIMESTAMP                         as SNAPSHOT_TIMESTAMP
+FROM (SELECT  ROWNUMBER() over(order by snapshot_timestamp) as rownum
+,dbpartitionnum
+,appls_cur_cons
+,appls_in_db2
+,rows_selected
+,rows_updated
+,total_sorts
+,total_sort_time
+,sort_overflows
+,active_sorts
+,lock_list_in_use
+,pkg_cache_lookups
+,pkg_cache_inserts
+,cat_cache_lookups
+,cat_cache_inserts
+,PKG_CACHE_NUM_OVERFLOWS
+,CAT_CACHE_OVERFLOWS
+, TOTAL_LOG_USED, SEC_LOG_USED_TOP, TOT_LOG_USED_TOP
+,snapshot_timestamp
+FROM dbccs.snapdb
+ORDER BY snapshot_timestamp) a,
+(SELECT  ROWNUMBER() over(order by snapshot_timestamp)+1 AS rownum
+,dbpartitionnum
+,appls_cur_cons
+,appls_in_db2
+,rows_selected
+,rows_updated
+,total_sorts
+,total_sort_time
+,sort_overflows
+,active_sorts
+,lock_list_in_use
+,pkg_cache_lookups
+,pkg_cache_inserts
+,cat_cache_lookups
+,cat_cache_inserts
+,PKG_CACHE_NUM_OVERFLOWS
+,CAT_CACHE_OVERFLOWS
+, TOTAL_LOG_USED, SEC_LOG_USED_TOP, TOT_LOG_USED_TOP
+,snapshot_timestamp
+FROM dbccs.snapdb
+ORDER BY snapshot_timestamp) b
+WHERE a.rownum = b.rownum) x]]></sql>
+  </item>
+  <item>
+    <time>2018-01-08 18:06:32</time>
+    <sql><![CDATA[SELECT
+to_char(x.SNAPSHOT_TIMESTAMP, 'YYYY-MM-DD HH24:MI:SS') as time
+,CASE pkg_cache_lookups when 0 then NULL
+else
+case when dec(((1 - dec(x.pkg_cache_inserts) / dec(x.pkg_cache_lookups)) * 100),15,2) < 0 then NULL
+else dec(((1 - dec(x.pkg_cache_inserts) / dec(x.pkg_cache_lookups)) * 100),15,2) end end AS PKG_CACHE
+
+,CASE cat_cache_lookups when 0 then NULL
+else
+case when dec(((1 - dec(x.cat_cache_inserts) / dec(x.cat_cache_lookups)) * 100),15,2) < 0 then NULL
+else dec(((1 - dec(x.cat_cache_inserts) / dec(x.cat_cache_lookups)) * 100),15,2) end end AS CAT_CACHE
+
+,x.pkg_cache_lookups,  x.pkg_cache_inserts
+,x.cat_cache_lookups,  x.cat_cache_inserts
+,x.PKG_CACHE_NUM_OVERFLOWS ,x.CAT_CACHE_OVERFLOWS
+, TOTAL_LOG_USED, SEC_LOG_USED_TOP, TOT_LOG_USED_TOP
+FROM (SELECT
+a.rownum
+,a.appls_cur_cons                             as appls_cur_cons
+,a.appls_in_db2                               as appls_in_db2
+,a.rows_selected      - b.rows_selected       as select_sql_stmts
+,a.rows_updated       - b.rows_updated        as uid_sql_stmts
+,a.total_sorts        - b.total_sorts         as total_sorts
+,a.total_sort_time    - b.total_sort_time     as total_sort_time
+,a.sort_overflows     - b.sort_overflows      as sort_overflows
+,a.active_sorts                               as active_sorts
+,a.lock_list_in_use                           as lock_list_in_use
+,a.pkg_cache_lookups  - b.pkg_cache_lookups   as pkg_cache_lookups
+,a.pkg_cache_inserts  - b.pkg_cache_inserts   as pkg_cache_inserts
+,a.cat_cache_lookups  - b.cat_cache_lookups   as cat_cache_lookups
+,a.cat_cache_inserts  - b.cat_cache_inserts   as cat_cache_inserts
+,a.PKG_CACHE_NUM_OVERFLOWS - b.PKG_CACHE_NUM_OVERFLOWS as PKG_CACHE_NUM_OVERFLOWS
+,a.CAT_CACHE_OVERFLOWS - b.CAT_CACHE_OVERFLOWS as CAT_CACHE_OVERFLOWS
+,a.TOTAL_LOG_USED - b.TOTAL_LOG_USED as TOTAL_LOG_USED
+,a.SEC_LOG_USED_TOP - b.SEC_LOG_USED_TOP as SEC_LOG_USED_TOP
+,a.TOT_LOG_USED_TOP - b.TOT_LOG_USED_TOP as TOT_LOG_USED_TOP
+,a.SNAPSHOT_TIMESTAMP                         as SNAPSHOT_TIMESTAMP
+FROM (SELECT  ROWNUMBER() over(order by snapshot_timestamp) as rownum
+,dbpartitionnum
+,appls_cur_cons
+,appls_in_db2
+,rows_selected
+,rows_updated
+,total_sorts
+,total_sort_time
+,sort_overflows
+,active_sorts
+,lock_list_in_use
+,pkg_cache_lookups
+,pkg_cache_inserts
+,cat_cache_lookups
+,cat_cache_inserts
+,PKG_CACHE_NUM_OVERFLOWS
+,CAT_CACHE_OVERFLOWS
+, TOTAL_LOG_USED, SEC_LOG_USED_TOP, TOT_LOG_USED_TOP
+,snapshot_timestamp
+FROM dbccs.snapdb
+ORDER BY snapshot_timestamp) a,
+(SELECT  ROWNUMBER() over(order by snapshot_timestamp)+1 AS rownum
+,dbpartitionnum
+,appls_cur_cons
+,appls_in_db2
+,rows_selected
+,rows_updated
+,total_sorts
+,total_sort_time
+,sort_overflows
+,active_sorts
+,lock_list_in_use
+,pkg_cache_lookups
+,pkg_cache_inserts
+,cat_cache_lookups
+,cat_cache_inserts
+,PKG_CACHE_NUM_OVERFLOWS
+,CAT_CACHE_OVERFLOWS
+, TOTAL_LOG_USED, SEC_LOG_USED_TOP, TOT_LOG_USED_TOP
+,snapshot_timestamp
+FROM dbccs.snapdb
+ORDER BY snapshot_timestamp) b
+WHERE a.rownum = b.rownum) x]]></sql>
+  </item>
+  <item>
+    <time>2018-01-08 18:08:47</time>
+    <sql><![CDATA[SELECT
+to_char(x.SNAPSHOT_TIMESTAMP, 'YYYY-MM-DD HH24:MI:SS') as time
+,CASE pkg_cache_lookups when 0 then NULL
+else
+case when dec(((1 - dec(x.pkg_cache_inserts) / dec(x.pkg_cache_lookups)) * 100),15,2) < 0 then NULL
+else dec(((1 - dec(x.pkg_cache_inserts) / dec(x.pkg_cache_lookups)) * 100),15,2) end end AS PKG_CACHE
+
+,CASE cat_cache_lookups when 0 then NULL
+else
+case when dec(((1 - dec(x.cat_cache_inserts) / dec(x.cat_cache_lookups)) * 100),15,2) < 0 then NULL
+else dec(((1 - dec(x.cat_cache_inserts) / dec(x.cat_cache_lookups)) * 100),15,2) end end AS CAT_CACHE
+
+,x.pkg_cache_lookups,  x.pkg_cache_inserts
+,x.cat_cache_lookups,  x.cat_cache_inserts
+,x.PKG_CACHE_NUM_OVERFLOWS ,x.CAT_CACHE_OVERFLOWS
+, TOTAL_LOG_USED, SEC_LOG_USED_TOP, TOT_LOG_USED_TOP, SEC_LOGS_ALLOCATED
+FROM (SELECT
+a.rownum
+,a.appls_cur_cons                             as appls_cur_cons
+,a.appls_in_db2                               as appls_in_db2
+,a.rows_selected      - b.rows_selected       as select_sql_stmts
+,a.rows_updated       - b.rows_updated        as uid_sql_stmts
+,a.total_sorts        - b.total_sorts         as total_sorts
+,a.total_sort_time    - b.total_sort_time     as total_sort_time
+,a.sort_overflows     - b.sort_overflows      as sort_overflows
+,a.active_sorts                               as active_sorts
+,a.lock_list_in_use                           as lock_list_in_use
+,a.pkg_cache_lookups  - b.pkg_cache_lookups   as pkg_cache_lookups
+,a.pkg_cache_inserts  - b.pkg_cache_inserts   as pkg_cache_inserts
+,a.cat_cache_lookups  - b.cat_cache_lookups   as cat_cache_lookups
+,a.cat_cache_inserts  - b.cat_cache_inserts   as cat_cache_inserts
+,a.PKG_CACHE_NUM_OVERFLOWS - b.PKG_CACHE_NUM_OVERFLOWS as PKG_CACHE_NUM_OVERFLOWS
+,a.CAT_CACHE_OVERFLOWS - b.CAT_CACHE_OVERFLOWS as CAT_CACHE_OVERFLOWS
+,a.TOTAL_LOG_USED - b.TOTAL_LOG_USED as TOTAL_LOG_USED
+,a.SEC_LOG_USED_TOP - b.SEC_LOG_USED_TOP as SEC_LOG_USED_TOP
+,a.TOT_LOG_USED_TOP - b.TOT_LOG_USED_TOP as TOT_LOG_USED_TOP
+,a.SEC_LOGS_ALLOCATED - b.SEC_LOGS_ALLOCATED as SEC_LOGS_ALLOCATED
+,a.SNAPSHOT_TIMESTAMP                         as SNAPSHOT_TIMESTAMP
+FROM (SELECT  ROWNUMBER() over(order by snapshot_timestamp) as rownum
+,dbpartitionnum
+,appls_cur_cons
+,appls_in_db2
+,rows_selected
+,rows_updated
+,total_sorts
+,total_sort_time
+,sort_overflows
+,active_sorts
+,lock_list_in_use
+,pkg_cache_lookups
+,pkg_cache_inserts
+,cat_cache_lookups
+,cat_cache_inserts
+,PKG_CACHE_NUM_OVERFLOWS
+,CAT_CACHE_OVERFLOWS
+, TOTAL_LOG_USED, SEC_LOG_USED_TOP, TOT_LOG_USED_TOP, SEC_LOGS_ALLOCATED
+,snapshot_timestamp
+FROM dbccs.snapdb
+ORDER BY snapshot_timestamp) a,
+(SELECT  ROWNUMBER() over(order by snapshot_timestamp)+1 AS rownum
+,dbpartitionnum
+,appls_cur_cons
+,appls_in_db2
+,rows_selected
+,rows_updated
+,total_sorts
+,total_sort_time
+,sort_overflows
+,active_sorts
+,lock_list_in_use
+,pkg_cache_lookups
+,pkg_cache_inserts
+,cat_cache_lookups
+,cat_cache_inserts
+,PKG_CACHE_NUM_OVERFLOWS
+,CAT_CACHE_OVERFLOWS
+, TOTAL_LOG_USED, SEC_LOG_USED_TOP, TOT_LOG_USED_TOP, SEC_LOGS_ALLOCATED
+,snapshot_timestamp
+FROM dbccs.snapdb
+ORDER BY snapshot_timestamp) b
+WHERE a.rownum = b.rownum) x]]></sql>
+  </item>
+  <item>
+    <time>2018-01-08 18:12:07</time>
+    <sql><![CDATA[SELECT
+to_char(x.SNAPSHOT_TIMESTAMP, 'YYYY-MM-DD HH24:MI:SS') as time
+,CASE pkg_cache_lookups when 0 then NULL
+else
+case when dec(((1 - dec(x.pkg_cache_inserts) / dec(x.pkg_cache_lookups)) * 100),15,2) < 0 then NULL
+else dec(((1 - dec(x.pkg_cache_inserts) / dec(x.pkg_cache_lookups)) * 100),15,2) end end AS PKG_CACHE
+
+,CASE cat_cache_lookups when 0 then NULL
+else
+case when dec(((1 - dec(x.cat_cache_inserts) / dec(x.cat_cache_lookups)) * 100),15,2) < 0 then NULL
+else dec(((1 - dec(x.cat_cache_inserts) / dec(x.cat_cache_lookups)) * 100),15,2) end end AS CAT_CACHE
+
+,x.pkg_cache_lookups,  x.pkg_cache_inserts
+,x.cat_cache_lookups,  x.cat_cache_inserts
+,x.PKG_CACHE_NUM_OVERFLOWS ,x.CAT_CACHE_OVERFLOWS
+
+, TOTAL_LOG_USED, SEC_LOG_USED_TOP, TOT_LOG_USED_TOP, SEC_LOGS_ALLOCATED
+FROM (SELECT
+a.rownum
+,a.appls_cur_cons                             as appls_cur_cons
+,a.appls_in_db2                               as appls_in_db2
+,a.rows_selected      - b.rows_selected       as select_sql_stmts
+,a.rows_updated       - b.rows_updated        as uid_sql_stmts
+,a.total_sorts        - b.total_sorts         as total_sorts
+,a.total_sort_time    - b.total_sort_time     as total_sort_time
+,a.sort_overflows     - b.sort_overflows      as sort_overflows
+,a.active_sorts                               as active_sorts
+,a.lock_list_in_use                           as lock_list_in_use
+,a.pkg_cache_lookups  - b.pkg_cache_lookups   as pkg_cache_lookups
+,a.pkg_cache_inserts  - b.pkg_cache_inserts   as pkg_cache_inserts
+,a.cat_cache_lookups  - b.cat_cache_lookups   as cat_cache_lookups
+,a.cat_cache_inserts  - b.cat_cache_inserts   as cat_cache_inserts
+,a.PKG_CACHE_NUM_OVERFLOWS - b.PKG_CACHE_NUM_OVERFLOWS as PKG_CACHE_NUM_OVERFLOWS
+,a.CAT_CACHE_OVERFLOWS - b.CAT_CACHE_OVERFLOWS as CAT_CACHE_OVERFLOWS
+,a.TOTAL_LOG_USED - b.TOTAL_LOG_USED as TOTAL_LOG_USED
+,a.SEC_LOG_USED_TOP - b.SEC_LOG_USED_TOP as SEC_LOG_USED_TOP
+,a.TOT_LOG_USED_TOP - b.TOT_LOG_USED_TOP as TOT_LOG_USED_TOP
+,a.SEC_LOGS_ALLOCATED - b.SEC_LOGS_ALLOCATED as SEC_LOGS_ALLOCATED
+,a.SNAPSHOT_TIMESTAMP                         as SNAPSHOT_TIMESTAMP
+FROM (SELECT  ROWNUMBER() over(order by snapshot_timestamp) as rownum
+,dbpartitionnum
+,appls_cur_cons
+,appls_in_db2
+,rows_selected
+,rows_updated
+,total_sorts
+,total_sort_time
+,sort_overflows
+,active_sorts
+,lock_list_in_use
+,pkg_cache_lookups
+,pkg_cache_inserts
+,cat_cache_lookups
+,cat_cache_inserts
+,PKG_CACHE_NUM_OVERFLOWS
+,CAT_CACHE_OVERFLOWS
+, TOTAL_LOG_USED, SEC_LOG_USED_TOP, TOT_LOG_USED_TOP, SEC_LOGS_ALLOCATED
+,snapshot_timestamp
+FROM dbccs.snapdb
+ORDER BY snapshot_timestamp) a,
+(SELECT  ROWNUMBER() over(order by snapshot_timestamp)+1 AS rownum
+,dbpartitionnum
+,appls_cur_cons
+,appls_in_db2
+,rows_selected
+,rows_updated
+,total_sorts
+,total_sort_time
+,sort_overflows
+,active_sorts
+,lock_list_in_use
+,pkg_cache_lookups
+,pkg_cache_inserts
+,cat_cache_lookups
+,cat_cache_inserts
+,PKG_CACHE_NUM_OVERFLOWS
+,CAT_CACHE_OVERFLOWS
+, TOTAL_LOG_USED, SEC_LOG_USED_TOP, TOT_LOG_USED_TOP, SEC_LOGS_ALLOCATED
+,snapshot_timestamp
+FROM dbccs.snapdb
+ORDER BY snapshot_timestamp) b
+WHERE a.rownum = b.rownum) x]]></sql>
+  </item>
+  <item>
+    <time>2018-01-08 18:12:51</time>
+    <sql><![CDATA[SELECT
+to_char(x.SNAPSHOT_TIMESTAMP, 'YYYY-MM-DD HH24:MI:SS') as time
+,CASE pkg_cache_lookups when 0 then NULL
+else
+case when dec(((1 - dec(x.pkg_cache_inserts) / dec(x.pkg_cache_lookups)) * 100),15,2) < 0 then NULL
+else dec(((1 - dec(x.pkg_cache_inserts) / dec(x.pkg_cache_lookups)) * 100),15,2) end end AS PKG_CACHE
+
+,CASE cat_cache_lookups when 0 then NULL
+else
+case when dec(((1 - dec(x.cat_cache_inserts) / dec(x.cat_cache_lookups)) * 100),15,2) < 0 then NULL
+else dec(((1 - dec(x.cat_cache_inserts) / dec(x.cat_cache_lookups)) * 100),15,2) end end AS CAT_CACHE
+
+,x.pkg_cache_lookups,  x.pkg_cache_inserts
+,x.cat_cache_lookups,  x.cat_cache_inserts
+,x.PKG_CACHE_NUM_OVERFLOWS ,x.CAT_CACHE_OVERFLOWS
+
+, TOTAL_LOG_USED, SEC_LOG_USED_TOP, TOT_LOG_USED_TOP, SEC_LOGS_ALLOCATED
+FROM (SELECT
+a.rownum
+,a.appls_cur_cons                             as appls_cur_cons
+,a.appls_in_db2                               as appls_in_db2
+,a.rows_selected      - b.rows_selected       as select_sql_stmts
+,a.rows_updated       - b.rows_updated        as uid_sql_stmts
+,a.total_sorts        - b.total_sorts         as total_sorts
+,a.total_sort_time    - b.total_sort_time     as total_sort_time
+,a.sort_overflows     - b.sort_overflows      as sort_overflows
+,a.active_sorts                               as active_sorts
+,a.lock_list_in_use                           as lock_list_in_use
+,a.pkg_cache_lookups  - b.pkg_cache_lookups   as pkg_cache_lookups
+,a.pkg_cache_inserts  - b.pkg_cache_inserts   as pkg_cache_inserts
+,a.cat_cache_lookups  - b.cat_cache_lookups   as cat_cache_lookups
+,a.cat_cache_inserts  - b.cat_cache_inserts   as cat_cache_inserts
+,a.PKG_CACHE_NUM_OVERFLOWS - b.PKG_CACHE_NUM_OVERFLOWS as PKG_CACHE_NUM_OVERFLOWS
+,a.CAT_CACHE_OVERFLOWS - b.CAT_CACHE_OVERFLOWS as CAT_CACHE_OVERFLOWS
+,a.TOTAL_LOG_USED - b.TOTAL_LOG_USED as TOTAL_LOG_USED
+,a.SEC_LOG_USED_TOP - b.SEC_LOG_USED_TOP as SEC_LOG_USED_TOP
+,a.TOT_LOG_USED_TOP - b.TOT_LOG_USED_TOP as TOT_LOG_USED_TOP
+,a.SEC_LOGS_ALLOCATED - b.SEC_LOGS_ALLOCATED as SEC_LOGS_ALLOCATED
+,a.SNAPSHOT_TIMESTAMP                         as SNAPSHOT_TIMESTAMP
+FROM (SELECT  ROWNUMBER() over(order by snapshot_timestamp) as rownum
+,dbpartitionnum
+,appls_cur_cons
+,appls_in_db2
+,rows_selected
+,rows_updated
+,total_sorts
+,total_sort_time
+,sort_overflows
+,active_sorts
+,lock_list_in_use
+,pkg_cache_lookups
+,pkg_cache_inserts
+,cat_cache_lookups
+,cat_cache_inserts
+,PKG_CACHE_NUM_OVERFLOWS
+,CAT_CACHE_OVERFLOWS
+, TOTAL_LOG_USED, SEC_LOG_USED_TOP, TOT_LOG_USED_TOP, SEC_LOGS_ALLOCATED
+,snapshot_timestamp
+FROM dbccs.snapdb
+ORDER BY snapshot_timestamp) a,
+(SELECT  ROWNUMBER() over(order by snapshot_timestamp)+1 AS rownum
+,dbpartitionnum
+,appls_cur_cons
+,appls_in_db2
+,rows_selected
+,rows_updated
+,total_sorts
+,total_sort_time
+,sort_overflows
+,active_sorts
+,lock_list_in_use
+,pkg_cache_lookups
+,pkg_cache_inserts
+,cat_cache_lookups
+,cat_cache_inserts
+,PKG_CACHE_NUM_OVERFLOWS
+,CAT_CACHE_OVERFLOWS
+, TOTAL_LOG_USED, SEC_LOG_USED_TOP, TOT_LOG_USED_TOP, SEC_LOGS_ALLOCATED
+,snapshot_timestamp
+FROM dbccs.snapdb
+ORDER BY snapshot_timestamp) b
+WHERE a.rownum = b.rownum) x]]></sql>
+  </item>
+  <item>
+    <time>2018-01-08 18:15:33</time>
+    <sql><![CDATA[SELECT
+to_char(x.SNAPSHOT_TIMESTAMP, 'YYYY-MM-DD HH24:MI:SS') as time
+, TOTAL_LOG_USED, SEC_LOG_USED_TOP, TOT_LOG_USED_TOP, SEC_LOGS_ALLOCATED
+
+FROM dbccs.snapdb]]></sql>
+  </item>
+  <item>
+    <time>2018-01-08 18:15:48</time>
+    <sql><![CDATA[SELECT
+to_char(SNAPSHOT_TIMESTAMP, 'YYYY-MM-DD HH24:MI:SS') as time
+, TOTAL_LOG_USED, SEC_LOG_USED_TOP, TOT_LOG_USED_TOP, SEC_LOGS_ALLOCATED
+
+FROM dbccs.snapdb]]></sql>
+  </item>
+</QUERY>
+

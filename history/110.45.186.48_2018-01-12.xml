@@ -1,0 +1,441 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<QUERY>
+  <item>
+    <time>2018-01-12 14:36:40</time>
+    <sql><![CDATA[select to_char(snapshot_timestamp, 'YYYY-MM-DD'),
+avg(SORT_HEAP_ALLOCATED)	,avg(SORT_SHRHEAP_ALLOCATED)	,avg(SORT_SHRHEAP_TOP)	,avg(POST_SHRTHRESHOLD_SORTS)	,avg(TOTAL_SORTS) TOTAL_SORTS	,avg(TOTAL_SORT_TIME) TOTAL_SORT_TIME	,avg(SORT_OVERFLOWS) SORT_OVERFLOWS
+,avg(TOTAL_HASH_JOINS) TOTAL_HASH_JOINS	,avg(TOTAL_HASH_LOOPS)	,avg(HASH_JOIN_OVERFLOWS) HASH_JOIN_OVERFLOWS	,avg(HASH_JOIN_SMALL_OVERFLOWS)	,avg(POST_SHRTHRESHOLD_HASH_JOINS)	,avg(ACTIVE_HASH_JOINS)
+ from dbccs.snapdb
+group by to_char(snapshot_timestamp, 'YYYY-MM-DD')
+;]]></sql>
+  </item>
+  <item>
+    <time>2018-01-12 14:36:48</time>
+    <sql><![CDATA[select to_char(snapshot_timestamp, 'YYYY-MM-DD'),
+avg(SORT_HEAP_ALLOCATED)	,avg(SORT_SHRHEAP_ALLOCATED)	,avg(SORT_SHRHEAP_TOP)	,avg(POST_SHRTHRESHOLD_SORTS)	,avg(TOTAL_SORTS) TOTAL_SORTS	,avg(TOTAL_SORT_TIME) TOTAL_SORT_TIME	,avg(SORT_OVERFLOWS) SORT_OVERFLOWS
+,avg(TOTAL_HASH_JOINS) TOTAL_HASH_JOINS	,avg(TOTAL_HASH_LOOPS)	,avg(HASH_JOIN_OVERFLOWS) HASH_JOIN_OVERFLOWS	,avg(HASH_JOIN_SMALL_OVERFLOWS)	,avg(POST_SHRTHRESHOLD_HASH_JOINS)	,avg(ACTIVE_HASH_JOINS)
+ from dbccs.snapdb
+group by to_char(snapshot_timestamp, 'YYYY-MM-DD')]]></sql>
+  </item>
+  <item>
+    <time>2018-01-12 14:37:36</time>
+    <sql><![CDATA[select to_char(snapshot_timestamp, 'YYYY-MM-DD'),
+avg(SORT_HEAP_ALLOCATED)	,avg(SORT_SHRHEAP_ALLOCATED)	,avg(SORT_SHRHEAP_TOP)	,avg(POST_SHRTHRESHOLD_SORTS)	,avg(TOTAL_SORTS) TOTAL_SORTS	,avg(TOTAL_SORT_TIME) TOTAL_SORT_TIME	,avg(SORT_OVERFLOWS) SORT_OVERFLOWS
+,avg(TOTAL_HASH_JOINS) TOTAL_HASH_JOINS	,avg(TOTAL_HASH_LOOPS)	,avg(HASH_JOIN_OVERFLOWS) HASH_JOIN_OVERFLOWS	,avg(HASH_JOIN_SMALL_OVERFLOWS)	,avg(POST_SHRTHRESHOLD_HASH_JOINS)	,avg(ACTIVE_HASH_JOINS)
+ from dbisw.snapdb
+group by to_char(snapshot_timestamp, 'YYYY-MM-DD')]]></sql>
+  </item>
+  <item>
+    <time>2018-01-12 14:38:29</time>
+    <sql><![CDATA[select to_char(snapshot_timestamp, 'YYYY-MM-DD'),
+avg(SORT_HEAP_ALLOCATED) as SORT_HEAP_ALLOCATED	,avg(SORT_SHRHEAP_ALLOCATED) as SORT_SHRHEAP_ALLOCATED	,avg(SORT_SHRHEAP_TOP) as SORT_SHRHEAP_TOP	,avg(POST_SHRTHRESHOLD_SORTS) as POST_SHRTHRESHOLD_SORTS	,avg(TOTAL_SORTS) TOTAL_SORTS	,avg(TOTAL_SORT_TIME) TOTAL_SORT_TIME	,avg(SORT_OVERFLOWS) SORT_OVERFLOWS
+,avg(TOTAL_HASH_JOINS) TOTAL_HASH_JOINS	,avg(TOTAL_HASH_LOOPS)	,avg(HASH_JOIN_OVERFLOWS) HASH_JOIN_OVERFLOWS	,avg(HASH_JOIN_SMALL_OVERFLOWS)	,avg(POST_SHRTHRESHOLD_HASH_JOINS)	,avg(ACTIVE_HASH_JOINS)
+ from dbisw.snapdb
+group by to_char(snapshot_timestamp, 'YYYY-MM-DD')]]></sql>
+  </item>
+  <item>
+    <time>2018-01-12 14:39:18</time>
+    <sql><![CDATA[select to_char(snapshot_timestamp, 'YYYY-MM-DD'),
+avg(SORT_HEAP_ALLOCATED) as SORT_HEAP_ALLOCATED	,avg(SORT_SHRHEAP_ALLOCATED) as SORT_SHRHEAP_ALLOCATED	,avg(SORT_SHRHEAP_TOP) as SORT_SHRHEAP_TOP	,avg(POST_SHRTHRESHOLD_SORTS) as POST_SHRTHRESHOLD_SORTS	,avg(TOTAL_SORTS) TOTAL_SORTS	,avg(TOTAL_SORT_TIME) TOTAL_SORT_TIME	,avg(SORT_OVERFLOWS) SORT_OVERFLOWS
+,avg(TOTAL_HASH_JOINS) TOTAL_HASH_JOINS	,avg(TOTAL_HASH_LOOPS) as TOTAL_HASH_LOOPS	,avg(HASH_JOIN_OVERFLOWS) HASH_JOIN_OVERFLOWS	,avg(HASH_JOIN_SMALL_OVERFLOWS)	
+ as HASH_JOIN_SMALL_OVERFLOWS
+,avg(POST_SHRTHRESHOLD_HASH_JOINS) as POST_SHRTHRESHOLD_HASH_JOINS	,avg(ACTIVE_HASH_JOINS) as ACTIVE_HASH_JOINS
+ from dbisw.snapdb
+group by to_char(snapshot_timestamp, 'YYYY-MM-DD')]]></sql>
+  </item>
+  <item>
+    <time>2018-01-12 14:41:59</time>
+    <sql><![CDATA[select to_char(snapshot_timestamp, 'YYYY-MM-DD'),
+max(SORT_HEAP_ALLOCATED) as SORT_HEAP_ALLOCATED	,max(SORT_SHRHEAP_ALLOCATED) as SORT_SHRHEAP_ALLOCATED	,max(SORT_SHRHEAP_TOP) as SORT_SHRHEAP_TOP	,max(POST_SHRTHRESHOLD_SORTS) as POST_SHRTHRESHOLD_SORTS	,max(TOTAL_SORTS) TOTAL_SORTS	,max(TOTAL_SORT_TIME) TOTAL_SORT_TIME	,max(SORT_OVERFLOWS) SORT_OVERFLOWS
+,max(TOTAL_HASH_JOINS) TOTAL_HASH_JOINS	,max(TOTAL_HASH_LOOPS) as TOTAL_HASH_LOOPS	,max(HASH_JOIN_OVERFLOWS) HASH_JOIN_OVERFLOWS	,max(HASH_JOIN_SMALL_OVERFLOWS)	
+ as HASH_JOIN_SMALL_OVERFLOWS
+,max(POST_SHRTHRESHOLD_HASH_JOINS) as POST_SHRTHRESHOLD_HASH_JOINS	,max(ACTIVE_HASH_JOINS) as ACTIVE_HASH_JOINS
+ from dbisw.snapdb
+group by to_char(snapshot_timestamp, 'YYYY-MM-DD')]]></sql>
+  </item>
+  <item>
+    <time>2018-01-12 14:55:42</time>
+    <sql><![CDATA[select to_char(snapshot_timestamp, 'YYYY-MM-DD')
+,max(DEADLOCKS)	DEADLOCKS ,max(LOCK_ESCALS) LOCK_ESCALS	,max(X_LOCK_ESCALS) X_LOCK_ESCALS	,max(LOCKS_WAITING) LOCKS_WAITING	,max(LOCK_TIMEOUTS) LOCK_TIMEOUTS from dbisw.snapdb
+group by to_char(snapshot_timestamp, 'YYYY-MM-DD')]]></sql>
+  </item>
+  <item>
+    <time>2018-01-12 15:03:58</time>
+    <sql><![CDATA[select to_char(snapshot_timestamp, 'YYYY-MM-DD')
+,	DEADLOCKS , LOCK_ESCALS	, X_LOCK_ESCALS	, LOCKS_WAITING	, LOCK_TIMEOUTS from dbisw.snapdb
+order by 1]]></sql>
+  </item>
+  <item>
+    <time>2018-01-12 15:04:25</time>
+    <sql><![CDATA[select snapshot_timestamp
+,	DEADLOCKS , LOCK_ESCALS	, X_LOCK_ESCALS	, LOCKS_WAITING	, LOCK_TIMEOUTS from dbisw.snapdb
+order by 1]]></sql>
+  </item>
+  <item>
+    <time>2018-01-12 15:07:56</time>
+    <sql><![CDATA[select snapshot_timestamp
+CATALOGCACHE_SZ
+from dbisw.snapdb
+order by 1]]></sql>
+  </item>
+  <item>
+    <time>2018-01-12 15:08:35</time>
+    <sql><![CDATA[select * from syscat.columns
+wherer tabname = 'SNAPDB']]></sql>
+  </item>
+  <item>
+    <time>2018-01-12 15:08:51</time>
+    <sql><![CDATA[select * from syscat.columns
+where tabname = 'SNAPDB']]></sql>
+  </item>
+  <item>
+    <time>2018-01-12 15:09:20</time>
+    <sql><![CDATA[select snapshot_timestamp
+CAT_CACHE_OVERFLOWS
+from dbisw.snapdb
+order by 1]]></sql>
+  </item>
+  <item>
+    <time>2018-01-12 15:09:33</time>
+    <sql><![CDATA[select snapshot_timestamp
+,CAT_CACHE_OVERFLOWS
+from dbisw.snapdb
+order by 1]]></sql>
+  </item>
+  <item>
+    <time>2018-01-12 15:10:34</time>
+    <sql><![CDATA[SELECT
+to_char(x.SNAPSHOT_TIMESTAMP, 'YYYY-MM-DD HH24:MI:SS') as time
+,CASE pkg_cache_lookups when 0 then NULL
+else
+case when dec(((1 - dec(x.pkg_cache_inserts) / dec(x.pkg_cache_lookups)) * 100),15,2) < 0 then NULL
+else dec(((1 - dec(x.pkg_cache_inserts) / dec(x.pkg_cache_lookups)) * 100),15,2) end end AS PKG_CACHE
+
+,CASE cat_cache_lookups when 0 then NULL
+else
+case when dec(((1 - dec(x.cat_cache_inserts) / dec(x.cat_cache_lookups)) * 100),15,2) < 0 then NULL
+else dec(((1 - dec(x.cat_cache_inserts) / dec(x.cat_cache_lookups)) * 100),15,2) end end AS CAT_CACHE
+
+,x.pkg_cache_lookups,  x.pkg_cache_inserts
+,x.cat_cache_lookups,  x.cat_cache_inserts
+,x.PKG_CACHE_NUM_OVERFLOWS ,x.CAT_CACHE_OVERFLOWS
+FROM (SELECT
+a.rownum
+,a.appls_cur_cons                             as appls_cur_cons
+,a.appls_in_db2                               as appls_in_db2
+,a.rows_selected      - b.rows_selected       as select_sql_stmts
+,a.rows_updated       - b.rows_updated        as uid_sql_stmts
+,a.total_sorts        - b.total_sorts         as total_sorts
+,a.total_sort_time    - b.total_sort_time     as total_sort_time
+,a.sort_overflows     - b.sort_overflows      as sort_overflows
+,a.active_sorts                               as active_sorts
+,a.lock_list_in_use                           as lock_list_in_use
+,a.pkg_cache_lookups  - b.pkg_cache_lookups   as pkg_cache_lookups
+,a.pkg_cache_inserts  - b.pkg_cache_inserts   as pkg_cache_inserts
+,a.cat_cache_lookups  - b.cat_cache_lookups   as cat_cache_lookups
+,a.cat_cache_inserts  - b.cat_cache_inserts   as cat_cache_inserts
+,a.PKG_CACHE_NUM_OVERFLOWS - b.PKG_CACHE_NUM_OVERFLOWS as PKG_CACHE_NUM_OVERFLOWS
+,a.CAT_CACHE_OVERFLOWS - b.CAT_CACHE_OVERFLOWS as CAT_CACHE_OVERFLOWS
+,a.SNAPSHOT_TIMESTAMP                         as SNAPSHOT_TIMESTAMP
+FROM (SELECT  ROWNUMBER() over(order by snapshot_timestamp) as rownum
+,dbpartitionnum
+,appls_cur_cons
+,appls_in_db2
+,rows_selected
+,rows_updated
+,total_sorts
+,total_sort_time
+,sort_overflows
+,active_sorts
+,lock_list_in_use
+,pkg_cache_lookups
+,pkg_cache_inserts
+,cat_cache_lookups
+,cat_cache_inserts
+,PKG_CACHE_NUM_OVERFLOWS
+,CAT_CACHE_OVERFLOWS
+,snapshot_timestamp
+FROM dbisw.snapdb
+ORDER BY snapshot_timestamp) a,
+(SELECT  ROWNUMBER() over(order by snapshot_timestamp)+1 AS rownum
+,dbpartitionnum
+,appls_cur_cons
+,appls_in_db2
+,rows_selected
+,rows_updated
+,total_sorts
+,total_sort_time
+,sort_overflows
+,active_sorts
+,lock_list_in_use
+,pkg_cache_lookups
+,pkg_cache_inserts
+,cat_cache_lookups
+,cat_cache_inserts
+,PKG_CACHE_NUM_OVERFLOWS
+,CAT_CACHE_OVERFLOWS
+,snapshot_timestamp
+FROM dbISW.snapdb
+ORDER BY snapshot_timestamp) b
+WHERE a.rownum = b.rownum) x
+;]]></sql>
+  </item>
+  <item>
+    <time>2018-01-12 15:10:55</time>
+    <sql><![CDATA[SELECT
+to_char(x.SNAPSHOT_TIMESTAMP, 'YYYY-MM-DD HH24:MI:SS') as time
+,CASE pkg_cache_lookups when 0 then NULL
+else
+case when dec(((1 - dec(x.pkg_cache_inserts) / dec(x.pkg_cache_lookups)) * 100),15,2) < 0 then NULL
+else dec(((1 - dec(x.pkg_cache_inserts) / dec(x.pkg_cache_lookups)) * 100),15,2) end end AS PKG_CACHE
+
+,CASE cat_cache_lookups when 0 then NULL
+else
+case when dec(((1 - dec(x.cat_cache_inserts) / dec(x.cat_cache_lookups)) * 100),15,2) < 0 then NULL
+else dec(((1 - dec(x.cat_cache_inserts) / dec(x.cat_cache_lookups)) * 100),15,2) end end AS CAT_CACHE
+
+,x.pkg_cache_lookups,  x.pkg_cache_inserts
+,x.cat_cache_lookups,  x.cat_cache_inserts
+,x.PKG_CACHE_NUM_OVERFLOWS ,x.CAT_CACHE_OVERFLOWS
+FROM (SELECT
+a.rownum
+,a.appls_cur_cons                             as appls_cur_cons
+,a.appls_in_db2                               as appls_in_db2
+,a.rows_selected      - b.rows_selected       as select_sql_stmts
+,a.rows_updated       - b.rows_updated        as uid_sql_stmts
+,a.total_sorts        - b.total_sorts         as total_sorts
+,a.total_sort_time    - b.total_sort_time     as total_sort_time
+,a.sort_overflows     - b.sort_overflows      as sort_overflows
+,a.active_sorts                               as active_sorts
+,a.lock_list_in_use                           as lock_list_in_use
+,a.pkg_cache_lookups  - b.pkg_cache_lookups   as pkg_cache_lookups
+,a.pkg_cache_inserts  - b.pkg_cache_inserts   as pkg_cache_inserts
+,a.cat_cache_lookups  - b.cat_cache_lookups   as cat_cache_lookups
+,a.cat_cache_inserts  - b.cat_cache_inserts   as cat_cache_inserts
+,a.PKG_CACHE_NUM_OVERFLOWS - b.PKG_CACHE_NUM_OVERFLOWS as PKG_CACHE_NUM_OVERFLOWS
+,a.CAT_CACHE_OVERFLOWS - b.CAT_CACHE_OVERFLOWS as CAT_CACHE_OVERFLOWS
+,a.SNAPSHOT_TIMESTAMP                         as SNAPSHOT_TIMESTAMP
+FROM (SELECT  ROWNUMBER() over(order by snapshot_timestamp) as rownum
+,dbpartitionnum
+,appls_cur_cons
+,appls_in_db2
+,rows_selected
+,rows_updated
+,total_sorts
+,total_sort_time
+,sort_overflows
+,active_sorts
+,lock_list_in_use
+,pkg_cache_lookups
+,pkg_cache_inserts
+,cat_cache_lookups
+,cat_cache_inserts
+,PKG_CACHE_NUM_OVERFLOWS
+,CAT_CACHE_OVERFLOWS
+,snapshot_timestamp
+FROM dbisw.snapdb
+ORDER BY snapshot_timestamp) a,
+(SELECT  ROWNUMBER() over(order by snapshot_timestamp)+1 AS rownum
+,dbpartitionnum
+,appls_cur_cons
+,appls_in_db2
+,rows_selected
+,rows_updated
+,total_sorts
+,total_sort_time
+,sort_overflows
+,active_sorts
+,lock_list_in_use
+,pkg_cache_lookups
+,pkg_cache_inserts
+,cat_cache_lookups
+,cat_cache_inserts
+,PKG_CACHE_NUM_OVERFLOWS
+,CAT_CACHE_OVERFLOWS
+,snapshot_timestamp
+FROM dbISW.snapdb
+ORDER BY snapshot_timestamp) b
+WHERE a.rownum = b.rownum) x]]></sql>
+  </item>
+  <item>
+    <time>2018-01-12 15:16:41</time>
+    <sql><![CDATA[SELECT
+to_char(SNAPSHOT_TIMESTAMP, 'YYYY-MM-DD HH24:MI:SS') as time
+, TOTAL_LOG_USED, SEC_LOG_USED_TOP, TOT_LOG_USED_TOP, SEC_LOGS_ALLOCATED
+
+FROM dbisw.snapdb]]></sql>
+  </item>
+  <item>
+    <time>2018-01-12 15:32:14</time>
+    <sql><![CDATA[SELECT substr(tabschema,1,15) as tabschema, substr(tabname,1,20) as tabname, substr(INDSCHEMA,1,15) AS INDSCHEMA, substr(INDNAME,1,25) AS INDNAME, max(NLEAF) as NLEAF, max(KEY_UPDATES) as KEY_UPDATES, max(INDEX_SCANS) as INDEX_SCANS
+          FROM ${DB}.TCBSTAT_INDEX
+         WHERE INDEX_SCANS=0
+               AND TIMESTAMP > '20171212'
+                and tabschema not like 'SYS%'
+        group by substr(tabschema,1,15), substr(tabname,1,20), substr(INDSCHEMA,1,15), substr(INDNAME,1,25)
+       ORDER BY NLEAF DESC
+--         ORDER BY KEY_UPDATES DESC]]></sql>
+  </item>
+  <item>
+    <time>2018-01-12 15:32:36</time>
+    <sql><![CDATA[SELECT substr(tabschema,1,15) as tabschema, substr(tabname,1,20) as tabname, substr(INDSCHEMA,1,15) AS INDSCHEMA, substr(INDNAME,1,25) AS INDNAME, max(NLEAF) as NLEAF, max(KEY_UPDATES) as KEY_UPDATES, max(INDEX_SCANS) as INDEX_SCANS
+          FROM dbisw.TCBSTAT_INDEX
+         WHERE INDEX_SCANS=0
+               AND TIMESTAMP > '20171212'
+                and tabschema not like 'SYS%'
+        group by substr(tabschema,1,15), substr(tabname,1,20), substr(INDSCHEMA,1,15), substr(INDNAME,1,25)
+       ORDER BY NLEAF DESC
+--         ORDER BY KEY_UPDATES DESC]]></sql>
+  </item>
+  <item>
+    <time>2018-01-12 15:44:46</time>
+    <sql><![CDATA[SELECT substr(tabschema,1,15) as tabschema, substr(tabname,1,20) as tabname, substr(INDSCHEMA,1,15) AS INDSCHEMA, substr(INDNAME,1,25) AS INDNAME, max(NLEAF) as NLEAF, max(KEY_UPDATES) as KEY_UPDATES, max(INDEX_SCANS) as INDEX_SCANS
+          FROM dbisw.TCBSTAT_INDEX
+         WHERE INDEX_SCANS=0
+               AND TIMESTAMP > '20171212'
+                and tabschema not like 'SYS%'
+        group by substr(tabschema,1,15), substr(tabname,1,20), substr(INDSCHEMA,1,15), substr(INDNAME,1,25)
+--       ORDER BY NLEAF DESC
+         ORDER BY KEY_UPDATES DESC]]></sql>
+  </item>
+  <item>
+    <time>2018-01-12 15:45:02</time>
+    <sql><![CDATA[SELECT substr(tabschema,1,15) as tabschema, substr(tabname,1,20) as tabname, substr(INDSCHEMA,1,15) AS INDSCHEMA, substr(INDNAME,1,25) AS INDNAME, max(NLEAF) as NLEAF, max(KEY_UPDATES) as KEY_UPDATES, max(INDEX_SCANS) as INDEX_SCANS
+          FROM dbisw.TCBSTAT_INDEX
+         WHERE INDEX_SCANS=0
+               AND TIMESTAMP > '20171212'
+                and tabschema not like 'SYS%'
+        group by substr(tabschema,1,15), substr(tabname,1,20), substr(INDSCHEMA,1,15), substr(INDNAME,1,25)
+         ORDER BY KEY_UPDATES DESC]]></sql>
+  </item>
+  <item>
+    <time>2018-01-12 15:46:01</time>
+    <sql><![CDATA[SELECT substr(tabschema,1,15) as tabschema, substr(tabname,1,20) as tabname, substr(INDSCHEMA,1,15) AS INDSCHEMA, substr(INDNAME,1,25) AS INDNAME, max(NLEAF) as NLEAF, max(KEY_UPDATES) as KEY_UPDATES, max(INDEX_SCANS) as INDEX_SCANS
+          FROM dbisw.TCBSTAT_INDEX
+         WHERE INDEX_SCANS=0
+               AND TIMESTAMP > '20171212'
+                and tabschema not like 'SYS%'
+and key_updates > 0
+        group by substr(tabschema,1,15), substr(tabname,1,20), substr(INDSCHEMA,1,15), substr(INDNAME,1,25)
+         ORDER BY KEY_UPDATES DESC]]></sql>
+  </item>
+  <item>
+    <time>2018-01-12 15:59:01</time>
+    <sql><![CDATA[select to_char(snapshot_timestamp, 'YYYY-MM-DD'), max(SORT_HEAP_ALLOCATED) as SORT_HEAP_ALLOCATED ,max(SORT_SHRHEAP_ALLOCATED) as SORT_SHRHEAP_ALLOCATED	,max(SORT_SHRHEAP_TOP) as SORT_SHRHEAP_TOP ,max(POST_SHRTHRESHOLD_SORTS) as POST_SHRTHRESHOLD_SORTS	,max(TOTAL_SORTS) TOTAL_SORTS	,max(TOTAL_SORT_TIME) TOTAL_SORT_TIME	,max(SORT_OVERFLOWS) SORT_OVERFLOWS ,max(TOTAL_HASH_JOINS) TOTAL_HASH_JOINS	,max(TOTAL_HASH_LOOPS) as TOTAL_HASH_LOOPS	,max(HASH_JOIN_OVERFLOWS) HASH_JOIN_OVERFLOWS	,max(HASH_JOIN_SMALL_OVERFLOWS)	as HASH_JOIN_SMALL_OVERFLOWS ,max(POST_SHRTHRESHOLD_HASH_JOINS) as POST_SHRTHRESHOLD_HASH_JOINS	,max(ACTIVE_HASH_JOINS) as ACTIVE_HASH_JOINS from dbSMT.snapdb group by to_char(snapshot_timestamp, 'YYYY-MM-DD')]]></sql>
+  </item>
+  <item>
+    <time>2018-01-12 16:01:09</time>
+    <sql><![CDATA[values 56927885 - 56806140, 57028956 - 56927885]]></sql>
+  </item>
+  <item>
+    <time>2018-01-12 16:02:14</time>
+    <sql><![CDATA[select to_char(snapshot_timestamp, 'YYYY-MM-DD')
+,max(DEADLOCKS)	DEADLOCKS ,max(LOCK_ESCALS) LOCK_ESCALS	,max(X_LOCK_ESCALS) X_LOCK_ESCALS	,max(LOCKS_WAITING) LOCKS_WAITING	,max(LOCK_TIMEOUTS) LOCK_TIMEOUTS from dbisw.snapdb
+group by to_char(snapshot_timestamp, 'YYYY-MM-DD')]]></sql>
+  </item>
+  <item>
+    <time>2018-01-12 16:04:30</time>
+    <sql><![CDATA[select to_char(snapshot_timestamp, 'YYYY-MM-DD')
+,max(DEADLOCKS)	DEADLOCKS ,max(LOCK_ESCALS) LOCK_ESCALS	,max(X_LOCK_ESCALS) X_LOCK_ESCALS	,max(LOCKS_WAITING) LOCKS_WAITING	,max(LOCK_TIMEOUTS) LOCK_TIMEOUTS from dbsmt.snapdb
+group by to_char(snapshot_timestamp, 'YYYY-MM-DD')]]></sql>
+  </item>
+  <item>
+    <time>2018-01-12 16:05:58</time>
+    <sql><![CDATA[SELECT
+to_char(SNAPSHOT_TIMESTAMP, 'YYYY-MM-DD HH24:MI:SS') as time
+, TOTAL_LOG_USED, SEC_LOG_USED_TOP, TOT_LOG_USED_TOP, SEC_LOGS_ALLOCATED
+FROM dbsmt.snapdb]]></sql>
+  </item>
+  <item>
+    <time>2018-01-12 16:40:46</time>
+    <sql><![CDATA[select to_char(snapshot_timestamp, 'YYYY-MM-DD'), max(SORT_HEAP_ALLOCATED) as SORT_HEAP_ALLOCATED ,max(SORT_SHRHEAP_ALLOCATED) as SORT_SHRHEAP_ALLOCATED	,max(SORT_SHRHEAP_TOP) as SORT_SHRHEAP_TOP ,max(POST_SHRTHRESHOLD_SORTS) as POST_SHRTHRESHOLD_SORTS	,max(TOTAL_SORTS) TOTAL_SORTS	,max(TOTAL_SORT_TIME) TOTAL_SORT_TIME	,max(SORT_OVERFLOWS) SORT_OVERFLOWS ,max(TOTAL_HASH_JOINS) TOTAL_HASH_JOINS	,max(TOTAL_HASH_LOOPS) as TOTAL_HASH_LOOPS	,max(HASH_JOIN_OVERFLOWS) HASH_JOIN_OVERFLOWS	,max(HASH_JOIN_SMALL_OVERFLOWS)	as HASH_JOIN_SMALL_OVERFLOWS ,max(POST_SHRTHRESHOLD_HASH_JOINS) as POST_SHRTHRESHOLD_HASH_JOINS	,max(ACTIVE_HASH_JOINS) as ACTIVE_HASH_JOINS from dbswk.snapdb group by to_char(snapshot_timestamp, 'YYYY-MM-DD')]]></sql>
+  </item>
+  <item>
+    <time>2018-01-12 16:42:54</time>
+    <sql><![CDATA[select to_char(snapshot_timestamp, 'YYYY-MM-DD')
+,max(DEADLOCKS)	DEADLOCKS ,max(LOCK_ESCALS) LOCK_ESCALS	,max(X_LOCK_ESCALS) X_LOCK_ESCALS	,max(LOCKS_WAITING) LOCKS_WAITING	,max(LOCK_TIMEOUTS) LOCK_TIMEOUTS from dbswk.snapdb
+group by to_char(snapshot_timestamp, 'YYYY-MM-DD')]]></sql>
+  </item>
+  <item>
+    <time>2018-01-12 16:45:43</time>
+    <sql><![CDATA[SELECT
+to_char(SNAPSHOT_TIMESTAMP, 'YYYY-MM-DD HH24:MI:SS') as time
+, TOTAL_LOG_USED, SEC_LOG_USED_TOP, TOT_LOG_USED_TOP, SEC_LOGS_ALLOCATED
+FROM dbswk.snapdb]]></sql>
+  </item>
+  <item>
+    <time>2018-01-12 16:59:44</time>
+    <sql><![CDATA[select to_char(snapshot_timestamp, 'YYYY-MM-DD'), max(SORT_HEAP_ALLOCATED) as SORT_HEAP_ALLOCATED ,max(SORT_SHRHEAP_ALLOCATED) as SORT_SHRHEAP_ALLOCATED	,max(SORT_SHRHEAP_TOP) as SORT_SHRHEAP_TOP ,max(POST_SHRTHRESHOLD_SORTS) as POST_SHRTHRESHOLD_SORTS	,max(TOTAL_SORTS) TOTAL_SORTS	,max(TOTAL_SORT_TIME) TOTAL_SORT_TIME	,max(SORT_OVERFLOWS) SORT_OVERFLOWS ,max(TOTAL_HASH_JOINS) TOTAL_HASH_JOINS	,max(TOTAL_HASH_LOOPS) as TOTAL_HASH_LOOPS	,max(HASH_JOIN_OVERFLOWS) HASH_JOIN_OVERFLOWS	,max(HASH_JOIN_SMALL_OVERFLOWS)	as HASH_JOIN_SMALL_OVERFLOWS ,max(POST_SHRTHRESHOLD_HASH_JOINS) as POST_SHRTHRESHOLD_HASH_JOINS	,max(ACTIVE_HASH_JOINS) as ACTIVE_HASH_JOINS from dbsea.snapdb group by to_char(snapshot_timestamp, 'YYYY-MM-DD')]]></sql>
+  </item>
+  <item>
+    <time>2018-01-12 17:02:10</time>
+    <sql><![CDATA[select to_char(snapshot_timestamp, 'YYYY-MM-DD')
+,max(DEADLOCKS)	DEADLOCKS ,max(LOCK_ESCALS) LOCK_ESCALS	,max(X_LOCK_ESCALS) X_LOCK_ESCALS	,max(LOCKS_WAITING) LOCKS_WAITING	,max(LOCK_TIMEOUTS) LOCK_TIMEOUTS from dbsea.snapdb
+group by to_char(snapshot_timestamp, 'YYYY-MM-DD')]]></sql>
+  </item>
+  <item>
+    <time>2018-01-12 17:03:40</time>
+    <sql><![CDATA[SELECT
+to_char(SNAPSHOT_TIMESTAMP, 'YYYY-MM-DD HH24:MI:SS') as time
+, TOTAL_LOG_USED, SEC_LOG_USED_TOP, TOT_LOG_USED_TOP, SEC_LOGS_ALLOCATED
+FROM dbsea.snapdb]]></sql>
+  </item>
+  <item>
+    <time>2018-01-12 17:10:58</time>
+    <sql><![CDATA[select to_char(snapshot_timestamp, 'YYYY-MM-DD'), max(SORT_HEAP_ALLOCATED) as SORT_HEAP_ALLOCATED ,max(SORT_SHRHEAP_ALLOCATED) as SORT_SHRHEAP_ALLOCATED	,max(SORT_SHRHEAP_TOP) as SORT_SHRHEAP_TOP ,max(POST_SHRTHRESHOLD_SORTS) as POST_SHRTHRESHOLD_SORTS	,max(TOTAL_SORTS) TOTAL_SORTS	,max(TOTAL_SORT_TIME) TOTAL_SORT_TIME	,max(SORT_OVERFLOWS) SORT_OVERFLOWS ,max(TOTAL_HASH_JOINS) TOTAL_HASH_JOINS	,max(TOTAL_HASH_LOOPS) as TOTAL_HASH_LOOPS	,max(HASH_JOIN_OVERFLOWS) HASH_JOIN_OVERFLOWS	,max(HASH_JOIN_SMALL_OVERFLOWS)	as HASH_JOIN_SMALL_OVERFLOWS ,max(POST_SHRTHRESHOLD_HASH_JOINS) as POST_SHRTHRESHOLD_HASH_JOINS	,max(ACTIVE_HASH_JOINS) as ACTIVE_HASH_JOINS from dbums.snapdb group by to_char(snapshot_timestamp, 'YYYY-MM-DD')]]></sql>
+  </item>
+  <item>
+    <time>2018-01-12 17:13:19</time>
+    <sql><![CDATA[select to_char(snapshot_timestamp, 'YYYY-MM-DD')
+,max(DEADLOCKS)	DEADLOCKS ,max(LOCK_ESCALS) LOCK_ESCALS	,max(X_LOCK_ESCALS) X_LOCK_ESCALS	,max(LOCKS_WAITING) LOCKS_WAITING	,max(LOCK_TIMEOUTS) LOCK_TIMEOUTS from dbums.snapdb
+group by to_char(snapshot_timestamp, 'YYYY-MM-DD')]]></sql>
+  </item>
+  <item>
+    <time>2018-01-12 17:13:34</time>
+    <sql><![CDATA[select to_char(snapshot_timestamp, 'YYYY-MM-DD')
+,max(DEADLOCKS)	DEADLOCKS ,max(LOCK_ESCALS) LOCK_ESCALS	,max(X_LOCK_ESCALS) X_LOCK_ESCALS	,max(LOCKS_WAITING) LOCKS_WAITING	,max(LOCK_TIMEOUTS) LOCK_TIMEOUTS from dbums.snapdb
+group by to_char(snapshot_timestamp, 'YYYY-MM-DD')]]></sql>
+  </item>
+  <item>
+    <time>2018-01-12 17:17:02</time>
+    <sql><![CDATA[SELECT
+to_char(SNAPSHOT_TIMESTAMP, 'YYYY-MM-DD HH24:MI:SS') as time
+, TOTAL_LOG_USED, SEC_LOG_USED_TOP, TOT_LOG_USED_TOP, SEC_LOGS_ALLOCATED
+FROM dbums.snapdb]]></sql>
+  </item>
+  <item>
+    <time>2018-01-12 17:21:34</time>
+    <sql><![CDATA[select to_char(snapshot_timestamp, 'YYYY-MM-DD'), max(SORT_HEAP_ALLOCATED) as SORT_HEAP_ALLOCATED ,max(SORT_SHRHEAP_ALLOCATED) as SORT_SHRHEAP_ALLOCATED	,max(SORT_SHRHEAP_TOP) as SORT_SHRHEAP_TOP ,max(POST_SHRTHRESHOLD_SORTS) as POST_SHRTHRESHOLD_SORTS	,max(TOTAL_SORTS) TOTAL_SORTS	,max(TOTAL_SORT_TIME) TOTAL_SORT_TIME	,max(SORT_OVERFLOWS) SORT_OVERFLOWS ,max(TOTAL_HASH_JOINS) TOTAL_HASH_JOINS	,max(TOTAL_HASH_LOOPS) as TOTAL_HASH_LOOPS	,max(HASH_JOIN_OVERFLOWS) HASH_JOIN_OVERFLOWS	,max(HASH_JOIN_SMALL_OVERFLOWS)	as HASH_JOIN_SMALL_OVERFLOWS ,max(POST_SHRTHRESHOLD_HASH_JOINS) as POST_SHRTHRESHOLD_HASH_JOINS	,max(ACTIVE_HASH_JOINS) as ACTIVE_HASH_JOINS from dbihp.snapdb group by to_char(snapshot_timestamp, 'YYYY-MM-DD')]]></sql>
+  </item>
+  <item>
+    <time>2018-01-12 17:23:52</time>
+    <sql><![CDATA[select to_char(snapshot_timestamp, 'YYYY-MM-DD')
+,max(DEADLOCKS)	DEADLOCKS ,max(LOCK_ESCALS) LOCK_ESCALS	,max(X_LOCK_ESCALS) X_LOCK_ESCALS	,max(LOCKS_WAITING) LOCKS_WAITING	,max(LOCK_TIMEOUTS) LOCK_TIMEOUTS from dbihp.snapdb
+group by to_char(snapshot_timestamp, 'YYYY-MM-DD')]]></sql>
+  </item>
+  <item>
+    <time>2018-01-12 17:24:58</time>
+    <sql><![CDATA[SELECT
+to_char(SNAPSHOT_TIMESTAMP, 'YYYY-MM-DD HH24:MI:SS') as time
+, TOTAL_LOG_USED, SEC_LOG_USED_TOP, TOT_LOG_USED_TOP, SEC_LOGS_ALLOCATED
+FROM dbihp.snapdb]]></sql>
+  </item>
+  <item>
+    <time>2018-01-12 17:28:38</time>
+    <sql><![CDATA[select to_char(snapshot_timestamp, 'YYYY-MM-DD'), max(SORT_HEAP_ALLOCATED) as SORT_HEAP_ALLOCATED ,max(SORT_SHRHEAP_ALLOCATED) as SORT_SHRHEAP_ALLOCATED	,max(SORT_SHRHEAP_TOP) as SORT_SHRHEAP_TOP ,max(POST_SHRTHRESHOLD_SORTS) as POST_SHRTHRESHOLD_SORTS	,max(TOTAL_SORTS) TOTAL_SORTS	,max(TOTAL_SORT_TIME) TOTAL_SORT_TIME	,max(SORT_OVERFLOWS) SORT_OVERFLOWS ,max(TOTAL_HASH_JOINS) TOTAL_HASH_JOINS	,max(TOTAL_HASH_LOOPS) as TOTAL_HASH_LOOPS	,max(HASH_JOIN_OVERFLOWS) HASH_JOIN_OVERFLOWS	,max(HASH_JOIN_SMALL_OVERFLOWS)	as HASH_JOIN_SMALL_OVERFLOWS ,max(POST_SHRTHRESHOLD_HASH_JOINS) as POST_SHRTHRESHOLD_HASH_JOINS	,max(ACTIVE_HASH_JOINS) as ACTIVE_HASH_JOINS from dbexp.snapdb group by to_char(snapshot_timestamp, 'YYYY-MM-DD')]]></sql>
+  </item>
+  <item>
+    <time>2018-01-12 17:30:39</time>
+    <sql><![CDATA[select to_char(snapshot_timestamp, 'YYYY-MM-DD')
+,max(DEADLOCKS)	DEADLOCKS ,max(LOCK_ESCALS) LOCK_ESCALS	,max(X_LOCK_ESCALS) X_LOCK_ESCALS	,max(LOCKS_WAITING) LOCKS_WAITING	,max(LOCK_TIMEOUTS) LOCK_TIMEOUTS from dbexp.snapdb
+group by to_char(snapshot_timestamp, 'YYYY-MM-DD')]]></sql>
+  </item>
+  <item>
+    <time>2018-01-12 17:31:53</time>
+    <sql><![CDATA[SELECT
+to_char(SNAPSHOT_TIMESTAMP, 'YYYY-MM-DD HH24:MI:SS') as time
+, TOTAL_LOG_USED, SEC_LOG_USED_TOP, TOT_LOG_USED_TOP, SEC_LOGS_ALLOCATED
+FROM dbexp.snapdb]]></sql>
+  </item>
+</QUERY>
+

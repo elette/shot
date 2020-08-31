@@ -1,0 +1,187 @@
+<style>
+$bg-color: #FDE48F;
+$fg-color: #2E1414;
+$link-color: #FF3838;
+$bq-line: #FEAB1B;
+html {font-size: 16px;}
+body {
+  font-family: 'Open Sans', sans-serif;
+  background: $bg-color;
+  color: $fg-color;
+  opacity: 0;
+  font-weight: 300;
+  line-height: 1.2em;
+}
+
+#content {
+  width: 35em;
+  padding: 2em 0 2em 2em;
+  position: fixed;
+  left: 0;
+  top: 0;
+  
+  p, ul, ol{ 
+    margin: 0;
+    padding: 1em 0;
+  }
+   li {
+     margin: 0;
+     padding: 0;
+   }
+  
+  blockquote {
+    .wrapliner {
+      position: relative;
+      padding-left: 0;
+      &:before {
+        position: absolute;
+        content: '';
+        top: 0;
+        left: -1.5em; 
+        height: 1.2em;
+        width: 3px;
+        background: $bq-line;
+        transform: skew(47deg);
+
+      }
+    }
+  }
+  a {
+    color: $link-color;
+    &:hover {
+      color: darken($link-color, 30%);
+    }
+  }
+  
+  a, h1, h2, h3, h4, h5, h6 {
+    font-weight: 400;
+  }
+  strong {
+    font-weight: 800;
+  }
+
+}
+
+@for $i from 1 through 6 {
+  h#{$i} {
+    font-size: 1em + 1/$i;
+    margin: 0;
+    padding: 1em 0;
+  }
+}
+
+
+
+
+
+.wrapliner {
+  display: block;
+  position: relative;
+  background: none;
+  padding: 0;
+  margin: 0;
+  z-index: 1;
+  width: 100%;
+  padding: 0 100px 0 40px;
+  .wrapliner {
+    padding: 0;
+  }
+}
+@for $i from 0 to 100 {
+  .wrap_line_#{$i + 1} {
+     left: $i * 20px;
+  }
+} 
+
+</style>
+<link href='http://fonts.googleapis.com/css?family=Open+Sans:300italic,300,800,400' rel='stylesheet' type='text/css'>
+<div id="content">
+  <h1>Diagonal scrolling page demo</h1>
+ 
+  
+  <h2>Blockquotes and lists</h2>
+  <blockquote>
+    This is a blockquote. Someone said something really funny and it should be noted here.
+    Aenean massa
+    <strong>strong</strong>
+    . Cum sociis
+    natoque penatibus et magnis dis parturient montes,
+    nascetur ridiculus mus. Donec quam felis, ultricies
+    nec, pellentesque eu, pretium quis, sem. Nulla consequat
+    massa quis enim. Donec pede justo, fringilla vel,
+    aliquet nec, vulputate eget, arcu. In <em>em</em>
+    enim justo, rhoncus ut, imperdiet a, venenatis vitae,
+    justo. Nullam
+    <a href="#">link</a>
+    dictum felis eu pede mollis pretium.
+  </blockquote>
+  <ul>
+    <li>This is a list</li>
+    <li>The type is unordered.</li>
+    <li>It will fit in here nicely</li>
+    <li>This actually works pretty well</li>
+    <li>Aenean commodo ligula eget</li>
+    <li>This also works if the text in the list item is too long to fit in one line. So let's add some bogus text to force at least two or three lines. Lorem Ipsum to the rescue: Lorem ipsum dolor sit amed.</li>
+
+  </ul>
+  <p>Ordered lists should work just the same</p>
+  <ol>
+    <li>This is a list</li>
+    <li>The type is ordered.</li>
+    <li>It will fit in here nicely</li>
+    <li>This actually works pretty well</li>
+    <li>Aenean commodo ligula eget</li>
+    <li>Cum sociis natoque penatibus et magnis</li>
+  </ol>
+  <h2>Aenean commodo ligula eget dolor aenean massa</h2>
+  <p>
+    Lorem ipsum dolor sit amet, consectetuer adipiscing
+  elit. Aenean commodo ligula eget dolor. Aenean massa.
+  Cum sociis natoque penatibus et magnis dis parturient
+  montes, nascetur ridiculus mus. Donec quam felis,
+  ultricies nec, pellentesque eu, pretium quis, sem.
+  </p>
+  <h3>
+    Cum sociis natoque penatibus dis
+  parturient mus
+  </h3>
+  <h4>Donec quam felis ultricies nec pellentesque</h4>
+  <h6>
+    In enim justo rhoncus ut imperdiet a venenatis vitae
+  justo
+  </h6>
+  <p>
+    Lorem ipsum dolor sit amet, consectetuer adipiscing
+  elit. Aenean commodo ligula eget dolor. Aenean massa.
+  Cum sociis natoque penatibus et magnis dis parturient
+  montes, nascetur ridiculus mus. Donec quam felis,
+  ultricies nec, pellentesque eu, pretium quis, sem.
+  </p>
+  <p>
+    Lorem ipsum dolor sit amet, consectetuer adipiscing
+  elit. Aenean commodo ligula eget dolor. Aenean massa.
+  Cum sociis natoque penatibus et magnis dis parturient
+  montes, nascetur ridiculus mus. Donec quam felis,
+  ultricies nec, pellentesque eu, pretium quis, sem.
+  </p>
+  <blockquote>
+    Lorem ipsum dolor sit amet, consectetuer
+    adipiscing elit. Aenean commodo ligula eget dolor.
+    Aenean massa
+    <strong>strong</strong>
+    . Cum sociis
+    natoque penatibus et magnis dis parturient montes,
+    nascetur ridiculus mus. Donec quam felis, ultricies
+    nec, pellentesque eu, pretium quis, sem. Nulla consequat
+    massa quis enim. Donec pede justo, fringilla vel,
+    aliquet nec, vulputate eget, arcu. In <em>em</em>
+    dictum felis eu pede mollis pretium.
+  </blockquote>
+  <p>
+    Lorem ipsum dolor sit amet, consectetuer adipiscing
+  elit. Aenean commodo ligula eget dolor. Aenean massa.
+  Cum sociis natoque penatibus et magnis dis parturient
+  montes, nascetur ridiculus mus. Donec quam felis,
+  ultricies nec, pellentesque eu, pretium quis, sem.
+  </p>
+</div>

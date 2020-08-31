@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<QUERY>
+  <item>
+    <time>2017-12-14 09:54:48</time>
+    <sql><![CDATA[WITH BPMETRICS AS (
+SELECT TBSP_ID, TBSP_NAME, TBSP_CUR_POOL_ID, TBSP_USED_PAGES, TBSP_TOTAL_PAGES, TBSP_AUTO_RESIZE_ENABLED,
+     pool_data_l_reads, pool_temp_data_l_reads, pool_index_l_reads, pool_temp_index_l_reads,
+     pool_data_p_reads, pool_temp_data_p_reads, pool_index_p_reads, pool_temp_index_p_reads,
+     pool_data_l_reads + pool_temp_data_l_reads +
+     pool_index_l_reads + pool_temp_index_l_reads +
+     pool_xda_l_reads + pool_temp_xda_l_reads  as logical_reads,
+     pool_data_p_reads + pool_temp_data_p_reads +
+     pool_index_p_reads + pool_temp_index_p_reads +
+     pool_xda_p_reads + pool_temp_xda_p_reads as physical_reads,
+     member
+  FROM TABLE(MON_GET_TABLESPACE('',-1)) AS METRICS)
+SELECT
+    TBSP_NAME,
+    CASE WHEN logical_reads > 0
+    THEN DECIMAL((1 - (FLOAT(physical_reads) / FLOAT(logical_reads))) * 100,5,2)
+    ELSE NULL
+    END AS HIT_RATIO,
+    CASE WHEN pool_data_l_reads > 0
+    THEN DECIMAL((1 - (FLOAT(pool_data_p_reads) / FLOAT(pool_data_l_reads))) * 100,5,2)
+    ELSE NULL
+    END AS DATA_HIT_RATIO,
+    CASE WHEN pool_index_l_reads > 0
+    THEN DECIMAL((1 - (FLOAT(pool_index_p_reads) / FLOAT(pool_index_l_reads))) * 100,5,2)
+    ELSE NULL
+    END AS INDEX_HIT_RATIO,
+    CASE WHEN pool_temp_data_l_reads + pool_temp_index_l_reads > 0
+    THEN DECIMAL((1 - (FLOAT(pool_temp_data_p_reads + pool_temp_index_p_reads) / FLOAT(pool_temp_data_l_reads + pool_temp_index_l_reads))) * 100,5,2)
+    ELSE NULL
+    END AS TEMP_HIT_RATIO,
+    B.PAGESIZE,
+    A.TBSP_USED_PAGES*B.PAGESIZE/1024/1024 AS SIZE_M,
+    DEC(100*A.TBSP_USED_PAGES/A.TBSP_TOTAL_PAGES,5,2) AS PCT,
+    A.TBSP_AUTO_RESIZE_ENABLED AS AUTO_RESIZE,
+    C.BPNAME
+   FROM BPMETRICS A,
+    SYSCAT.TABLESPACES B,
+    SYSCAT.BUFFERPOOLS C
+  WHERE A.TBSP_ID = B.TBSPACEID
+    AND A.TBSP_CUR_POOL_ID = C.BUFFERPOOLID]]></sql>
+  </item>
+</QUERY>
+

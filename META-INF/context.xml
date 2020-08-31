@@ -41,7 +41,6 @@
               jdbcInterceptors="org.apache.tomcat.jdbc.pool.interceptor.ConnectionState;org.apache.tomcat.jdbc.pool.interceptor.StatementFinalizer"
               driverClassName="com.ibm.db2.jcc.DB2Driver"
               driverType="4"/>
-<!--
               url="jdbc:db2://192.168.186.130:59000/sample"/>
 -->
 </Context>

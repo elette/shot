@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<QUERY>
+  <item>
+    <time>2017-10-26 11:15:35</time>
+    <sql><![CDATA[SELECT 
+* 
+--t.table_name, COUNT(1)
+from columns c join tables t ON c.table_name = t.table_name
+WHERE t.table_catalog != 'SYSTEM' 
+--and t.table_name LIKE 'DDTLH_%'
+--AND t.table_catalog = 'KSNET_WH' 
+AND t.table_type = 'TABLE'
+AND t.table_name in
+(
+upper('pgcctlh_yyyymm_pt')
+)
+--AND c.column_name LIKE upper('deal_gove_date')
+--AND column_name like 'ECY_%'
+--GROUP BY t.table_name
+--ORDER BY t.table_name
+ORDER BY 3,5
+;]]></sql>
+  </item>
+</QUERY>
+

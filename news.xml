@@ -30,7 +30,7 @@
     <anchor><![CDATA[strong > a]]></anchor>
     <filter><![CDATA[artid]]></filter>
     <title><![CDATA[h1[id="article_title"]]]></title>
-    <content><![CDATA[div[class="art_body"]]]></content>
+    <content><![CDATA[div[class="articlebody"]]]></content>
   </item>
   <item cat="portal">
     <name>Media Today</name>

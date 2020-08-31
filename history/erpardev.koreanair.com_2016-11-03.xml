@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<QUERY>
+  <item>
+    <time>2016-11-03 13:52:48</time>
+    <sql><![CDATA[select * from dba_tables
+where table_name = 'MTL_MATERIAL_TRANSACTIONS']]></sql>
+  </item>
+  <item>
+    <time>2016-11-03 14:14:34</time>
+    <sql><![CDATA[union all select mmt.* 
+from INV.mtl_material_transactions mmt
+    ,INV.org_acct_periods   oap
+where 1 = 1
+and ( mmt.PROJECT_ID IS NULL
+    OR exists ( 
+SELECT 1 
+FROM APPS.PA_PROJECTS_ALL prj 
+WHERE mmt.project_id =
+ prj.project_id
+and prj.project_status_code = 'CLOSED'
+) )
+and mmt.transaction_date between 
+to_date(:PERIODFROM, 'dd-mon-yyyy') and to_date(:PERIODTO || ' 235959','dd-mon-yyyy hh24miss')
+and mmt.organization_id in (
+select code_values1 from 
+OPTIM.OPTIM_BIZ_MAP_CODE 
+where BIZ_NAME=:BIZ_NAME 
+and code_type='ORG_ID'
+)
+and MMT.organization_id = 
+oap.organization_id 
+and MMT.acct_period_id = 
+oap.acct_period_id
+and oap.open_flag = 'N']]></sql>
+  </item>
+  <item>
+    <time>2016-11-03 14:58:16</time>
+    <sql><![CDATA[select sqltext from optim_sql
+where rownum < 10]]></sql>
+  </item>
+</QUERY>
+

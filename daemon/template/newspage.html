@@ -1,1 +1,3 @@
-{{ content.encode('utf-8').replace('\r\n', '<br>').replace('&'+'nbsp;', ' ') }}
+{% if content != None %}
+	{{ content.replace('\r\n', '<br>').replace('&'+'nbsp;', ' ') }}
+{% endif %}

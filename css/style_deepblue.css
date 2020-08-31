@@ -158,11 +158,11 @@ circle { fill: #808080; stroke: #fff; }
   /*font-family: 휴먼아미체; */
   /*font-family: HYSinMyeongJo; */
   /*font-family: 한겨레결체; */
-  font-family: 서울한강 장체L; 
+  font-family: SeoulHangangC L; 
   /*font-family: 대한; */
   /*font-family: KoPubBatang; */
   /*font-family: 나눔고딕코딩; */
-  font-size: 13pt;
+  font-size: 11pt;
   line-height: 150%; padding: 5px;
   /*font-weight: bold;*/
   /*word-break: inherit;*/
@@ -193,6 +193,6 @@ circle { fill: #808080; stroke: #fff; }
 }
 
 .article {
-  width:380px;
+  width:100%;
   height:auto;
 }

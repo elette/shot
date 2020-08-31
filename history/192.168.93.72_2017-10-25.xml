@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<QUERY>
+  <item>
+    <time>2017-10-25 13:26:33</time>
+    <sql><![CDATA[SELECT 
+* 
+--t.table_name, COUNT(1)
+from columns c join tables t ON c.table_name = t.table_name
+WHERE t.table_catalog != 'SYSTEM' 
+--and t.table_name LIKE 'DDTLH_%'
+--AND t.table_catalog = 'KSNET_WH' 
+AND t.table_type = 'TABLE'
+AND t.table_name in
+(
+upper('cb_ddmsm01_yyyymm')
+)
+--AND c.column_name LIKE upper('deal_gove_date')
+--AND column_name like 'ECY_%'
+--GROUP BY t.table_name
+--ORDER BY t.table_name
+ORDER BY 3,5
+;]]></sql>
+  </item>
+  <item>
+    <time>2017-10-25 13:32:01</time>
+    <sql><![CDATA[SELECT qs_sessionid, qs_cliipaddr, to_char(qs_tstart + (select TZOFFSET from _VT_PG_TIME_OFFSET), 'HH24:MI:SS') AS qs_tstart, NOW() - QS_TSTART - (select TZOFFSET from _VT_PG_TIME_OFFSET) AS elapsed, qs_estcost, qs_estdisk, qs_resrows, substr(replace(qs_sql,'\n',''),1,100) FROM _v_qrystat ORDER BY 3 desc LIMIT 10]]></sql>
+  </item>
+  <item>
+    <time>2017-10-25 13:32:09</time>
+    <sql><![CDATA[SELECT session_id,  session_username as db_user, client_ip, client_os_username as client_user, session_state_name, to_char(max(r.submit_time), 'YYYYMMDD HH24MISS') as submit_time, sum(r.returned_rows) as return, substr(replace(sqltext,'\n',''),1,99) as sqltext, sum(r.execution_secs) FROM _v_session_detail s INNER JOIN _V_PLAN_RESOURCE r ON s.session_id = r.SESSION where dbname = upper('$db') GROUP BY session_id, session_username, client_ip, client_pid, client_os_username, session_state_name, substr(replace(sqltext,'\n',''),1,99) order by sum(r.execution_secs) desc]]></sql>
+  </item>
+</QUERY>
+

@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<QUERY>
+  <item>
+    <time>2016-11-09 17:38:04</time>
+    <sql><![CDATA[with v_obj as (
+--	select obj_id, obj_name, obj_type, listagg(def,'') within group (order by seqno) as defs
+--	  from (
+--	select obj_id, obj_name, obj_type, xmlagg(xmlelement(col,'',def) order by seqno).extract('//text()').getclobval() as def
+--	  from (
+			select obj_id, obj_name, obj_type, seqno, concat(definition1, concat(definition2, concat(definition3, definition4))) as def
+			  from pstobj2
+--	) 
+--	 group by obj_id, obj_name, obj_type
+)
+select distinct req.obj_id, req.obj_name, ld.obj_name, tm.obj_name, cm.obj_name
+  from v_obj req, v_obj ld, v_obj tm, v_obj cm
+ where req.obj_type = 'W' and ld.obj_type in ('L', 'I') and tm.obj_type = 'T' and cm.obj_type = 'C'
+   and req.obj_id = ld.obj_id and ld.obj_id = tm.obj_id and tm.obj_id = cm.obj_id
+   and req.obj_name = 'RR_AHLP_PA'
+   and instr(req.def, ld.obj_id) > 1 and instr(req.def, ld.obj_name) > 1
+   and instr(ld.def, tm.obj_id) > 1 and instr(ld.def, tm.obj_name) > 1
+   and instr(tm.def, cm.obj_id) > 1 and instr(tm.def, cm.obj_name) > 1
+ order by req.obj_id, req.obj_name]]></sql>
+  </item>
+  <item>
+    <time>2016-11-09 17:39:27</time>
+    <sql><![CDATA[with v_obj as (
+--	select obj_id, obj_name, obj_type, listagg(def,'') within group (order by seqno) as defs
+--	  from (
+--	select obj_id, obj_name, obj_type, xmlagg(xmlelement(col,'',def) order by seqno).extract('//text()').getclobval() as def
+--	  from (
+			select obj_id, obj_name, obj_type, seqno, concat(definition1, concat(definition2, concat(definition3, definition4))) as def
+			  from pstarchdata.pstobj2
+--	) 
+--	 group by obj_id, obj_name, obj_type
+)
+select distinct req.obj_id, req.obj_name, ld.obj_name, tm.obj_name, cm.obj_name
+  from v_obj req, v_obj ld, v_obj tm, v_obj cm
+ where req.obj_type = 'W' and ld.obj_type in ('L', 'I') and tm.obj_type = 'T' and cm.obj_type = 'C'
+   and req.obj_id = ld.obj_id and ld.obj_id = tm.obj_id and tm.obj_id = cm.obj_id
+   and req.obj_name = 'RR_AHLP_PA'
+   and instr(req.def, ld.obj_id) > 1 and instr(req.def, ld.obj_name) > 1
+   and instr(ld.def, tm.obj_id) > 1 and instr(ld.def, tm.obj_name) > 1
+   and instr(tm.def, cm.obj_id) > 1 and instr(tm.def, cm.obj_name) > 1
+ order by req.obj_id, req.obj_name]]></sql>
+  </item>
+  <item>
+    <time>2016-11-09 17:40:26</time>
+    <sql><![CDATA[with v_obj as (
+--	select obj_id, obj_name, obj_type, listagg(def,'') within group (order by seqno) as defs
+--	  from (
+--	select obj_id, obj_name, obj_type, xmlagg(xmlelement(col,'',def) order by seqno).extract('//text()').getclobval() as def
+--	  from (
+			select obj_id, obj_name, obj_type, seqno, concat(definition1, concat(definition2, concat(definition3, definition4))) as def
+			  from pstarchdata.pstobj2
+--	) 
+--	 group by obj_id, obj_name, obj_type
+)
+select distinct req.obj_id, req.obj_name, ld.obj_name, tm.obj_name, cm.obj_name
+  from v_obj req, v_obj ld, v_obj tm, v_obj cm
+ where req.obj_type = 'W' and ld.obj_type in ('L', 'I') and tm.obj_type = 'T' and cm.obj_type = 'C'
+   and req.obj_id = ld.obj_id and ld.obj_id = tm.obj_id and tm.obj_id = cm.obj_id
+   and req.obj_name = 'RR_AHLP_PA'
+   and instr(req.def, ld.obj_id) > 1 and instr(req.def, ld.obj_name) > 1
+   and instr(ld.def, tm.obj_id) > 1 and instr(ld.def, tm.obj_name) > 1
+   and instr(tm.def, cm.obj_id) > 1 and instr(tm.def, cm.obj_name) > 1
+ order by req.obj_id, req.obj_name]]></sql>
+  </item>
+  <item>
+    <time>2016-11-09 17:43:28</time>
+    <sql><![CDATA[with v_obj as (
+--	select obj_id, obj_name, obj_type, listagg(def,'') within group (order by seqno) as defs
+--	  from (
+--	select obj_id, obj_name, obj_type, xmlagg(xmlelement(col,'',def) order by seqno).extract('//text()').getclobval() as def
+--	  from (
+			select obj_id, obj_name, obj_type, seqno, concat(definition1, concat(definition2, concat(definition3, definition4))) as def
+			  from pstarchdata.pstobj2
+--	) 
+--	 group by obj_id, obj_name, obj_type
+)
+select distinct req.obj_id, req.obj_name as req, ld.obj_name as load, tm.obj_name as tm, cm.obj_name as cm
+  from v_obj req, v_obj ld, v_obj tm, v_obj cm
+ where req.obj_type = 'W' and ld.obj_type in ('L', 'I') and tm.obj_type = 'T' and cm.obj_type = 'C'
+   and req.obj_id = ld.obj_id and ld.obj_id = tm.obj_id and tm.obj_id = cm.obj_id
+   and req.obj_name = 'RR_AHLP_PA'
+   and instr(req.def, ld.obj_id) > 1 and instr(req.def, ld.obj_name) > 1
+   and instr(ld.def, tm.obj_id) > 1 and instr(ld.def, tm.obj_name) > 1
+   and instr(tm.def, cm.obj_id) > 1 and instr(tm.def, cm.obj_name) > 1
+ order by req.obj_id, req.obj_name]]></sql>
+  </item>
+</QUERY>
+

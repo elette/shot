@@ -24,7 +24,7 @@ public class EventFactory {
         int resultInt = EventDefine.E_EVENT_INIT;
         try{
             Class<?> eventHander  = Class.forName(classID);
-            Object bizObj      = eventHander.newInstance();
+            Object bizObj      = eventHander.getDeclaredConstructor().newInstance();
 
             Class[] paramClass = new Class[1];
             paramClass[0]      = ioParam.getClass();

@@ -199,5 +199,26 @@
     <version />
     <desc />
   </item>
+  <item name="RPA" cseq="20200729090743">
+    <dbms>MSSQL</dbms>
+    <system>HANSAE</system>
+    <server>192.168.0.150</server>
+    <port>1433</port>
+    <database>crdb-new</database>
+    <instance>sa</instance>
+    <pass>hansae1!</pass>
+    <version />
+    <desc />
+  </item>
+  <item name="RPA" cseq="20200729092103">
+    <dbms>MSSQL</dbms>
+    <system>HANSAE</system>
+    <server>192.168.0.150</server>
+    <port>1433</port>
+    <database>crdb-new</database>
+    <instance>sa</instance>
+    <pass>hansae1!</pass>
+    <version />
+    <desc />
+  </item>
 </customer>
-

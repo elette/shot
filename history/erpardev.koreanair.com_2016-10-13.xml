@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<QUERY>
+  <item>
+    <time>2016-10-13 11:21:11</time>
+    <sql><![CDATA[select * from dba_tables]]></sql>
+  </item>
+  <item>
+    <time>2016-10-13 11:30:16</time>
+    <sql><![CDATA[select * from dba_tables
+where owner = 'OPTIM']]></sql>
+  </item>
+  <item>
+    <time>2016-10-13 11:30:33</time>
+    <sql><![CDATA[select * from dba_tables
+where owner = 'PSTARCHDATA']]></sql>
+  </item>
+  <item>
+    <time>2016-10-13 11:31:32</time>
+    <sql><![CDATA[select * from dba_tables
+where owner = 'PSTARCHDATA'
+and table_name not like 'T$%']]></sql>
+  </item>
+  <item>
+    <time>2016-10-13 11:32:06</time>
+    <sql><![CDATA[select table_name from dba_tables
+where owner = 'PSTARCHDATA'
+and table_name not like 'T$%']]></sql>
+  </item>
+  <item>
+    <time>2016-10-13 14:37:14</time>
+    <sql><![CDATA[select * from dba_tab_cols
+where row_num=1]]></sql>
+  </item>
+  <item>
+    <time>2016-10-13 14:37:36</time>
+    <sql><![CDATA[select * from dba_tab_cols
+where rownum=1]]></sql>
+  </item>
+</QUERY>
+

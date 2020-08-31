@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<QUERY>
+  <item>
+    <time>2016-11-02 16:10:46</time>
+    <sql><![CDATA[select * from user_tables]]></sql>
+  </item>
+  <item>
+    <time>2016-11-02 16:11:25</time>
+    <sql><![CDATA[select * from dba_tables
+where owner = 'PSTARCH']]></sql>
+  </item>
+  <item>
+    <time>2016-11-02 16:11:33</time>
+    <sql><![CDATA[select * from dba_tables
+where owner = 'PSTARCHDATA']]></sql>
+  </item>
+  <item>
+    <time>2016-11-02 16:13:16</time>
+    <sql><![CDATA[select * from pstarchdata.pstobj2
+where wornum < 10]]></sql>
+  </item>
+  <item>
+    <time>2016-11-02 16:13:24</time>
+    <sql><![CDATA[select * from pstarchdata.pstobj2
+where rownum < 10]]></sql>
+  </item>
+</QUERY>
+
