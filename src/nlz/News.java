@@ -75,9 +75,10 @@ public class News {
         try {
             ioParam.setResultURL("/" + xmlFile.getName());
             // String[] cmd = {"C:/Python27/python.exe", "C:/apache-tomcat-8.5.9/webapps/shot/daemon/NewsService.py", "C:/apache-tomcat-8.5.9/webapps/shot/news.xml"} ;
-            String[] cmd = "cmd /c cd C:\\apache-tomcat-8.5.9\\webapps\\shot\\daemon && python NewsService.py ..\\news.xml".split(" ");
-
-            if (p == null) {
+            // String[] cmd = "cmd /c cd " + System.getProperty("user.dir") + "\\webapps\\shot\\daemon && python NewsService.py ..\\news.xml".split(" ");
+            String[] cmd = {"cmd.exe", "/C", "cd " + System.getProperty("user.dir") + "\\webapps\\shot\\daemon && python NewsService.py ..\\news.xml"};
+System.out.println(cmd.toString());
+            // if (p == null) {
                 p = Runtime.getRuntime().exec(cmd);
                 po1 = new ProcOutThread(p.getInputStream());
                 po1.start();
@@ -86,18 +87,22 @@ public class News {
                 p.getOutputStream().close();
 
                 // p.waitFor();
+                LoggingWriter.setLogAll(pgmID,"@Business==== " + "News Service Started.");
+            // }else{
+            if (p != null) {
+                LoggingWriter.setLogAll(pgmID,"@Business==== " + "Already Started..");
             }
         } catch (Exception e) {
             resultInt = EventDefine.E_DOEXECUTE_ERROR;
             e.printStackTrace();
         // } finally {
-        //     // try {
+        //     try {
         //         if (p != null)
         //             p.destroy();
-        //     // } catch (Exception e) {
-        //     //     resultInt = EventDefine.E_DOEXECUTE_ERROR;
-        //     //     e.printStackTrace();
-        //     // }
+        //     } catch (Exception e) {
+        //         resultInt = EventDefine.E_DOEXECUTE_ERROR;
+        //         e.printStackTrace();
+        //     }
         }
         return resultInt;
     }

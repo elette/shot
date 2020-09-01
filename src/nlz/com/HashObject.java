@@ -4,7 +4,6 @@ package nlz.com;
 import java.util.Enumeration;
 import java.util.Hashtable;
 
-
 public class HashObject {
 
 	Hashtable<String,Object> ht;
