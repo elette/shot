@@ -366,17 +366,25 @@ function callServerSearchItem(searchitem) {
 }
 
 function callServerNewsLaunch() {
-  var url = "CommandAction?CID=News&CMD=launch";
+  var url = "CommandAction?CID=News&CMD=launch&" + Math.random();
   xmlHttp.open("GET", url, true);
-  xmlHttp.onreadystatechange = function(){};
+  xmlHttp.onreadystatechange = function(){
+    if (xmlHttp.readyState == 4) {
+      console.log("News Service started.");
+    }
+  };
 
   xmlHttp.send(null);
 }
 
 function callServerNewsStop() {
-  var url = "CommandAction?CID=News&CMD=stop";
+  var url = "CommandAction?CID=News&CMD=stop&" + Math.random();
   xmlHttp.open("GET", url, true);
-  xmlHttp.onreadystatechange = function(){};
+  xmlHttp.onreadystatechange = function(){
+    if (xmlHttp.readyState == 4) {
+      console.log("News Service stopped.");
+    }
+  };
 
   xmlHttp.send(null);
 }

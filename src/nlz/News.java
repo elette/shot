@@ -77,8 +77,8 @@ public class News {
             // String[] cmd = {"C:/Python27/python.exe", "C:/apache-tomcat-8.5.9/webapps/shot/daemon/NewsService.py", "C:/apache-tomcat-8.5.9/webapps/shot/news.xml"} ;
             // String[] cmd = "cmd /c cd " + System.getProperty("user.dir") + "\\webapps\\shot\\daemon && python NewsService.py ..\\news.xml".split(" ");
             String[] cmd = {"cmd.exe", "/C", "cd " + System.getProperty("user.dir") + "\\webapps\\shot\\daemon && python NewsService.py ..\\news.xml"};
-System.out.println(cmd.toString());
-            // if (p == null) {
+System.out.println(p);
+            if (p == null) {
                 p = Runtime.getRuntime().exec(cmd);
                 po1 = new ProcOutThread(p.getInputStream());
                 po1.start();
@@ -88,8 +88,7 @@ System.out.println(cmd.toString());
 
                 // p.waitFor();
                 LoggingWriter.setLogAll(pgmID,"@Business==== " + "News Service Started.");
-            // }else{
-            if (p != null) {
+            }else{
                 LoggingWriter.setLogAll(pgmID,"@Business==== " + "Already Started..");
             }
         } catch (Exception e) {
@@ -161,7 +160,7 @@ System.out.println(cmd.toString());
             ioParam.setResultURL("/" + xmlFile.getName());
             String item  = (String)ho.get("ITEM",HashObject.YES);
             
-            String filename = "../webapps/shot/daemon/text.txt";
+            String filename = System.getProperty("user.dir") + "\\webapps\\shot\\daemon\\text.txt";
             File file        = new File(filename);
             if(!file.exists()) {
                 file.createNewFile();
