@@ -34,27 +34,27 @@
         </init-param>
         <init-param>
             <param-name>LOG_DIR</param-name>
-            <param-value>c:/jetty-9.4.30/logs/nlz</param-value>
+            <param-value>c:/jetty/logs/nlz</param-value>
         </init-param>
         <init-param>
             <param-name>CONFIG_PATH</param-name>
-            <param-value>c:/jetty-9.4.30/webapps/shot/mon.xml</param-value>
+            <param-value>c:/jetty/webapps/shot/mon.xml</param-value>
         </init-param>
         <init-param>
             <param-name>NEWS_PATH</param-name>
-            <param-value>c:/jetty-9.4.30/webapps/shot/news.xml</param-value>
+            <param-value>c:/jetty/webapps/shot/news.xml</param-value>
         </init-param>
         <init-param>
             <param-name>CLIENT_PATH</param-name>
-            <param-value>c:/jetty-9.4.30/webapps/shot/client.xml</param-value>
+            <param-value>c:/jetty/webapps/shot/client.xml</param-value>
         </init-param>
         <init-param>
             <param-name>LOG_PATH</param-name>
-            <param-value>c:/jetty-9.4.30/webapps/shot/logs</param-value>
+            <param-value>c:/jetty/webapps/shot/logs</param-value>
         </init-param>
         <init-param>
             <param-name>HIST_PATH</param-name>
-            <param-value>c:/jetty-9.4.30/webapps/shot/history</param-value>
+            <param-value>c:/jetty/webapps/shot/history</param-value>
         </init-param>
         <init-param>
           <param-name>welcomeServlets</param-name>
@@ -63,13 +63,14 @@
         <load-on-startup>1</load-on-startup>
     </servlet>
 
-  <servlet id="jsp">
+   <servlet id="jsp">
     <servlet-name>jsp</servlet-name>
-    <servlet-class>org.eclipse.jetty.jsp.JettyJspServlet</servlet-class>
-    <context-param>
+    <!-- <servlet-class>org.eclipse.jetty.jsp.JettyJspServlet</servlet-class> -->
+    <servlet-class>org.apache.jasper.servlet.JspServlet</servlet-class>
+<!--     <context-param>
       <param-name>org.eclipse.jetty.jsp.precompiled</param-name>
       <param-value>true</param-value>
-    </context-param>
+    </context-param> -->
     <init-param>
       <param-name>logVerbosityLevel</param-name>
       <param-value>DEBUG</param-value>
@@ -82,12 +83,12 @@
       <param-name>keepgenerated</param-name>
       <param-value>true</param-value>
     </init-param>
-    <!--  
+<!--      
     <init-param>
         <param-name>classpath</param-name>
         <param-value>?</param-value>
     </init-param>
-    -->
+ -->   
     <init-param>
       <param-name>welcomeServlets</param-name>
       <param-value>true</param-value>
@@ -95,10 +96,17 @@
     <load-on-startup>1</load-on-startup>
   </servlet>
 
-  <servlet-mapping>
-    <servlet-name>jsp</servlet-name>
-    <url-pattern>*.jsp</url-pattern>
-  </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>jsp</servlet-name>
+        <url-pattern>*.jsp</url-pattern>
+        <url-pattern>*.jspf</url-pattern>
+        <url-pattern>*.jspx</url-pattern>
+        <url-pattern>*.xsp</url-pattern>
+        <url-pattern>*.JSP</url-pattern>
+        <url-pattern>*.JSPF</url-pattern>
+        <url-pattern>*.JSPX</url-pattern>
+        <url-pattern>*.XSP</url-pattern>
+    </servlet-mapping>    
 
     <servlet-mapping>
         <servlet-name>CommandAction</servlet-name>
@@ -107,12 +115,31 @@
 
     <welcome-file-list>
         <welcome-file>index.htm</welcome-file>
+        <welcome-file>index.jsp</welcome-file>
     </welcome-file-list>
 
-<!--     <filter>
-        <filter-name>CorsFilter</filter-name>
-        <filter-class>org.apache.catalina.filters.CorsFilter</filter-class>
-        <init-param>
+    <!-- <filter> -->
+        <!-- <filter-name>CorsFilter</filter-name> -->
+        <!-- <filter-class>org.apache.catalina.filters.CorsFilter</filter-class> -->
+<!--         <filter-name>cross-origin</filter-name>
+        <filter-class>org.eclipse.jetty.servlets.CrossOriginFilter</filter-class>
+       <init-param>
+           <param-name>chainPreflight</param-name>
+           <param-value>false</param-value>
+       </init-param>
+       <init-param>
+           <param-name>allowedOrigins</param-name>
+           <param-value>*</param-value>
+       </init-param>
+       <init-param>
+           <param-name>allowedMethods</param-name>
+           <param-value>GET,POST,PUT,DELETE,HEAD,OPTIONS</param-value>
+       </init-param>
+       <init-param>
+           <param-name>allowedHeaders</param-name>
+           <param-value>*</param-value>
+       </init-param> -->
+<!--         <init-param>
             <param-name>cors.allowed.origins</param-name>
             <param-value>*</param-value>
         </init-param>
@@ -136,9 +163,14 @@
             <param-name>cors.preflight.maxage</param-name>
             <param-value>600</param-value>
         </init-param>
-    </filter>
-    <filter-mapping>
+ -->
+     <!-- </filter> -->
+<!--     <filter-mapping>
         <filter-name>CorsFilter</filter-name>
+        <url-pattern>/*</url-pattern>
+    </filter-mapping> -->
+<!--     <filter-mapping>
+        <filter-name>cross-origin</filter-name>
         <url-pattern>/*</url-pattern>
     </filter-mapping>
  --></web-app>

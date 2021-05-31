@@ -74,8 +74,10 @@ ul#cards li:hover {
   /*font-family: 서울한강 장체L; */
   /*font-family: 대한; */
   /*font-family: KoPubBatang; */
-  font-family: 나눔고딕; 
-  font-size: 9pt;
+  font-family: BlinkMacSystemFont;
+/*  font-family: -apple-system; */
+/*  font-family: 나눔고딕; */
+  font-size: 10pt;
   /*width: 360px;*/
   height: 18px;
   padding: 6px;

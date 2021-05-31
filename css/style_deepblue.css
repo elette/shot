@@ -158,7 +158,8 @@ circle { fill: #808080; stroke: #fff; }
   /*font-family: 휴먼아미체; */
   /*font-family: HYSinMyeongJo; */
   /*font-family: 한겨레결체; */
-  font-family: SeoulHangangC L; 
+  /*font-family: SeoulHangangC L; */
+  font-family: BlinkMacSystemFont;
   /*font-family: 대한; */
   /*font-family: KoPubBatang; */
   /*font-family: 나눔고딕코딩; */

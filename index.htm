@@ -15,6 +15,9 @@
 <!-- <script type="text/javascript" charset="UTF-8" src="./js/jquery.resize.js"></script> -->
 <script type="text/javascript" charset="UTF-8" src="./js/meta.js"></script>
 <script type="text/javascript" charset="UTF-8" src="./js/chart.js"></script>
+<script type="text/javascript" charset="UTF-8" src="./js/go-debug.js"></script>
+<script type="text/javascript" charset="UTF-8" src="./js/Figures.js"></script>
+<script type="text/javascript" charset="UTF-8" src="./js/Buttons.js"></script>
 <script type="text/javascript">
 window.onload = function() {
     doToggle('StatusBox', 'L');
@@ -61,6 +64,7 @@ function OKSelected() {
 </tr>
 <tr><td class="buttontd" colspan="2" onclick="javascript:toggle('Property', 'L');">▒▒</td></tr>
 <tr><td onclick="javascript:toggleTheme(1);">&nbsp;</td><td onclick="javascript:toggleTheme(2);">&nbsp;</td></tr>
+<tr><td class="buttontd" colspan="2" onclick="javascript:showDiag();$E('msgbox').style.display ='block';">D</td></tr>
 </table>
 
 <table id="StatusBox" class="database">
@@ -203,6 +207,7 @@ function OKSelected() {
 </div>
 <div id="paneCard" class="scrollbar" style="position:absolute; width:90%; height:90%; left:40; top:60;display:none;"></div>
 <span id="msgbox" style="border:none;display:none;">
+  <div id="myDiagramDiv" class="scrollbar" style="width:100%;height:100%;padding:5px; border: solid 1px black;"></div>
 <table width="100%" border="0" cellspacing="0" cellpadding="1">
 <tr><td align="left">-</td>
 <th style="display:none;"><div id="SQLMSG"></div></th>
@@ -210,7 +215,8 @@ function OKSelected() {
 </tr>
 <tr><td colspan="2">
 <div id="msgdetail" class="scrollbar" style="width:610px;height:610px;padding:5px; border-bottom:none;word-wrap:break-word;white-space:pre-line;"></div>
-</td></tr></table>
+</td></tr>
+</table>
 </span>
 
 </body>

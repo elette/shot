@@ -31,7 +31,7 @@ public class JoinParser {
             resultInt = EventDefine.E_DOEXECUTE_SUCCESS;
             LoggingWriter.setLogDebug(pgmID,"@Business==== " + MessageDefine.M_SELECT_OK);
 
-            joinRelationAnalyze analysis = new joinRelationAnalyze( (String)ho.get("SQL",HashObject.YES), EDbVendor.dbvoracle );
+            joinRelationAnalyze analysis = new joinRelationAnalyze( (String)ho.get("SQL",HashObject.YES), EDbVendor.dbvdb2 );
 
             strSplit = analysis.getAnalysisResult().split("\r\n");
             for(String each : strSplit) {

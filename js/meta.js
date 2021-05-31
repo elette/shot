@@ -69,19 +69,37 @@ function XHR(url,target) {
   // if (target != null && target != 'board' && target != 'msgdetail' && target != 'DBInfo') wheel(0, target);
   if ($E(target).className == 'buttoncircle') wheel(0, target);
 
+  //Split url for POST
+  var strCmd = url.split('?');
+  var strUrl = strCmd[0];
+  var strParam = strCmd[1];
+  // var arrUrl = strCmd[1].split('&');
+  
+  // var arrParam = new Array();
+
+  // console.log("url: " + strUrl);
+  // console.log("parmams: " + strParam);
+  // for (var i in arrUrl) {
+  //   //Set parameters
+  //   console.log("param[" + i + "]" + ": " + arrUrl[i]);
+  //   // if (arrUrl[i].indexOf('=')>0)
+  //   //   arrParam.push()
+  // }
+
+
   if (window.XMLHttpRequest) {
     var req = new XMLHttpRequest();
     req.onreadystatechange = function() {XHRDone(req, target);};
-    req.open("GET", url, true);
-//	req.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
-    req.send(null);
+    req.open("POST", strUrl, true);
+  	req.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+    req.send(strParam);
     // IE/Windows ActiveX version
   } else if (window.ActiveXObject) {
     var req = new ActiveXObject("Microsoft.XMLDOM");
     if (req) {
       req.onreadystatechange = function() {XHRDone(req, target);};
-      req.open("GET", url, true);
-      req.send(null);
+      req.open("POST", strUrl, true);
+      req.send(strParam);
     }
   }
 }
@@ -253,7 +271,7 @@ function callXMLLog() {
 }
 
 function callServerJoin(SQL) {
-    var url = "CommandAction?CID=SqlP&CMD=getJoin&SQL=" + urlfmt(SQL);
+    var url = "CommandAction?CID=SqlP&CMD=getJoin&SQL=" + urlfmt(SQL) + "&" + Math.random();
 
   $E('divInfo').style.display = 'none';
     // $E('gridTable').style.top = window.innerHeight-$E('gridTable').clientHeight;
@@ -819,7 +837,7 @@ function updateNewsSubPane() {
   if (xmlHttp.readyState == 4) {
     var xmlDoc=xmlHttp.responseXML;
     // var xmlDoc = xmlHttp.responseText;
-//console.info("xml response: " + xmlHttp.responseText);
+// console.info("xml response: " + xmlHttp.responseText);
 
     $E('wrapper').innerHTML = "";
     var eleUl = document.createElement("div"); 
@@ -1825,4 +1843,242 @@ function toggleTheme(input) {
   var link  = document.getElementById("maincss");
   link.href = (input == 1)? './css/style_deepblue.css': './css/style_normal.css';
   console.info("Theme is changed.");
+}
+
+function showDiag() {
+  var iJoin = $E('resultJoin').childNodes;
+  console.log(iJoin);
+  var tbody = iJoin[1].childNodes;
+  var tabcol = {};
+  var tabs = new Array();
+  for (i=0; i<tbody.length-1; i++) {
+    if (tbody[i+1].localName == 'tr') {
+        console.log(tbody[i+1].cells[0].innerText + ", " + tbody[i+1].cells[2].innerText);
+      if (tabs.length == 0 || tabs.indexOf(tbody[i+1].cells[0].innerText) == -1) tabs.push(tbody[i+1].cells[0].innerText);
+      if (tabs.length == 0 || tabs.indexOf(tbody[i+1].cells[2].innerText) == -1) tabs.push(tbody[i+1].cells[2].innerText);
+    }
+  }
+
+  for (i=0; i<tabs.length; i++) {
+    tabcol[tabs[i]] = new Array();
+  }
+
+  for (i=0; i<tbody.length-1; i++) {
+    if (tbody[i+1].localName == 'tr') {
+      if ( !tabcol[tbody[i+1].cells[0].innerText].includes(tbody[i+1].cells[0].innerText) )
+        tabcol[tbody[i+1].cells[0].innerText].push(tbody[i+1].cells[1].innerText);
+      if ( !tabcol[tbody[i+1].cells[2].innerText].includes(tbody[i+1].cells[2].innerText) )
+        tabcol[tbody[i+1].cells[2].innerText].push(tbody[i+1].cells[3].innerText);
+    }
+  }
+
+  // if (window.goSamples) goSamples();  // init for these samples -- you don't need to call this
+  var $ = go.GraphObject.make;  // for conciseness in defining templates
+  $E('myDiagramDiv').style.visibility = "visible";
+
+  myDiagram =
+    $(go.Diagram, "myDiagramDiv",  // must name or refer to the DIV HTML element
+      {
+        allowDelete: false,
+        allowCopy: false,
+        layout: $(go.ForceDirectedLayout),
+        "undoManager.isEnabled": true
+      });
+
+  var colors = {
+    'red': '#be4b15',
+    'green': '#52ce60',
+    'blue': '#6ea5f8',
+    'lightred': '#fd8852',
+    'lightblue': '#afd4fe',
+    'lightgreen': '#b9e986',
+    'pink': '#faadc1',
+    'purple': '#d689ff',
+    'orange': '#fdb400',
+  }
+
+  // the template for each attribute in a node's array of item data
+  var itemTempl =
+    $(go.Panel, "Horizontal",
+      $(go.Shape,
+        { desiredSize: new go.Size(8, 8), strokeJoin: "round", strokeWidth: 1, stroke: null, margin: 2 },
+        new go.Binding("figure", "figure"),
+        new go.Binding("fill", "color"),
+        new go.Binding("stroke", "color")),
+      $(go.TextBlock,
+        {
+          stroke: "#333333",
+          font: "bold 12px Consolas"
+        },
+        new go.Binding("text", "name"))
+    );
+
+  // myDiagram.clear; 
+  // define the Node template, representing an entity
+  myDiagram.nodeTemplate =
+    $(go.Node, "Auto",  // the whole node panel
+      {
+        selectionAdorned: true,
+        resizable: true,
+        layoutConditions: go.Part.LayoutStandard & ~go.Part.LayoutNodeSized,
+        fromSpot: go.Spot.AllSides,
+        toSpot: go.Spot.AllSides,
+        isShadowed: true,
+        shadowOffset: new go.Point(1, 1),
+        shadowColor: "#C5C1AA"
+      },
+      new go.Binding("location", "location").makeTwoWay(),
+      // whenever the PanelExpanderButton changes the visible property of the "LIST" panel,
+      // clear out any desiredSize set by the ResizingTool.
+      new go.Binding("desiredSize", "visible", function(v) { return new go.Size(NaN, NaN); }).ofObject("LIST"),
+      // define the node's outer shape, which will surround the Table
+      $(go.Shape, "RoundedRectangle",
+        { fill: 'gray', stroke: "#eeeeee", strokeWidth: 1 }),
+      $(go.Panel, "Table",
+        { margin: 8, stretch: go.GraphObject.Fill },
+        $(go.RowColumnDefinition, { row: 0, sizing: go.RowColumnDefinition.None }),
+        // the table header
+        $(go.TextBlock,
+          {
+            row: 0, alignment: go.Spot.Center,
+            margin: new go.Margin(0, 24, 0, 2),  // leave room for Button
+            font: "bold 16px Consolas"
+          },
+          new go.Binding("text", "key")),
+        // the collapse/expand button
+        $("PanelExpanderButton", "LIST",  // the name of the element whose visibility this button toggles
+          { row: 0, alignment: go.Spot.TopRight }),
+        // the list of Panels, each showing an attribute
+        $(go.Panel, "Vertical",
+          {
+            name: "LIST",
+            row: 1,
+            padding: 3,
+            alignment: go.Spot.TopLeft,
+            defaultAlignment: go.Spot.Left,
+            stretch: go.GraphObject.Horizontal,
+            itemTemplate: itemTempl
+          },
+          new go.Binding("itemArray", "items"))
+      )  // end Table Panel
+    );  // end Node
+
+  // define the Link template, representing a relationship
+  myDiagram.linkTemplate =
+    $(go.Link,  // the whole link panel
+      {
+        selectionAdorned: true,
+        layerName: "Foreground",
+        reshapable: true,
+        routing: go.Link.AvoidsNodes,
+        corner: 5,
+        curve: go.Link.JumpOver
+      },
+      $(go.Shape,  // the link shape
+        { stroke: "#303B45", strokeWidth: 2.5 }),
+      $(go.TextBlock,  // the "from" label
+        {
+          textAlign: "center",
+          font: "bold 14px Consolas",
+          stroke: "#1967B3",
+          segmentIndex: 0,
+          segmentOffset: new go.Point(NaN, NaN),
+          segmentOrientation: go.Link.OrientUpright
+        },
+        new go.Binding("text", "text")),
+      $(go.TextBlock,  // the "to" label
+        {
+          textAlign: "center",
+          font: "bold 14px Consolas",
+          stroke: "#1967B3",
+          segmentIndex: -1,
+          segmentOffset: new go.Point(NaN, NaN),
+          segmentOrientation: go.Link.OrientUpright
+        },
+        new go.Binding("text", "toText"))
+    );
+
+  // myDiagram.model = $(go.GraphLinksModel,
+  //   {
+  //     copiesArrays: true,
+  //     copiesArrayObjects: true,
+  //     nodeDataArray: eval("[]"),
+  //     linkDataArray: eval("[]")
+  //   });
+
+  // create the model for the E-R diagram
+  var strKey = "";
+  for (i=0; i<tabs.length; i++) {
+    // if (i > 0) strKey += ",{";
+    strKey += "{key: '" + tabs[i] + "'},";
+  }
+  console.log (strKey);
+
+  console.log (tabcol);
+  var strKeyCol = "";
+  for (i=0; i<tabs.length; i++) {
+    // if (i > 0) strKey += ",{";
+    strKeyCol += "{key: '" + tabs[i] + "', items: [";
+    for (k=0; k<tabcol[tabs[i]].length; k++)
+      strKeyCol += "{name: '" + tabcol[tabs[i]][k] + "', figure: 'Circle'},";
+    strKeyCol += "]},";
+  }
+  console.log (strKeyCol);
+  var nodeDataArray = eval("[" + strKeyCol + "]");
+  // var nodeDataArray = [
+  //   {
+  //     key: "Products",
+  //     items: [{ name: "ProductID", iskey: true, figure: "Decision", color: colors.red },
+  //     { name: "ProductName", iskey: false, figure: "Hexagon", color: colors.blue },
+  //     { name: "SupplierID", iskey: false, figure: "Decision", color: "purple" },
+  //     { name: "CategoryID", iskey: false, figure: "Decision", color: "purple" }]
+  //   },
+  //   {
+  //     key: "Suppliers",
+  //     items: [{ name: "SupplierID", iskey: true, figure: "Decision", color: colors.red },
+  //     { name: "CompanyName", iskey: false, figure: "Hexagon", color: colors.blue },
+  //     { name: "ContactName", iskey: false, figure: "Hexagon", color: colors.blue },
+  //     { name: "Address", iskey: false, figure: "Hexagon", color: colors.blue }]
+  //   },
+  //   {
+  //     key: "Categories",
+  //     items: [{ name: "CategoryID", iskey: true, figure: "Decision", color: colors.red },
+  //     { name: "CategoryName", iskey: false, figure: "Hexagon", color: colors.blue },
+  //     { name: "Description", iskey: false, figure: "Hexagon", color: colors.blue },
+  //     { name: "Picture", iskey: false, figure: "TriangleUp", color: colors.pink }]
+  //   },
+  //   {
+  //     key: "Order Details",
+  //     items: [{ name: "OrderID", iskey: true, figure: "Decision", color: colors.red },
+  //     { name: "ProductID", iskey: true, figure: "Decision", color: colors.red },
+  //     { name: "UnitPrice", iskey: false, figure: "Circle", color: colors.green },
+  //     { name: "Quantity", iskey: false, figure: "Circle", color: colors.green },
+  //     { name: "Discount", iskey: false, figure: "Circle", color: colors.green }]
+  //   },
+  // ];
+
+  var strLink = "";
+  for (i=0; i<tbody.length-1; i++) {
+    if (tbody[i+1].localName == 'tr')
+        strLink += "{from:'" + tbody[i+1].cells[0].innerText +"', to:'" + tbody[i+1].cells[2].innerText + "', text: '" + tbody[i+1].cells[1].innerText + "', toText: '" + tbody[i+1].cells[3].innerText + "'},";
+  }
+  console.log (strLink);
+  var linkDataArray = eval("[" + strLink + "]");
+  // var linkDataArray = [
+  //   { from: "Products", to: "Suppliers", text: "0..N", toText: "1" },
+  //   { from: "Products", to: "Categories", text: "0..N", toText: "1" },
+  //   { from: "Order Details", to: "Products", text: "0..N", toText: "1" }
+  // ];
+
+  myDiagram.model = $(go.GraphLinksModel,
+    {
+      copiesArrays: true,
+      copiesArrayObjects: true,
+      nodeDataArray: nodeDataArray,
+      linkDataArray: linkDataArray
+    });
+
+  $E('msgbox').style.visibility = "visible";
+  // sm('msgbox', 700, 640);
+  $E('myDiagramDiv').focus();
 }
