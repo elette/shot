@@ -12,6 +12,7 @@ import xml.etree.ElementTree as ET
 import multiprocessing
 import time, datetime
 from newspaper import Article
+from newspaper import Config
 import newspaper
 #from importlib import reload
 
@@ -20,8 +21,6 @@ import newspaper
 
 xmlFile = sys.argv[1]
 env = Environment(loader=FileSystemLoader('template'))
-
-searchfile = open("text.txt", 'r')
 
 def get_size(obj, seen=None):
     """Recursively finds size of objects"""
@@ -55,12 +54,21 @@ def NewsList(cluster, interval, lock, shared_sites, shared_pages, par):
 	}
 	sites = {}
 	pages = {}
+
+	user_agent = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:78.0) Gecko/20100101 Firefox/78.0'
+
+	config = Config()
+	config.browser_user_agent = user_agent
+	config.request_timeout = 10
+
 	while True:
 		# with lock:
 		# 	shared_sites.clear()
 		# 	shared_pages.clear()
 		viewlist = []
+		searchfile = open("text.txt", 'r')
 		searchitem = searchfile.read()
+		searchfile.close()
 		end = par[1].find('/', 8) if par[1].find('/', 8) > -1 else len(par[1])
 		baseurl = par[1][:end]
 		# reqUrl = par[1] + 'q=' + searchitem.decode('utf-8') + '&oq=' + searchitem.decode('utf-8') + '&sourceid=chrome&ie=UTF-8' if par[0] == 'Search' else baseurl #par[1]
@@ -133,7 +141,7 @@ def NewsList(cluster, interval, lock, shared_sites, shared_pages, par):
 # tree = lxml.html.fromstring(response.text)
 # contents = tree.text_content().strip()
 			
-			article = Article(urllib.parse.unquote(page['url']))
+			article = Article(urllib.parse.unquote(page['url']), config=config)
 			article.download()
 			article.parse()
 
@@ -180,7 +188,7 @@ class Init(object):
 		i = 0
 		for news in root.iter("item"):
 			par = [news.findtext("name"), news.findtext("page"), news.findtext("anchor"), news.findtext("filter"), news.findtext("title"), news.findtext("content")]
-			arg_list = ("news", 600.0, self.news_lock, self.shared_sites, self.shared_pages, par)
+			arg_list = ("news", 300.0, self.news_lock, self.shared_sites, self.shared_pages, par)
 			self.news_process.append(multiprocessing.Process(target=NewsList, name=news.findtext("name"), args=arg_list))
 			self.news_process[i].daemon = True
 			self.news_process[i].start()

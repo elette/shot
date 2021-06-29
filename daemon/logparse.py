@@ -90,7 +90,7 @@ def LogParse(lock, shared_level, shared_logs):
         shared_logs.update(logitems)
 
     for it in levels:
-        print it + ": ", len(levels[it])
+        print (it + ": ", len(levels[it]))
 
     # print (len(shared_logs))
 
